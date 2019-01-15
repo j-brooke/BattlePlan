@@ -10,7 +10,7 @@ namespace BattlePlan.Common
         public string SourceEntity { get; set; }
         public Vector2Di? SourceLocation { get; set; }
         public int SourceTeamId { get; set; }
-        public UnitClass? SourceClass { get; set; }
+        public string SourceClass { get; set; }
         public string TargetEntity { get; set; }
         public Vector2Di? TargetLocation { get; set; }
         public int TargetTeamId { get; set; }

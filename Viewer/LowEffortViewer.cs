@@ -8,7 +8,7 @@ namespace BattlePlan.Viewer
 {
     public class LowEffortViewer
     {
-        public double FrameTimeSeconds { get; set; } = 0.2;
+        public double FrameTimeSeconds { get; set; } = 0.1;
 
         public double DamageDisplayTimeSeconds { get; set; } = 0.2;
 
@@ -21,6 +21,13 @@ namespace BattlePlan.Viewer
             _terrainBuffer = MakeTerrainBuffer(resolution.Terrain);
             _frameBuffer = new char[_terrainBuffer.GetLength(0),_terrainBuffer.GetLength(1)];
             _rencentDamageEvents = new Queue<BattleEvent>();
+
+            _unitTypeMap = new Dictionary<string, UnitCharacteristics>();
+            if (resolution.UnitTypes != null)
+            {
+                foreach (var unitType in resolution.UnitTypes)
+                    _unitTypeMap.Add(unitType.Name, unitType);
+            }
 
             var eventQueue = new Queue<BattleEvent>(resolution.Events.OrderBy( (evt) => evt.Time ) );
             double time = 0.0;
@@ -61,6 +68,7 @@ namespace BattlePlan.Viewer
         private char[,] _frameBuffer;
         private Dictionary<string,ViewEntity> _entities;
         private Queue<BattleEvent> _rencentDamageEvents;
+        private Dictionary<string,UnitCharacteristics> _unitTypeMap;
 
         private char[,] MakeTerrainBuffer(Terrain terrain)
         {
@@ -132,22 +140,10 @@ namespace BattlePlan.Viewer
             {
                 Id = evt.SourceEntity,
                 TeamId = evt.SourceTeamId,
-                Class = evt.SourceClass.Value,
+                UnitType = _unitTypeMap[evt.SourceClass],
                 Position = evt.SourceLocation.Value,
             };
-
-            switch (evt.SourceClass.Value)
-            {
-                case UnitClass.AttackerGrunt:
-                    newEnt.Symbol = 'T';
-                    break;
-                case UnitClass.DefenderArcher:
-                    newEnt.Symbol = '{';
-                    break;
-                default:
-                    newEnt.Symbol = '?';
-                    break;
-            }
+            newEnt.Symbol = newEnt.UnitType.Symbol;
 
             _entities[newEnt.Id] = newEnt;
         }

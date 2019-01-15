@@ -4,9 +4,9 @@
     {
       "TeamId": 1,
       "Spawns": [
-        { "Class": "AttackerGrunt", "SpawnPointIndex": 0, "Time": 0 },
-        { "Class": "AttackerGrunt", "SpawnPointIndex": 1, "Time": 0 },
-        { "Class": "AttackerGrunt", "SpawnPointIndex": 2, "Time": 0 }
+        { "UnitType": "Grunt", "SpawnPointIndex": 0, "Time": 0 },
+        { "UnitType": "Grunt", "SpawnPointIndex": 1, "Time": 0 },
+        { "UnitType": "Grunt", "SpawnPointIndex": 2, "Time": 0 }
       ]
     }
   ],

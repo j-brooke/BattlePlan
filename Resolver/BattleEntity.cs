@@ -9,7 +9,7 @@ namespace BattlePlan.Resolver
     internal class BattleEntity
     {
         public string Id { get; }
-        public ClassCharacteristics Class { get; }
+        public UnitCharacteristics Class { get; }
         public int HitPoints { get; set; }
         public Vector2Di Position { get; private set; }
         public Vector2Di? MovingToPosition { get; private set; }
@@ -20,7 +20,7 @@ namespace BattlePlan.Resolver
         public double WeaponReloadElapsedTime { get; private set; }
         public Queue<Vector2Di> PlannedPath { get; private set; }
 
-        public BattleEntity(string id, ClassCharacteristics clsChar, int teamId)
+        public BattleEntity(string id, UnitCharacteristics clsChar, int teamId)
         {
             this.Id = id;
             this.Class = clsChar;

@@ -13,6 +13,11 @@ namespace BattlePlan.Resolver
             _attackPlans = new List<AttackPlan>(scenario.AttackPlans);
             _defensePlans = new List<DefensePlan>(scenario.DefensePlans ?? Enumerable.Empty<DefensePlan>());
 
+            // Make a lookup table for unit types.
+            _unitTypeMap = new Dictionary<string, UnitCharacteristics>();
+            foreach (var unitType in scenario.UnitTypes)
+                _unitTypeMap.Add(unitType.Name, unitType);
+
             // TODO: validate
             // * terrain is passable from spawn to goal
             // * attack and defense plans use only legal units
@@ -46,8 +51,8 @@ namespace BattlePlan.Resolver
             {
                 foreach (var placement in plan.Placements)
                 {
-                    var id = GenerateId(0.0, placement.Class);
-                    var classChar = ClassCharacteristics.Get(placement.Class);
+                    var id = GenerateId(0.0, placement.UnitType);
+                    var classChar = _unitTypeMap[placement.UnitType];
                     var newEntity = new BattleEntity(id, classChar, plan.TeamId);
                     newEntity.Spawn(this, placement.Position);
                     _entities.Add(newEntity);
@@ -139,6 +144,7 @@ namespace BattlePlan.Resolver
             return new BattleResolution()
             {
                 Terrain = _terrain,
+                UnitTypes = scenario.UnitTypes,
                 Events = _events,
                 AttackerBreachCounts = attackerBreachCounts,
             };
@@ -237,6 +243,8 @@ namespace BattlePlan.Resolver
 
         private BattlePathGraph _pathGraph;
 
+        private Dictionary<string, UnitCharacteristics> _unitTypeMap;
+
         private int _nextId;
 
         private static readonly double _maxTime = 300.0;
@@ -251,7 +259,7 @@ namespace BattlePlan.Resolver
                 SourceEntity = sourceEnt?.Id,
                 SourceLocation = sourceEnt?.Position,
                 SourceTeamId = sourceEnt?.TeamId ?? 0,
-                SourceClass = sourceEnt?.Class.Class,
+                SourceClass = sourceEnt?.Class.Name,
                 TargetEntity = targetEnt?.Id,
                 TargetLocation = targetEnt?.Position,
                 TargetTeamId = targetEnt?.TeamId ?? 0,
@@ -271,8 +279,8 @@ namespace BattlePlan.Resolver
                 var isBlocked = GetEntityAt(spawnPos) != null;
                 if (!isBlocked)
                 {
-                    var id = GenerateId(time, nextSpawnCommand.Class);
-                    var classChar = ClassCharacteristics.Get(nextSpawnCommand.Class);
+                    var id = GenerateId(time, nextSpawnCommand.UnitType);
+                    var classChar = _unitTypeMap[nextSpawnCommand.UnitType];
                     var newEntity = new BattleEntity(id, classChar, plan.TeamId);
                     newEntity.Spawn(this, spawnPos);
 
@@ -285,7 +293,7 @@ namespace BattlePlan.Resolver
             return null;
         }
 
-        private string GenerateId(double time, UnitClass cls)
+        private string GenerateId(double time, string cls)
         {
             var id = $"{cls}{_nextId.ToString()}";
             _nextId += 1;

@@ -1,0 +1,28 @@
+[
+  {
+    "Name": "Grunt",
+    "Symbol": "T",
+    "CanAttack": true,
+    "CanDefend": false,
+    "SpeedTilesPerSec": 1.0,
+    "InitialHitPoints": 100,
+    "WeaponUseTime": 0.5,
+    "WeaponReloadTime": 0.5,
+    "WeaponRangeTiles": 1.5,
+    "WeaponDamage": 60,
+    "ResourceCost": 100
+  },
+  {
+    "Name": "Archer",
+    "Symbol": "{",
+    "CanAttack": true,
+    "CanDefend": true,
+    "SpeedTilesPerSec": 1.0,
+    "InitialHitPoints": 75,
+    "WeaponUseTime": 0.3,
+    "WeaponReloadTime": 0.7,
+    "WeaponRangeTiles": 8.0,
+    "WeaponDamage": 20,
+    "ResourceCost": 100
+  }
+]

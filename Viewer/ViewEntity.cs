@@ -9,7 +9,7 @@ namespace BattlePlan.Viewer
         public string Id { get; set; }
         public Vector2Di Position { get; set; }
         public int TeamId { get; set; }
-        public UnitClass Class { get; set; }
+        public UnitCharacteristics UnitType { get; set; }
         public char Symbol { get; set; }
     }
 }

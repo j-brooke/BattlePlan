@@ -85,17 +85,45 @@
       ]
     }
   },
+  "UnitTypes": [
+    {
+      "Name": "Grunt",
+      "Symbol": "T",
+      "CanAttack": true,
+      "CanDefend": false,
+      "SpeedTilesPerSec": 1.0,
+      "InitialHitPoints": 100,
+      "WeaponUseTime": 0.5,
+      "WeaponReloadTime": 0.5,
+      "WeaponRangeTiles": 1.5,
+      "WeaponDamage": 60,
+      "ResourceCost": 100
+    },
+    {
+      "Name": "Archer",
+      "Symbol": "{",
+      "CanAttack": true,
+      "CanDefend": true,
+      "SpeedTilesPerSec": 1.0,
+      "InitialHitPoints": 75,
+      "WeaponUseTime": 0.3,
+      "WeaponReloadTime": 0.7,
+      "WeaponRangeTiles": 8.0,
+      "WeaponDamage": 20,
+      "ResourceCost": 100
+    }
+  ],
   "Events": [
     {
       "Time": 0.1,
       "Type": "Spawn",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 4,
         "Y": 27
       },
       "SourceTeamId": 1,
-      "SourceClass": "AttackerGrunt",
+      "SourceClass": "Grunt",
       "TargetEntity": null,
       "TargetLocation": null,
       "TargetTeamId": 0,
@@ -104,13 +132,13 @@
     {
       "Time": 0.1,
       "Type": "Spawn",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 10,
         "Y": 15
       },
       "SourceTeamId": 1,
-      "SourceClass": "AttackerGrunt",
+      "SourceClass": "Grunt",
       "TargetEntity": null,
       "TargetLocation": null,
       "TargetTeamId": 0,
@@ -119,13 +147,13 @@
     {
       "Time": 0.1,
       "Type": "Spawn",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 2,
         "Y": 7
       },
       "SourceTeamId": 1,
-      "SourceClass": "AttackerGrunt",
+      "SourceClass": "Grunt",
       "TargetEntity": null,
       "TargetLocation": null,
       "TargetTeamId": 0,
@@ -134,7 +162,7 @@
     {
       "Time": 0.2,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 4,
         "Y": 27
@@ -152,7 +180,7 @@
     {
       "Time": 0.2,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 10,
         "Y": 15
@@ -170,7 +198,7 @@
     {
       "Time": 0.2,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 2,
         "Y": 7
@@ -188,7 +216,7 @@
     {
       "Time": 1.2,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 4,
         "Y": 27
@@ -206,7 +234,7 @@
     {
       "Time": 1.2,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 10,
         "Y": 15
@@ -224,7 +252,7 @@
     {
       "Time": 1.2,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 2,
         "Y": 7
@@ -242,7 +270,7 @@
     {
       "Time": 1.3,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 5,
         "Y": 27
@@ -260,7 +288,7 @@
     {
       "Time": 1.3,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 11,
         "Y": 15
@@ -278,7 +306,7 @@
     {
       "Time": 1.3,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 3,
         "Y": 7
@@ -296,7 +324,7 @@
     {
       "Time": 2.3000000000000007,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 5,
         "Y": 27
@@ -314,7 +342,7 @@
     {
       "Time": 2.3000000000000007,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 11,
         "Y": 15
@@ -332,7 +360,7 @@
     {
       "Time": 2.3000000000000007,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 3,
         "Y": 7
@@ -350,7 +378,7 @@
     {
       "Time": 2.4000000000000008,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 6,
         "Y": 27
@@ -368,7 +396,7 @@
     {
       "Time": 2.4000000000000008,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 12,
         "Y": 15
@@ -386,7 +414,7 @@
     {
       "Time": 2.4000000000000008,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 4,
         "Y": 7
@@ -404,7 +432,7 @@
     {
       "Time": 3.4000000000000017,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 6,
         "Y": 27
@@ -422,7 +450,7 @@
     {
       "Time": 3.4000000000000017,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 12,
         "Y": 15
@@ -440,7 +468,7 @@
     {
       "Time": 3.4000000000000017,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 4,
         "Y": 7
@@ -458,7 +486,7 @@
     {
       "Time": 3.5000000000000018,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 7,
         "Y": 27
@@ -476,7 +504,7 @@
     {
       "Time": 3.5000000000000018,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 13,
         "Y": 15
@@ -494,7 +522,7 @@
     {
       "Time": 3.5000000000000018,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 5,
         "Y": 7
@@ -512,7 +540,7 @@
     {
       "Time": 4.5,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 7,
         "Y": 27
@@ -530,7 +558,7 @@
     {
       "Time": 4.5,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 13,
         "Y": 15
@@ -548,7 +576,7 @@
     {
       "Time": 4.5,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 5,
         "Y": 7
@@ -566,7 +594,7 @@
     {
       "Time": 4.6,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 8,
         "Y": 27
@@ -584,7 +612,7 @@
     {
       "Time": 4.6,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 14,
         "Y": 15
@@ -602,7 +630,7 @@
     {
       "Time": 4.6,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 6,
         "Y": 7
@@ -620,7 +648,7 @@
     {
       "Time": 5.5999999999999961,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 8,
         "Y": 27
@@ -638,7 +666,7 @@
     {
       "Time": 5.5999999999999961,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 14,
         "Y": 15
@@ -656,7 +684,7 @@
     {
       "Time": 5.5999999999999961,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 6,
         "Y": 7
@@ -674,7 +702,7 @@
     {
       "Time": 5.6999999999999957,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 9,
         "Y": 26
@@ -692,7 +720,7 @@
     {
       "Time": 5.6999999999999957,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 15,
         "Y": 15
@@ -710,7 +738,7 @@
     {
       "Time": 5.6999999999999957,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 7,
         "Y": 7
@@ -728,7 +756,7 @@
     {
       "Time": 6.6999999999999922,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 9,
         "Y": 26
@@ -746,7 +774,7 @@
     {
       "Time": 6.6999999999999922,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 15,
         "Y": 15
@@ -764,7 +792,7 @@
     {
       "Time": 6.6999999999999922,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 7,
         "Y": 7
@@ -782,7 +810,7 @@
     {
       "Time": 6.7999999999999918,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 10,
         "Y": 26
@@ -800,7 +828,7 @@
     {
       "Time": 6.7999999999999918,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 16,
         "Y": 15
@@ -818,7 +846,7 @@
     {
       "Time": 6.7999999999999918,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 8,
         "Y": 7
@@ -836,7 +864,7 @@
     {
       "Time": 7.7999999999999883,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 10,
         "Y": 26
@@ -854,7 +882,7 @@
     {
       "Time": 7.7999999999999883,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 16,
         "Y": 15
@@ -872,7 +900,7 @@
     {
       "Time": 7.7999999999999883,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 8,
         "Y": 7
@@ -890,7 +918,7 @@
     {
       "Time": 7.8999999999999879,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 11,
         "Y": 26
@@ -908,7 +936,7 @@
     {
       "Time": 7.8999999999999879,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 17,
         "Y": 15
@@ -926,7 +954,7 @@
     {
       "Time": 7.8999999999999879,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 9,
         "Y": 8
@@ -944,7 +972,7 @@
     {
       "Time": 8.8999999999999844,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 11,
         "Y": 26
@@ -962,7 +990,7 @@
     {
       "Time": 8.8999999999999844,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 17,
         "Y": 15
@@ -980,7 +1008,7 @@
     {
       "Time": 8.8999999999999844,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 9,
         "Y": 8
@@ -998,7 +1026,7 @@
     {
       "Time": 8.999999999999984,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 12,
         "Y": 25
@@ -1016,7 +1044,7 @@
     {
       "Time": 8.999999999999984,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 18,
         "Y": 15
@@ -1034,7 +1062,7 @@
     {
       "Time": 8.999999999999984,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 10,
         "Y": 9
@@ -1052,7 +1080,7 @@
     {
       "Time": 9.99999999999998,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 12,
         "Y": 25
@@ -1070,7 +1098,7 @@
     {
       "Time": 9.99999999999998,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 18,
         "Y": 15
@@ -1088,7 +1116,7 @@
     {
       "Time": 9.99999999999998,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 10,
         "Y": 9
@@ -1106,7 +1134,7 @@
     {
       "Time": 10.09999999999998,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 13,
         "Y": 25
@@ -1124,7 +1152,7 @@
     {
       "Time": 10.09999999999998,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 19,
         "Y": 15
@@ -1142,7 +1170,7 @@
     {
       "Time": 10.09999999999998,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 11,
         "Y": 9
@@ -1160,7 +1188,7 @@
     {
       "Time": 11.099999999999977,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 13,
         "Y": 25
@@ -1178,7 +1206,7 @@
     {
       "Time": 11.099999999999977,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 19,
         "Y": 15
@@ -1196,7 +1224,7 @@
     {
       "Time": 11.099999999999977,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 11,
         "Y": 9
@@ -1214,7 +1242,7 @@
     {
       "Time": 11.199999999999976,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 14,
         "Y": 25
@@ -1232,7 +1260,7 @@
     {
       "Time": 11.199999999999976,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 20,
         "Y": 15
@@ -1250,7 +1278,7 @@
     {
       "Time": 11.199999999999976,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 12,
         "Y": 9
@@ -1268,7 +1296,7 @@
     {
       "Time": 12.199999999999973,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 14,
         "Y": 25
@@ -1286,7 +1314,7 @@
     {
       "Time": 12.199999999999973,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 20,
         "Y": 15
@@ -1304,7 +1332,7 @@
     {
       "Time": 12.199999999999973,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 12,
         "Y": 9
@@ -1322,7 +1350,7 @@
     {
       "Time": 12.299999999999972,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 15,
         "Y": 25
@@ -1340,7 +1368,7 @@
     {
       "Time": 12.299999999999972,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 21,
         "Y": 15
@@ -1358,7 +1386,7 @@
     {
       "Time": 12.299999999999972,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 13,
         "Y": 9
@@ -1376,7 +1404,7 @@
     {
       "Time": 13.299999999999969,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 15,
         "Y": 25
@@ -1394,7 +1422,7 @@
     {
       "Time": 13.299999999999969,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 21,
         "Y": 15
@@ -1412,7 +1440,7 @@
     {
       "Time": 13.299999999999969,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 13,
         "Y": 9
@@ -1430,7 +1458,7 @@
     {
       "Time": 13.399999999999968,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 16,
         "Y": 25
@@ -1448,7 +1476,7 @@
     {
       "Time": 13.399999999999968,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 22,
         "Y": 15
@@ -1466,7 +1494,7 @@
     {
       "Time": 13.399999999999968,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 14,
         "Y": 9
@@ -1484,7 +1512,7 @@
     {
       "Time": 14.399999999999965,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 16,
         "Y": 25
@@ -1502,7 +1530,7 @@
     {
       "Time": 14.399999999999965,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 22,
         "Y": 15
@@ -1520,7 +1548,7 @@
     {
       "Time": 14.399999999999965,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 14,
         "Y": 9
@@ -1538,7 +1566,7 @@
     {
       "Time": 14.499999999999964,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 17,
         "Y": 25
@@ -1556,7 +1584,7 @@
     {
       "Time": 14.499999999999964,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 23,
         "Y": 15
@@ -1574,7 +1602,7 @@
     {
       "Time": 14.499999999999964,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 15,
         "Y": 9
@@ -1592,7 +1620,7 @@
     {
       "Time": 15.499999999999961,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 17,
         "Y": 25
@@ -1610,7 +1638,7 @@
     {
       "Time": 15.499999999999961,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 23,
         "Y": 15
@@ -1628,7 +1656,7 @@
     {
       "Time": 15.499999999999961,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 15,
         "Y": 9
@@ -1646,7 +1674,7 @@
     {
       "Time": 15.599999999999961,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 18,
         "Y": 25
@@ -1664,7 +1692,7 @@
     {
       "Time": 15.599999999999961,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 24,
         "Y": 15
@@ -1682,7 +1710,7 @@
     {
       "Time": 15.599999999999961,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 16,
         "Y": 9
@@ -1700,7 +1728,7 @@
     {
       "Time": 16.599999999999966,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 18,
         "Y": 25
@@ -1718,7 +1746,7 @@
     {
       "Time": 16.599999999999966,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 24,
         "Y": 15
@@ -1736,7 +1764,7 @@
     {
       "Time": 16.599999999999966,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 16,
         "Y": 9
@@ -1754,7 +1782,7 @@
     {
       "Time": 16.699999999999967,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 19,
         "Y": 25
@@ -1772,7 +1800,7 @@
     {
       "Time": 16.699999999999967,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 25,
         "Y": 15
@@ -1790,7 +1818,7 @@
     {
       "Time": 16.699999999999967,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 17,
         "Y": 10
@@ -1808,7 +1836,7 @@
     {
       "Time": 17.699999999999982,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 19,
         "Y": 25
@@ -1826,7 +1854,7 @@
     {
       "Time": 17.699999999999982,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 25,
         "Y": 15
@@ -1844,7 +1872,7 @@
     {
       "Time": 17.699999999999982,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 17,
         "Y": 10
@@ -1862,7 +1890,7 @@
     {
       "Time": 17.799999999999983,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 20,
         "Y": 24
@@ -1880,7 +1908,7 @@
     {
       "Time": 17.799999999999983,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 26,
         "Y": 15
@@ -1898,7 +1926,7 @@
     {
       "Time": 17.799999999999983,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 18,
         "Y": 10
@@ -1916,7 +1944,7 @@
     {
       "Time": 18.799999999999997,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 20,
         "Y": 24
@@ -1934,7 +1962,7 @@
     {
       "Time": 18.799999999999997,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 26,
         "Y": 15
@@ -1952,7 +1980,7 @@
     {
       "Time": 18.799999999999997,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 18,
         "Y": 10
@@ -1970,7 +1998,7 @@
     {
       "Time": 18.9,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 21,
         "Y": 24
@@ -1988,7 +2016,7 @@
     {
       "Time": 18.9,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 27,
         "Y": 15
@@ -2006,7 +2034,7 @@
     {
       "Time": 18.9,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 19,
         "Y": 10
@@ -2024,7 +2052,7 @@
     {
       "Time": 19.900000000000013,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 21,
         "Y": 24
@@ -2042,7 +2070,7 @@
     {
       "Time": 19.900000000000013,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 27,
         "Y": 15
@@ -2060,7 +2088,7 @@
     {
       "Time": 19.900000000000013,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 19,
         "Y": 10
@@ -2078,7 +2106,7 @@
     {
       "Time": 20.000000000000014,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 22,
         "Y": 23
@@ -2096,7 +2124,7 @@
     {
       "Time": 20.000000000000014,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 28,
         "Y": 16
@@ -2114,7 +2142,7 @@
     {
       "Time": 20.000000000000014,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 20,
         "Y": 10
@@ -2132,7 +2160,7 @@
     {
       "Time": 21.000000000000028,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 22,
         "Y": 23
@@ -2150,7 +2178,7 @@
     {
       "Time": 21.000000000000028,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 28,
         "Y": 16
@@ -2168,7 +2196,7 @@
     {
       "Time": 21.000000000000028,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 20,
         "Y": 10
@@ -2186,7 +2214,7 @@
     {
       "Time": 21.10000000000003,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 23,
         "Y": 23
@@ -2204,7 +2232,7 @@
     {
       "Time": 21.10000000000003,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 29,
         "Y": 16
@@ -2222,7 +2250,7 @@
     {
       "Time": 21.10000000000003,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 21,
         "Y": 10
@@ -2240,7 +2268,7 @@
     {
       "Time": 22.100000000000044,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 23,
         "Y": 23
@@ -2258,7 +2286,7 @@
     {
       "Time": 22.100000000000044,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 29,
         "Y": 16
@@ -2276,7 +2304,7 @@
     {
       "Time": 22.100000000000044,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 21,
         "Y": 10
@@ -2294,7 +2322,7 @@
     {
       "Time": 22.200000000000045,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 24,
         "Y": 23
@@ -2312,7 +2340,7 @@
     {
       "Time": 22.200000000000045,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 30,
         "Y": 16
@@ -2330,7 +2358,7 @@
     {
       "Time": 22.200000000000045,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 22,
         "Y": 10
@@ -2348,7 +2376,7 @@
     {
       "Time": 23.20000000000006,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 24,
         "Y": 23
@@ -2366,7 +2394,7 @@
     {
       "Time": 23.20000000000006,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 30,
         "Y": 16
@@ -2384,7 +2412,7 @@
     {
       "Time": 23.20000000000006,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 22,
         "Y": 10
@@ -2402,7 +2430,7 @@
     {
       "Time": 23.300000000000061,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 25,
         "Y": 23
@@ -2420,7 +2448,7 @@
     {
       "Time": 23.300000000000061,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 31,
         "Y": 16
@@ -2438,7 +2466,7 @@
     {
       "Time": 23.300000000000061,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 23,
         "Y": 10
@@ -2456,7 +2484,7 @@
     {
       "Time": 24.300000000000075,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 25,
         "Y": 23
@@ -2474,7 +2502,7 @@
     {
       "Time": 24.300000000000075,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 31,
         "Y": 16
@@ -2492,7 +2520,7 @@
     {
       "Time": 24.300000000000075,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 23,
         "Y": 10
@@ -2510,7 +2538,7 @@
     {
       "Time": 24.400000000000077,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 26,
         "Y": 23
@@ -2528,7 +2556,7 @@
     {
       "Time": 24.400000000000077,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 32,
         "Y": 16
@@ -2546,7 +2574,7 @@
     {
       "Time": 24.400000000000077,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 24,
         "Y": 10
@@ -2564,7 +2592,7 @@
     {
       "Time": 25.400000000000091,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 26,
         "Y": 23
@@ -2582,7 +2610,7 @@
     {
       "Time": 25.400000000000091,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 32,
         "Y": 16
@@ -2600,7 +2628,7 @@
     {
       "Time": 25.400000000000091,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 24,
         "Y": 10
@@ -2618,7 +2646,7 @@
     {
       "Time": 25.500000000000092,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 27,
         "Y": 23
@@ -2636,7 +2664,7 @@
     {
       "Time": 25.500000000000092,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 33,
         "Y": 16
@@ -2654,7 +2682,7 @@
     {
       "Time": 25.500000000000092,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 25,
         "Y": 10
@@ -2672,7 +2700,7 @@
     {
       "Time": 26.500000000000107,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 27,
         "Y": 23
@@ -2690,7 +2718,7 @@
     {
       "Time": 26.500000000000107,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 33,
         "Y": 16
@@ -2708,7 +2736,7 @@
     {
       "Time": 26.500000000000107,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 25,
         "Y": 10
@@ -2726,7 +2754,7 @@
     {
       "Time": 26.600000000000108,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 28,
         "Y": 23
@@ -2744,7 +2772,7 @@
     {
       "Time": 26.600000000000108,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 34,
         "Y": 16
@@ -2762,7 +2790,7 @@
     {
       "Time": 26.600000000000108,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 26,
         "Y": 10
@@ -2780,7 +2808,7 @@
     {
       "Time": 27.600000000000122,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 28,
         "Y": 23
@@ -2798,7 +2826,7 @@
     {
       "Time": 27.600000000000122,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 34,
         "Y": 16
@@ -2816,7 +2844,7 @@
     {
       "Time": 27.600000000000122,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 26,
         "Y": 10
@@ -2834,7 +2862,7 @@
     {
       "Time": 27.700000000000124,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 29,
         "Y": 23
@@ -2852,7 +2880,7 @@
     {
       "Time": 27.700000000000124,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 35,
         "Y": 16
@@ -2870,7 +2898,7 @@
     {
       "Time": 27.700000000000124,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 27,
         "Y": 10
@@ -2888,7 +2916,7 @@
     {
       "Time": 28.700000000000138,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 29,
         "Y": 23
@@ -2906,7 +2934,7 @@
     {
       "Time": 28.700000000000138,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 35,
         "Y": 16
@@ -2924,7 +2952,7 @@
     {
       "Time": 28.700000000000138,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 27,
         "Y": 10
@@ -2942,7 +2970,7 @@
     {
       "Time": 28.800000000000139,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 30,
         "Y": 23
@@ -2960,7 +2988,7 @@
     {
       "Time": 28.800000000000139,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 36,
         "Y": 16
@@ -2978,7 +3006,7 @@
     {
       "Time": 28.800000000000139,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 28,
         "Y": 10
@@ -2996,7 +3024,7 @@
     {
       "Time": 29.800000000000153,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 30,
         "Y": 23
@@ -3014,7 +3042,7 @@
     {
       "Time": 29.800000000000153,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 36,
         "Y": 16
@@ -3032,7 +3060,7 @@
     {
       "Time": 29.800000000000153,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 28,
         "Y": 10
@@ -3050,7 +3078,7 @@
     {
       "Time": 29.900000000000155,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 31,
         "Y": 23
@@ -3068,7 +3096,7 @@
     {
       "Time": 29.900000000000155,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 37,
         "Y": 16
@@ -3086,7 +3114,7 @@
     {
       "Time": 29.900000000000155,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 29,
         "Y": 10
@@ -3104,7 +3132,7 @@
     {
       "Time": 30.900000000000169,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 31,
         "Y": 23
@@ -3122,7 +3150,7 @@
     {
       "Time": 30.900000000000169,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 37,
         "Y": 16
@@ -3140,7 +3168,7 @@
     {
       "Time": 30.900000000000169,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 29,
         "Y": 10
@@ -3158,7 +3186,7 @@
     {
       "Time": 31.000000000000171,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 32,
         "Y": 22
@@ -3176,7 +3204,7 @@
     {
       "Time": 31.000000000000171,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 38,
         "Y": 17
@@ -3194,7 +3222,7 @@
     {
       "Time": 31.000000000000171,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 30,
         "Y": 11
@@ -3212,7 +3240,7 @@
     {
       "Time": 32.000000000000185,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 32,
         "Y": 22
@@ -3230,7 +3258,7 @@
     {
       "Time": 32.000000000000185,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 38,
         "Y": 17
@@ -3248,7 +3276,7 @@
     {
       "Time": 32.000000000000185,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 30,
         "Y": 11
@@ -3266,7 +3294,7 @@
     {
       "Time": 32.100000000000186,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 33,
         "Y": 22
@@ -3284,7 +3312,7 @@
     {
       "Time": 32.100000000000186,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 39,
         "Y": 18
@@ -3302,7 +3330,7 @@
     {
       "Time": 32.100000000000186,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 31,
         "Y": 12
@@ -3320,7 +3348,7 @@
     {
       "Time": 33.1000000000002,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 33,
         "Y": 22
@@ -3338,7 +3366,7 @@
     {
       "Time": 33.1000000000002,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 39,
         "Y": 18
@@ -3356,7 +3384,7 @@
     {
       "Time": 33.1000000000002,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 31,
         "Y": 12
@@ -3374,7 +3402,7 @@
     {
       "Time": 33.2000000000002,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 34,
         "Y": 22
@@ -3392,7 +3420,7 @@
     {
       "Time": 33.2000000000002,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 40,
         "Y": 19
@@ -3410,7 +3438,7 @@
     {
       "Time": 33.2000000000002,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 32,
         "Y": 12
@@ -3428,7 +3456,7 @@
     {
       "Time": 34.200000000000216,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 34,
         "Y": 22
@@ -3446,7 +3474,7 @@
     {
       "Time": 34.200000000000216,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 40,
         "Y": 19
@@ -3464,7 +3492,7 @@
     {
       "Time": 34.200000000000216,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 32,
         "Y": 12
@@ -3482,7 +3510,7 @@
     {
       "Time": 34.300000000000217,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 35,
         "Y": 22
@@ -3500,7 +3528,7 @@
     {
       "Time": 34.300000000000217,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 41,
         "Y": 20
@@ -3518,7 +3546,7 @@
     {
       "Time": 34.300000000000217,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 33,
         "Y": 12
@@ -3536,7 +3564,7 @@
     {
       "Time": 35.300000000000232,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 35,
         "Y": 22
@@ -3554,7 +3582,7 @@
     {
       "Time": 35.300000000000232,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 41,
         "Y": 20
@@ -3572,7 +3600,7 @@
     {
       "Time": 35.300000000000232,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 33,
         "Y": 12
@@ -3590,7 +3618,7 @@
     {
       "Time": 35.400000000000233,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 36,
         "Y": 22
@@ -3608,7 +3636,7 @@
     {
       "Time": 35.400000000000233,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 42,
         "Y": 21
@@ -3626,7 +3654,7 @@
     {
       "Time": 35.400000000000233,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 34,
         "Y": 13
@@ -3644,7 +3672,7 @@
     {
       "Time": 36.400000000000247,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 36,
         "Y": 22
@@ -3662,7 +3690,7 @@
     {
       "Time": 36.400000000000247,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 42,
         "Y": 21
@@ -3680,7 +3708,7 @@
     {
       "Time": 36.400000000000247,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 34,
         "Y": 13
@@ -3698,13 +3726,13 @@
     {
       "Time": 36.400000000000247,
       "Type": "ReachesGoal",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 43,
         "Y": 22
       },
       "SourceTeamId": 1,
-      "SourceClass": "AttackerGrunt",
+      "SourceClass": "Grunt",
       "TargetEntity": null,
       "TargetLocation": null,
       "TargetTeamId": 0,
@@ -3713,13 +3741,13 @@
     {
       "Time": 36.400000000000247,
       "Type": "Despawn",
-      "SourceEntity": "AttackerGrunt1",
+      "SourceEntity": "Grunt1",
       "SourceLocation": {
         "X": 43,
         "Y": 22
       },
       "SourceTeamId": 1,
-      "SourceClass": "AttackerGrunt",
+      "SourceClass": "Grunt",
       "TargetEntity": null,
       "TargetLocation": null,
       "TargetTeamId": 0,
@@ -3728,7 +3756,7 @@
     {
       "Time": 36.500000000000249,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 37,
         "Y": 22
@@ -3746,7 +3774,7 @@
     {
       "Time": 36.500000000000249,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 35,
         "Y": 14
@@ -3764,7 +3792,7 @@
     {
       "Time": 37.500000000000263,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 37,
         "Y": 22
@@ -3782,7 +3810,7 @@
     {
       "Time": 37.500000000000263,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 35,
         "Y": 14
@@ -3800,7 +3828,7 @@
     {
       "Time": 37.600000000000264,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 38,
         "Y": 22
@@ -3818,7 +3846,7 @@
     {
       "Time": 37.600000000000264,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 36,
         "Y": 15
@@ -3836,7 +3864,7 @@
     {
       "Time": 38.600000000000279,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 38,
         "Y": 22
@@ -3854,7 +3882,7 @@
     {
       "Time": 38.600000000000279,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 36,
         "Y": 15
@@ -3872,7 +3900,7 @@
     {
       "Time": 38.70000000000028,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 39,
         "Y": 22
@@ -3890,7 +3918,7 @@
     {
       "Time": 38.70000000000028,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 37,
         "Y": 16
@@ -3908,7 +3936,7 @@
     {
       "Time": 39.700000000000294,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 39,
         "Y": 22
@@ -3926,7 +3954,7 @@
     {
       "Time": 39.700000000000294,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 37,
         "Y": 16
@@ -3944,7 +3972,7 @@
     {
       "Time": 39.800000000000296,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 40,
         "Y": 22
@@ -3962,7 +3990,7 @@
     {
       "Time": 39.800000000000296,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 38,
         "Y": 17
@@ -3980,7 +4008,7 @@
     {
       "Time": 40.80000000000031,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 40,
         "Y": 22
@@ -3998,7 +4026,7 @@
     {
       "Time": 40.80000000000031,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 38,
         "Y": 17
@@ -4016,7 +4044,7 @@
     {
       "Time": 40.900000000000311,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 41,
         "Y": 22
@@ -4034,7 +4062,7 @@
     {
       "Time": 40.900000000000311,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 39,
         "Y": 18
@@ -4052,7 +4080,7 @@
     {
       "Time": 41.900000000000325,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 41,
         "Y": 22
@@ -4070,7 +4098,7 @@
     {
       "Time": 41.900000000000325,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 39,
         "Y": 18
@@ -4088,7 +4116,7 @@
     {
       "Time": 42.000000000000327,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 42,
         "Y": 22
@@ -4106,7 +4134,7 @@
     {
       "Time": 42.000000000000327,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 40,
         "Y": 19
@@ -4124,7 +4152,7 @@
     {
       "Time": 43.000000000000341,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 42,
         "Y": 22
@@ -4142,7 +4170,7 @@
     {
       "Time": 43.000000000000341,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 40,
         "Y": 19
@@ -4160,13 +4188,13 @@
     {
       "Time": 43.000000000000341,
       "Type": "ReachesGoal",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 43,
         "Y": 22
       },
       "SourceTeamId": 1,
-      "SourceClass": "AttackerGrunt",
+      "SourceClass": "Grunt",
       "TargetEntity": null,
       "TargetLocation": null,
       "TargetTeamId": 0,
@@ -4175,13 +4203,13 @@
     {
       "Time": 43.000000000000341,
       "Type": "Despawn",
-      "SourceEntity": "AttackerGrunt0",
+      "SourceEntity": "Grunt0",
       "SourceLocation": {
         "X": 43,
         "Y": 22
       },
       "SourceTeamId": 1,
-      "SourceClass": "AttackerGrunt",
+      "SourceClass": "Grunt",
       "TargetEntity": null,
       "TargetLocation": null,
       "TargetTeamId": 0,
@@ -4190,7 +4218,7 @@
     {
       "Time": 43.100000000000342,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 41,
         "Y": 20
@@ -4208,7 +4236,7 @@
     {
       "Time": 44.100000000000357,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 41,
         "Y": 20
@@ -4226,7 +4254,7 @@
     {
       "Time": 44.200000000000358,
       "Type": "BeginMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 42,
         "Y": 21
@@ -4244,7 +4272,7 @@
     {
       "Time": 45.200000000000372,
       "Type": "EndMovement",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 42,
         "Y": 21
@@ -4262,13 +4290,13 @@
     {
       "Time": 45.200000000000372,
       "Type": "ReachesGoal",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 43,
         "Y": 22
       },
       "SourceTeamId": 1,
-      "SourceClass": "AttackerGrunt",
+      "SourceClass": "Grunt",
       "TargetEntity": null,
       "TargetLocation": null,
       "TargetTeamId": 0,
@@ -4277,13 +4305,13 @@
     {
       "Time": 45.200000000000372,
       "Type": "Despawn",
-      "SourceEntity": "AttackerGrunt2",
+      "SourceEntity": "Grunt2",
       "SourceLocation": {
         "X": 43,
         "Y": 22
       },
       "SourceTeamId": 1,
-      "SourceClass": "AttackerGrunt",
+      "SourceClass": "Grunt",
       "TargetEntity": null,
       "TargetLocation": null,
       "TargetTeamId": 0,

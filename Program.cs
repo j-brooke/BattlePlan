@@ -27,6 +27,9 @@ namespace BattlePlan
             var fileContentsAsString = File.ReadAllText("scenarios/test1.json");
             var scenario = JsonConvert.DeserializeObject<Scenario>(fileContentsAsString);
 
+            if (scenario.UnitTypes == null)
+                scenario.UnitTypes = LoadUnits("scenarios/units.json");
+
             var resolver = new BattleState();
             var result = resolver.Resolve(scenario);
 
@@ -71,7 +74,6 @@ namespace BattlePlan
             var viewer = new Viewer.LowEffortViewer();
             viewer.Show(result);
         }
-
         private static JsonSerializerSettings _serialOpts = new JsonSerializerSettings()
         {
             Formatting = Formatting.Indented,
@@ -82,5 +84,12 @@ namespace BattlePlan
             Formatting = Formatting.None,
             Converters = { new Newtonsoft.Json.Converters.StringEnumConverter() },
         };
+
+        private static List<UnitCharacteristics> LoadUnits(string filename)
+        {
+            var fileContentsAsString = File.ReadAllText(filename);
+            var unitList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(fileContentsAsString);
+            return unitList;
+        }
     }
 }

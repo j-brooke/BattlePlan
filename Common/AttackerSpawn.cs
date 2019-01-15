@@ -5,7 +5,7 @@ namespace BattlePlan.Common
     public class AttackerSpawn
     {
         public double Time { get; set; }
-        public UnitClass Class { get; set; }
+        public string UnitType { get; set; }
 
         public int SpawnPointIndex { get; set; }
         public AttackerSpawn()
@@ -15,7 +15,7 @@ namespace BattlePlan.Common
         public AttackerSpawn(AttackerSpawn other)
         {
             this.Time = other.Time;
-            this.Class = other.Class;
+            this.UnitType = other.UnitType;
             this.SpawnPointIndex = other.SpawnPointIndex;
         }
     }

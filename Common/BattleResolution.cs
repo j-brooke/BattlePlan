@@ -6,6 +6,7 @@ namespace BattlePlan.Common
     public class BattleResolution
     {
         public Terrain Terrain { get; set; }
+        public IList<UnitCharacteristics> UnitTypes { get; set; }
         public IList<BattleEvent> Events { get; set; }
 
         /// <summary>
