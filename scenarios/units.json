@@ -13,6 +13,19 @@
     "ResourceCost": 100
   },
   {
+    "Name": "Scout",
+    "Symbol": "i",
+    "CanAttack": true,
+    "CanDefend": false,
+    "SpeedTilesPerSec": 2.0,
+    "InitialHitPoints": 60,
+    "WeaponUseTime": 0.5,
+    "WeaponReloadTime": 0.5,
+    "WeaponRangeTiles": 1.5,
+    "WeaponDamage": 40,
+    "ResourceCost": 100
+  },
+  {
     "Name": "Archer",
     "Symbol": "{",
     "CanAttack": true,
@@ -23,6 +36,19 @@
     "WeaponReloadTime": 0.7,
     "WeaponRangeTiles": 8.0,
     "WeaponDamage": 20,
+    "ResourceCost": 100
+  },
+  {
+    "Name": "Barrier",
+    "Symbol": "#",
+    "CanAttack": false,
+    "CanDefend": true,
+    "SpeedTilesPerSec": 0.0,
+    "InitialHitPoints": 75,
+    "WeaponUseTime": 0.0,
+    "WeaponReloadTime": 0.0,
+    "WeaponRangeTiles": 0.0,
+    "WeaponDamage": 0,
     "ResourceCost": 100
   }
 ]

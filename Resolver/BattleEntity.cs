@@ -10,7 +10,8 @@ namespace BattlePlan.Resolver
     {
         public string Id { get; }
         public UnitCharacteristics Class { get; }
-        public int HitPoints { get; set; }
+        public bool IsAttacker { get; }
+        public int HitPoints { get; private set; }
         public Vector2Di Position { get; private set; }
         public Vector2Di? MovingToPosition { get; private set; }
         public Action CurrentAction { get; private set; }
@@ -20,10 +21,11 @@ namespace BattlePlan.Resolver
         public double WeaponReloadElapsedTime { get; private set; }
         public Queue<Vector2Di> PlannedPath { get; private set; }
 
-        public BattleEntity(string id, UnitCharacteristics clsChar, int teamId)
+        public BattleEntity(string id, UnitCharacteristics clsChar, int teamId, bool isAttacker)
         {
             this.Id = id;
             this.Class = clsChar;
+            this.IsAttacker = isAttacker;
             this.HitPoints = clsChar.InitialHitPoints;
             this.Position = new Vector2Di(short.MinValue, short.MinValue);
             this.CurrentAction = Action.None;
@@ -220,11 +222,16 @@ namespace BattlePlan.Resolver
             return evt;
         }
 
+        /// <summary>
+        /// Chooses the unit's next action, using default AI.
+        /// </summary>
         private BattleEvent ChooseActionDefault(BattleState battleState, double time, double deltaSeconds)
         {
             Debug.Assert(this.CurrentAction==Action.None);
 
-            if (this.Class.SpeedTilesPerSec>0)
+            // If this is a mobile unit, try to move, or attack whatever's in the way.
+            // Defenders can't move, even if their class can when they're on attack.
+            if (this.Class.SpeedTilesPerSec>0 && this.IsAttacker)
             {
                 if (this.PlannedPath==null || this.PlannedPath.Count==0)
                     ChoosePath(battleState);

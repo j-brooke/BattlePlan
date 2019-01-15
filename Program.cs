@@ -38,9 +38,6 @@ namespace BattlePlan
                 Console.WriteLine(evt.ToString());
             }
 
-            var outputAsString = JsonConvert.SerializeObject(result, _serialOpts);
-            File.WriteAllText("resolutions/test1.json", outputAsString);
-
             var viewer = new Viewer.LowEffortViewer();
             viewer.Show(result);
         }

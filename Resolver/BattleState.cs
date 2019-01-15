@@ -31,15 +31,15 @@ namespace BattlePlan.Resolver
 
             var attackerBreachCounts = new Dictionary<int,int>();
 
-            // Make copies of the attack plans to keep track of what's left to spawn.  Reverse-order
-            // by time so that removing the next item from the list isn't costly.
+            // Make copies of the attack plans to keep track of what's left to spawn.
+            // TODO: replace with an appropriate data structure.
             var remainingAttackerSpawns = new List<AttackPlan>();
             foreach (var plan in _attackPlans)
             {
                 var copy = new AttackPlan()
                 {
                     TeamId = plan.TeamId,
-                    Spawns = plan.Spawns.OrderByDescending( (spawn) => spawn.Time ).ToList(),
+                    Spawns = new List<AttackerSpawn>(plan.Spawns),
                 };
                 remainingAttackerSpawns.Add(copy);
 
@@ -53,7 +53,7 @@ namespace BattlePlan.Resolver
                 {
                     var id = GenerateId(0.0, placement.UnitType);
                     var classChar = _unitTypeMap[placement.UnitType];
-                    var newEntity = new BattleEntity(id, classChar, plan.TeamId);
+                    var newEntity = new BattleEntity(id, classChar, plan.TeamId, false);
                     newEntity.Spawn(this, placement.Position);
                     _entities.Add(newEntity);
                     _events.Add(CreateEvent(0.0, BattleEventType.Spawn, newEntity, null));
@@ -128,13 +128,13 @@ namespace BattlePlan.Resolver
                     }
                 }
 
-                // End things if there are no mobile units left (and nothing left to spawn),
+                // End things if there are no attacker units left (and nothing left to spawn),
                 // or if the time gets too high.
                 var noMobileUnitsLeft = false;
                 var spawnListsAreEmpty = remainingAttackerSpawns.All( (plan) => plan.Spawns.Count==0 );
                 if (spawnListsAreEmpty)
                 {
-                    noMobileUnitsLeft = !_entities.Any( (ent) => ent.Class.SpeedTilesPerSec>0 );
+                    noMobileUnitsLeft = !_entities.Any( (ent) => ent.IsAttacker );
                 }
 
                 battleEnded = (time >= _maxTime)
@@ -269,10 +269,7 @@ namespace BattlePlan.Resolver
 
         private BattleEntity TrySpawnNextAttacker(double time, AttackPlan plan)
         {
-            // Try to create the next attacker in the list (which is ordered high to low by time).
-            // If we're past the spawn's time, and the spawn location isn't blocked, we can do it.
-            // If not, we'll try again later.
-            var nextSpawnCommand = (plan.Spawns.Count>0)? plan.Spawns[plan.Spawns.Count-1] : null;
+            var nextSpawnCommand = (plan.Spawns.Count>0)? plan.Spawns[0] : null;
             if (nextSpawnCommand != null && nextSpawnCommand.Time<=time)
             {
                 var spawnPos = _terrain.SpawnPointsMap[plan.TeamId][nextSpawnCommand.SpawnPointIndex];
@@ -281,10 +278,11 @@ namespace BattlePlan.Resolver
                 {
                     var id = GenerateId(time, nextSpawnCommand.UnitType);
                     var classChar = _unitTypeMap[nextSpawnCommand.UnitType];
-                    var newEntity = new BattleEntity(id, classChar, plan.TeamId);
+                    var newEntity = new BattleEntity(id, classChar, plan.TeamId, true);
                     newEntity.Spawn(this, spawnPos);
 
-                    plan.Spawns.RemoveAt(plan.Spawns.Count-1);
+                    // TODO: use a better data structure.  This is stupid.
+                    plan.Spawns.RemoveAt(0);
 
                     return newEntity;
                 }
