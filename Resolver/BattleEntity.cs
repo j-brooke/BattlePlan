@@ -6,11 +6,15 @@ using BattlePlan.Common;
 
 namespace BattlePlan.Resolver
 {
+    /// <summary>
+    /// Something that exists in the game world, such as an attacker, defender, or blockade.
+    /// </summary>
     internal class BattleEntity
     {
         public string Id { get; }
         public UnitCharacteristics Class { get; }
         public bool IsAttacker { get; }
+        public double SpeedTilesPerSec { get; private set; }
         public int HitPoints { get; private set; }
         public Vector2Di Position { get; private set; }
         public Vector2Di? MovingToPosition { get; private set; }
@@ -32,6 +36,9 @@ namespace BattlePlan.Resolver
             this.CurrentActionElapsedTime = 0.0;
             this.TeamId = teamId;
             this.WeaponReloadElapsedTime = 0.0;
+
+            // Only attackers are allowed to move.
+            this.SpeedTilesPerSec = (isAttacker)? clsChar.SpeedTilesPerSec : 0.0;
         }
 
         public BattleEvent Update(BattleState battleState, double time, double deltaSeconds)
@@ -95,10 +102,10 @@ namespace BattlePlan.Resolver
         {
             Debug.Assert(this.CurrentAction==Action.Move);
             Debug.Assert(this.MovingToPosition.HasValue);
-            Debug.Assert(this.Class.SpeedTilesPerSec >= 0);
+            Debug.Assert(this.SpeedTilesPerSec > 0);
             Debug.Assert(battleState.GetEntityAt(this.MovingToPosition.Value).Id==this.Id);
 
-            var timeToMove = 1.0/this.Class.SpeedTilesPerSec;
+            var timeToMove = 1.0/this.SpeedTilesPerSec;
             this.CurrentActionElapsedTime += deltaSeconds;
             if (this.CurrentActionElapsedTime >= timeToMove)
             {
@@ -166,7 +173,7 @@ namespace BattlePlan.Resolver
         private BattleEvent TryBeginMove(BattleState battleState, double time, double deltaSeconds, Vector2Di toPos)
         {
             // If speed is zero, obviously, no move.
-            if (this.Class.SpeedTilesPerSec <= 0)
+            if (this.SpeedTilesPerSec <= 0)
                 return null;
 
             // If the target tile is blocked, we can't move.
@@ -231,7 +238,7 @@ namespace BattlePlan.Resolver
 
             // If this is a mobile unit, try to move, or attack whatever's in the way.
             // Defenders can't move, even if their class can when they're on attack.
-            if (this.Class.SpeedTilesPerSec>0 && this.IsAttacker)
+            if (this.SpeedTilesPerSec>0 && this.IsAttacker)
             {
                 if (this.PlannedPath==null || this.PlannedPath.Count==0)
                     ChoosePath(battleState);
@@ -254,9 +261,13 @@ namespace BattlePlan.Resolver
                     // The thing in our way is an enemy.  KILL IT!
                     return TryBeginAttack(battleState, time, deltaSeconds, entityInNextPos);
                 }
-
-                // If the thing in our way is friendly, fall through to the next section where we look
-                // for something to kill while we wait.
+                else
+                {
+                    // The thing in our way is a friend.  Make sure we look for a new path next tick,
+                    // but then fall through to the block below to look for something to attack.
+                    // (This might get really expensive on the pathfinding.)
+                    this.PlannedPath = null;
+                }
             }
 
             if (this.Class.WeaponRangeTiles>0)
@@ -273,7 +284,7 @@ namespace BattlePlan.Resolver
 
         private void ChoosePath(BattleState battleState)
         {
-            var path = battleState.FindPathToGoal(this.TeamId, this.Position);
+            var path = battleState.FindPathToGoal(this);
             this.PlannedPath = new Queue<Vector2Di>(path);
         }
 

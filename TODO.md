@@ -1,5 +1,4 @@
 * Pathing: more efficient data structs
-* Pathing: redo costs in terms of time, not distance
 * Viewer: Text lines for reaches-goal, etc.
 * Viewer: grid numbers
 * General: Add logging
@@ -8,3 +7,4 @@
 * General: exceptions and data validation
 * Viewer: Color?
 * AI: create different behavior types - esp.  attack-first marcher.
+* Pathing: add hurt-map to allow attackers to avoid places that enemies can attack a lot.

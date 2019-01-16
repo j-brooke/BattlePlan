@@ -33,11 +33,6 @@ namespace BattlePlan
             var resolver = new BattleState();
             var result = resolver.Resolve(scenario);
 
-            foreach (var evt in result.Events)
-            {
-                Console.WriteLine(evt.ToString());
-            }
-
             var viewer = new Viewer.LowEffortViewer();
             viewer.Show(result);
         }

@@ -12,33 +12,72 @@ namespace BattlePlan.Resolver
     /// </summary>
     internal class BattlePathGraph : IPathGraph<Vector2Di>
     {
-        public Terrain Terrain { get; set; }
+        public BattlePathGraph(BattleState battleState)
+        {
+            _battleState = battleState;
+            _terrain = battleState.Terrain;
+        }
 
+        public BattlePathGraph(Terrain terrain)
+        {
+            _battleState = null;
+            _terrain = terrain;
+        }
+
+        /// <summary>
+        /// Returns the cost, for pathfinding purposes, of moving between the given locations.
+        /// The cost is mostly based on traversal time, but other factors may be mixed in.
+        /// </summary>
         public double Cost(Vector2Di fromNode, Vector2Di toNode)
         {
             if (toNode.Equals(_afterGoalNode))
             {
-                // FIXME - make it work for any team, not hard-coded to 1.
-                if (this.Terrain.GoalPointsMap[1].Contains(fromNode))
+                if (_goals.Contains(fromNode))
                     return 0;
                 else
                     return double.PositiveInfinity;
             }
 
-            var deltaX = Math.Abs(fromNode.X - toNode.X);
-            var deltaY = Math.Abs(fromNode.Y - toNode.Y);
+            var delta = toNode - fromNode;
+            double distance = Math.Sqrt(delta.X*delta.X + delta.Y*delta.Y);
+            double timeToMove = distance/_unitSpeedTilesPerSecond;
 
-            switch (deltaX+deltaY)
+            // Possibly add penalties for things in the way.  We want units to look for routes around things
+            // if it's not too much of a hassle, but wait or attack other times.
+            double penalty = 0.0;
+            if (_battleState != null && _searchForEntity != null)
             {
-                case 0:
-                    return 0.0;
-                case 1:
-                    return 1.0;
-                case 2:
-                    return _sqrt2;
-                default:
-                    return double.PositiveInfinity;
+                var blockingEnt = _battleState.GetEntityAt(toNode);
+                if (blockingEnt != null)
+                {
+                    if (blockingEnt.TeamId == _searchForEntity.TeamId)
+                    {
+                        if (blockingEnt.SpeedTilesPerSec<=0.0)
+                        {
+                            // If the blocking entity can't move, strongly incentivise this one to go around.
+                            // (Does this work?  Not sure how math goes with PositiveInfinity.)
+                            penalty = double.PositiveInfinity;
+                        }
+                        else
+                        {
+                            // If the blocking entity is mobile, make a penalty based on its speed and how far away
+                            // it is.  We don't want to worry too much about distant obstacles.
+                            penalty = 2.0/blockingEnt.SpeedTilesPerSec/_searchForEntity.Position.DistanceTo(toNode);
+                        }
+                    }
+                    else
+                    {
+                        // Make a penalty based on how long it'll take us to kill the thing in the way.  (This is
+                        // an approximation using continuous math instead of discrete whacks, and it doesn't consider
+                        // that our friends might be attacking too.)
+                        if (_searchForEntity.Class.WeaponDamage>0)
+                            penalty = (blockingEnt.HitPoints / _searchForEntity.Class.WeaponDamage)
+                                * (_searchForEntity.Class.WeaponUseTime + _searchForEntity.Class.WeaponReloadTime);
+                    }
+                }
             }
+
+            return timeToMove + penalty;
         }
 
         public double EstimatedDistance(Vector2Di fromNode, Vector2Di toNode)
@@ -46,7 +85,7 @@ namespace BattlePlan.Resolver
             if (toNode.Equals(_afterGoalNode))
                 return 0.0;
 
-            var dist = this.Terrain.GoalPointsMap[1]
+            var dist = _terrain.GoalPointsMap[1]
                 .Select( (goalNode) => DiagonalDistance(fromNode, goalNode) )
                 .Min();
             return dist;
@@ -57,13 +96,13 @@ namespace BattlePlan.Resolver
             if (fromNode.Equals(_afterGoalNode))
                 return Enumerable.Empty<Vector2Di>();
 
-            if (fromNode.X<0 || fromNode.X>=this.Terrain.Width || fromNode.Y<0 || fromNode.Y>=this.Terrain.Height)
+            if (fromNode.X<0 || fromNode.X>=_terrain.Width || fromNode.Y<0 || fromNode.Y>=_terrain.Height)
                 throw new ArgumentOutOfRangeException("fromNode");
 
-            bool openUp = fromNode.Y>0 && !this.Terrain.GetTile(fromNode.X, fromNode.Y-1).BlocksMovement;
-            bool openDown = fromNode.Y<this.Terrain.Height-1 && !this.Terrain.GetTile(fromNode.X, fromNode.Y+1).BlocksMovement;
-            bool openLeft = fromNode.X>0 && !this.Terrain.GetTile(fromNode.X-1, fromNode.Y).BlocksMovement;
-            bool openRight = fromNode.X<this.Terrain.Width-1 && !this.Terrain.GetTile(fromNode.X+1, fromNode.Y).BlocksMovement;
+            bool openUp = fromNode.Y>0 && !_terrain.GetTile(fromNode.X, fromNode.Y-1).BlocksMovement;
+            bool openDown = fromNode.Y<_terrain.Height-1 && !_terrain.GetTile(fromNode.X, fromNode.Y+1).BlocksMovement;
+            bool openLeft = fromNode.X>0 && !_terrain.GetTile(fromNode.X-1, fromNode.Y).BlocksMovement;
+            bool openRight = fromNode.X<_terrain.Width-1 && !_terrain.GetTile(fromNode.X+1, fromNode.Y).BlocksMovement;
 
             var list = new List<Vector2Di>();
             if (openUp)
@@ -77,13 +116,13 @@ namespace BattlePlan.Resolver
 
             // Only allow diagonal movement if both cardinal directions are clear too.  I.e.,
             // don't allow cutting corners.
-            if (openUp & openLeft && !this.Terrain.GetTile(fromNode.X-1, fromNode.Y-1).BlocksMovement)
+            if (openUp & openLeft && !_terrain.GetTile(fromNode.X-1, fromNode.Y-1).BlocksMovement)
                 list.Add(new Vector2Di(fromNode.X-1, fromNode.Y-1));
-            if (openUp & openRight && !this.Terrain.GetTile(fromNode.X+1, fromNode.Y-1).BlocksMovement)
+            if (openUp & openRight && !_terrain.GetTile(fromNode.X+1, fromNode.Y-1).BlocksMovement)
                 list.Add(new Vector2Di(fromNode.X+1, fromNode.Y-1));
-            if (openDown & openLeft && !this.Terrain.GetTile(fromNode.X-1, fromNode.Y+1).BlocksMovement)
+            if (openDown & openLeft && !_terrain.GetTile(fromNode.X-1, fromNode.Y+1).BlocksMovement)
                 list.Add(new Vector2Di(fromNode.X-1, fromNode.Y+1));
-            if (openDown & openRight && !this.Terrain.GetTile(fromNode.X+1, fromNode.Y+1).BlocksMovement)
+            if (openDown & openRight && !_terrain.GetTile(fromNode.X+1, fromNode.Y+1).BlocksMovement)
                 list.Add(new Vector2Di(fromNode.X+1, fromNode.Y+1));
 
             // Special non-Euclidean neighbor.  The algorithm can't directly handle multiple goals, so
@@ -95,10 +134,18 @@ namespace BattlePlan.Resolver
             return list;
         }
 
-        public IList<Vector2Di> FindPathToGoal(int teamId, Vector2Di startPos)
+        public IList<Vector2Di> FindPathToGoal(BattleState battleState, BattleEntity entity)
         {
-            _goals = this.Terrain.GoalPointsMap[teamId];
-            var path = BattlePlan.Path.AStar.FindPath(this, startPos, _afterGoalNode);
+            // If, somehow, we're asked to find the path for an immobile object, return null.
+            if (entity.SpeedTilesPerSec <= 0.0)
+                return null;
+
+            // Hack.  Store data about the entity being moved and enemies and such.
+            // TODO: Redesign this whole data structure.
+            _unitSpeedTilesPerSecond = entity.SpeedTilesPerSec;
+            _goals = _terrain.GoalPointsMap[entity.TeamId];
+            _searchForEntity = entity;
+            var path = BattlePlan.Path.AStar.FindPath(this, entity.Position, _afterGoalNode);
 
             // Remove _afterGoalNode since it's special and doesn't exist in our map space.
             if (path != null)
@@ -137,6 +184,12 @@ namespace BattlePlan.Resolver
         private static Vector2Di _afterGoalNode = new Vector2Di(-1, -1);
 
         private IList<Vector2Di> _goals = null;
+        private BattleEntity _searchForEntity = null;
+
+        private double _unitSpeedTilesPerSecond = 0.0;
+
+        private readonly BattleState _battleState;
+        private readonly Terrain _terrain;
 
         private static double DiagonalDistance(Vector2Di fromNode, Vector2Di toNode)
         {

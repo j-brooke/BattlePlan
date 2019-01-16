@@ -5,8 +5,15 @@ using BattlePlan.Common;
 
 namespace BattlePlan.Resolver
 {
+    /// <summary>
+    /// Class that resolves a scenario (map, attacker and defender lists, etc) into a BattleResolution.
+    /// It tracks the state of everything while the resolution is going on and can be queried by
+    /// the other pieces.
+    /// </summary>
     public sealed class BattleState
     {
+        public Terrain Terrain { get { return _terrain; } }
+
         public BattleResolution Resolve(Scenario scenario)
         {
             _terrain = scenario.Terrain;
@@ -27,7 +34,7 @@ namespace BattlePlan.Resolver
             _events = new List<BattleEvent>();
             _entities = new List<BattleEntity>();
             _entityPositions = new Dictionary<Vector2Di, BattleEntity>();
-            _pathGraph = new BattlePathGraph() { Terrain = scenario.Terrain };
+            _pathGraph = new BattlePathGraph(this);
 
             var attackerBreachCounts = new Dictionary<int,int>();
 
@@ -226,9 +233,9 @@ namespace BattlePlan.Resolver
             return this._terrain.GoalPointsMap[teamId];
         }
 
-        internal IList<Vector2Di> FindPathToGoal(int teamId, Vector2Di startPos)
+        internal IList<Vector2Di> FindPathToGoal(BattleEntity entity)
         {
-            var path = _pathGraph.FindPathToGoal(teamId, startPos);
+            var path = _pathGraph.FindPathToGoal(this, entity);
             return path;
         }
 
