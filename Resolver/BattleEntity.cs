@@ -154,6 +154,7 @@ namespace BattlePlan.Resolver
                     Type = BattleEventType.EndAttack,
                     SourceEntity = this.Id,
                     SourceLocation = this.Position,
+                    SourceTeamId = this.TeamId,
                     TargetEntity = target?.Id,
                     TargetLocation = target?.Position,
                     TargetTeamId = target?.TeamId ?? 0,

@@ -34,7 +34,7 @@ namespace BattlePlan
             var result = resolver.Resolve(scenario);
 
             var viewer = new Viewer.LowEffortViewer();
-            viewer.Show(result);
+            viewer.ShowBattleResolution(result);
         }
 
         private static void MapGen()
@@ -64,7 +64,7 @@ namespace BattlePlan
             File.WriteAllText("scenarios/map1.json", outputAsString);
 
             var viewer = new Viewer.LowEffortViewer();
-            viewer.Show(result);
+            viewer.ShowBattleResolution(result);
         }
         private static JsonSerializerSettings _serialOpts = new JsonSerializerSettings()
         {
