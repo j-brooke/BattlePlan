@@ -20,6 +20,8 @@ namespace BattlePlan
                 Play();
             else if (verb.Equals("map", StringComparison.CurrentCultureIgnoreCase))
                 MapGen();
+            else if (verb.Equals("edit", StringComparison.CurrentCultureIgnoreCase))
+                Edit();
         }
 
         private static void Play()
@@ -66,6 +68,13 @@ namespace BattlePlan
             var viewer = new Viewer.LowEffortViewer();
             viewer.ShowBattleResolution(result);
         }
+
+        private static void Edit()
+        {
+            var viewer = new Viewer.LowEffortEditor();
+            viewer.EditScenario(null);
+        }
+
         private static JsonSerializerSettings _serialOpts = new JsonSerializerSettings()
         {
             Formatting = Formatting.Indented,

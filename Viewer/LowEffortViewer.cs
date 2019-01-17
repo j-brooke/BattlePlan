@@ -2,23 +2,29 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
+using Newtonsoft.Json;
 using BattlePlan.Common;
+using BattlePlan.MapGeneration;
 
 namespace BattlePlan.Viewer
 {
+    /// <summary>
+    /// Class that shows battle results by animating ASCII symbols on a terminal window.
+    /// </summary>
     public class LowEffortViewer
     {
         public double FrameTimeSeconds { get; set; } = 0.2;
 
         public double DamageDisplayTimeSeconds { get; set; } = 0.2;
 
-        public bool UseColor { get; set; } = true;
-
+        /// <summary>
+        /// Shows a battle result by animating ASCII symbols on a terminal window.
+        /// </summary>
         public void ShowBattleResolution(BattleResolution resolution)
         {
             // Clear screen
-            Console.Clear();
-            Console.CursorVisible = false;
+            _canvas.Init();
 
             _entities = new Dictionary<string, ViewEntity>();
             _rencentDamageEvents = new Queue<BattleEvent>();
@@ -61,29 +67,32 @@ namespace BattlePlan.Viewer
                 RemoveOldDamageEvents(time);
                 RemoveOldTextEvents(maxTextEvents);
 
+                _canvas.BeginFrame();
+
                 // Draw text events first.  Otherwise if they go past the edge of the screen, they trash part of the map.
-                WriteTextEvents(_recentTextEvents, resolution.Terrain.Width + 2, 0);
+                _canvas.WriteTextEvents(_recentTextEvents, resolution.Terrain.Width + 2, 0);
 
                 // Draw the map and everything on it.
-                PaintTerrain(resolution.Terrain, 0, 0);
-                PaintSpawnPoints(resolution.Terrain, 0, 0);
-                PaintGoalPoints(resolution.Terrain, 0, 0);
-                PaintEntities(_entities.Values, 0, 0);
-                PaintDamageIndicators(_rencentDamageEvents, 0, 0);
+                _canvas.PaintTerrain(resolution.Terrain, 0, 0);
+                _canvas.PaintSpawnPoints(resolution.Terrain, 0, 0);
+                _canvas.PaintGoalPoints(resolution.Terrain, 0, 0);
+                _canvas.PaintEntities(_entities.Values, 0, 0);
+                _canvas.PaintDamageIndicators(_rencentDamageEvents, 0, 0);
+
+                _canvas.EndFrame();
 
                 firstPass = false;
                 time += this.FrameTimeSeconds;
-
-                // Reset things while we wait, in case of ctrl-c.
-                Console.SetCursorPosition(0, resolution.Terrain.Height);
-                Console.ResetColor();
 
                 var processFrameTimeMS = frameTimer.ElapsedMilliseconds;
                 var sleepTimeMS = Math.Max(0, (int)(this.FrameTimeSeconds*1000 - processFrameTimeMS));
                 System.Threading.Thread.Sleep(sleepTimeMS);
             }
+
+            _canvas.Shutdown();
         }
 
+        private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
         private Dictionary<string,ViewEntity> _entities;
         private Queue<BattleEvent> _rencentDamageEvents;
         private Queue<BattleEvent> _recentTextEvents;
@@ -184,209 +193,6 @@ namespace BattlePlan.Viewer
         {
             while (_recentTextEvents.Count>maxNumberOfTextEvents)
                 _recentTextEvents.Dequeue();
-        }
-
-        private void PaintTerrain(Terrain terrain, int canvasOffsetX, int canvasOffsetY)
-        {
-            // Assume the screen is cleared already as needed.
-            for (int row=0; row<terrain.Height; ++row)
-            {
-                Console.SetCursorPosition(canvasOffsetX, row+canvasOffsetY);
-
-                for (int col=0; col<terrain.Width; ++col)
-                {
-                    var tileChars = terrain.GetTile(col, row);
-                    if (this.UseColor)
-                    {
-                        Console.ForegroundColor = GetTerrainFGColor(tileChars.Appearance);
-                        Console.BackgroundColor = GetTerrainBGColor(tileChars.Appearance);
-                    }
-                    Console.Write(tileChars.Appearance[0]);
-                }
-            }
-        }
-
-        private void PaintTile(int x, int y, char symbol, ConsoleColor fgColor, ConsoleColor bgColor, int canvasOffsetX, int canvasOffsetY)
-        {
-            Console.SetCursorPosition(x+canvasOffsetX, y+canvasOffsetY);
-
-            if (this.UseColor)
-            {
-                Console.ForegroundColor = fgColor;
-                Console.BackgroundColor = bgColor;
-            }
-            Console.Write(symbol);
-        }
-
-        private void PaintEntities(IEnumerable<ViewEntity> entities, int canvasOffsetX, int canvasOffsetY)
-        {
-            foreach(var entity in entities)
-            {
-                PaintTile(
-                    entity.Position.X,
-                    entity.Position.Y,
-                    entity.Symbol,
-                    GetTeamColor(entity.TeamId),
-                    GetTerrainBGColor(" "),
-                    canvasOffsetX,
-                    canvasOffsetY);
-            }
-        }
-
-        private void PaintSpawnPoints(Terrain terrain, int canvasOffsetX, int canvasOffsetY)
-        {
-            const char spawnPointSymbol = 'O';
-            var bgColor = GetTerrainBGColor(" ");
-            if (terrain?.SpawnPointsMap != null)
-            {
-                foreach (var keyValuePair in terrain.SpawnPointsMap)
-                {
-                    var teamId = keyValuePair.Key;
-                    var spawnPointsForTeam = keyValuePair.Value;
-                    var teamColor = GetTeamColor(teamId);
-                    foreach (var spawnPoint in spawnPointsForTeam)
-                    {
-                        PaintTile(
-                            spawnPoint.X,
-                            spawnPoint.Y,
-                            spawnPointSymbol,
-                            teamColor,
-                            bgColor,
-                            canvasOffsetX,
-                            canvasOffsetY);
-                    }
-                }
-            }
-        }
-
-        private void PaintDamageIndicators(IEnumerable<BattleEvent> dmgEvents, int canvasOffsetX, int canvasOffsetY)
-        {
-            const char dmgSymbol = '*';
-            foreach(var evt in dmgEvents)
-            {
-                Debug.Assert(evt.TargetLocation.HasValue);
-                PaintTile(
-                    evt.TargetLocation.Value.X,
-                    evt.TargetLocation.Value.Y,
-                    dmgSymbol,
-                    GetDamageColor(),
-                    GetTerrainBGColor(" "),
-                    canvasOffsetX,
-                    canvasOffsetY);
-            }
-        }
-
-        private void PaintGoalPoints(Terrain terrain, int canvasOffsetX, int canvasOffsetY)
-        {
-            const char goalPointSymbol = 'X';
-            var bgColor = GetTerrainBGColor(" ");
-            if (terrain?.SpawnPointsMap != null)
-            {
-                foreach (var keyValuePair in terrain.GoalPointsMap)
-                {
-                    var teamId = keyValuePair.Key;
-                    var goalPointsForTeam = keyValuePair.Value;
-                    var teamColor = GetTeamColor(teamId);
-                    foreach (var goalPoint in goalPointsForTeam)
-                    {
-                        PaintTile(
-                            goalPoint.X,
-                            goalPoint.Y,
-                            goalPointSymbol,
-                            teamColor,
-                            bgColor,
-                            canvasOffsetX,
-                            canvasOffsetY);
-                    }
-                }
-            }
-        }
-
-        private void WriteTextEvents(IEnumerable<BattleEvent> textEvents, int canvasOffsetX, int canvasOffsetY)
-        {
-            int row = 0;
-
-            Console.ResetColor();
-            foreach (var evt in textEvents)
-            {
-                Console.SetCursorPosition(canvasOffsetX, canvasOffsetY + row);
-
-                switch (evt.Type)
-                {
-                    case BattleEventType.EndAttack:
-                        WriteText(evt.SourceEntity, GetTeamColor(evt.SourceTeamId));
-                        WriteText(" damages ", GetTextColor());
-                        WriteText(evt.TargetEntity, GetTeamColor(evt.TargetTeamId));
-                        WriteText(" for ", GetTextColor());
-                        WriteText(evt.DamageAmount.ToString(), GetDamageColor());
-                        ClearToEndOfLine();
-                        break;
-                    case BattleEventType.ReachesGoal:
-                        WriteText(evt.SourceEntity, GetTeamColor(evt.SourceTeamId));
-                        WriteText(" reaches goal!", GetTextColor());
-                        ClearToEndOfLine();
-                        break;
-                    case BattleEventType.Die:
-                        WriteText(evt.SourceEntity, GetTeamColor(evt.SourceTeamId));
-                        WriteText(" dies!", GetTextColor());
-                        ClearToEndOfLine();
-                        break;
-                }
-
-                row += 1;
-            }
-        }
-
-        private void WriteText(string text, ConsoleColor color)
-        {
-            if (this.UseColor)
-                Console.ForegroundColor = color;
-            Console.Write(text);
-        }
-
-        private void ClearToEndOfLine()
-        {
-            Console.Write("\u001B[K");
-        }
-
-        // TODO: Color values should probably come from a config file.
-        private ConsoleColor GetTerrainFGColor(string tileSymbol)
-        {
-            switch (tileSymbol)
-            {
-                case ":": return ConsoleColor.White;
-                case " ": return ConsoleColor.DarkGray;
-                default: return ConsoleColor.Black;
-            }
-        }
-        private ConsoleColor GetTerrainBGColor(string tileSymbol)
-        {
-            switch (tileSymbol)
-            {
-                case ":": return ConsoleColor.Gray;
-                case " ": return ConsoleColor.DarkGray;
-                default: return ConsoleColor.White;
-            }
-        }
-
-        private ConsoleColor GetTeamColor(int teamId)
-        {
-            switch (teamId)
-            {
-                case 1: return ConsoleColor.Yellow;
-                case 2: return ConsoleColor.Green;
-                default: return ConsoleColor.White;
-            }
-        }
-
-        private ConsoleColor GetDamageColor()
-        {
-            return ConsoleColor.Red;
-        }
-
-        private ConsoleColor GetTextColor()
-        {
-            return ConsoleColor.White;
         }
     }
 }

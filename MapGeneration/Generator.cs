@@ -60,8 +60,8 @@ namespace BattlePlan.MapGeneration
                 Width = _options.Width,
                 TileTypes = new List<TileCharacteristics>()
                 {
-                    new TileCharacteristics() { BlocksMovement=false, BlocksVision=false, Appearance=" " },
-                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=true, Appearance=":" }
+                    new TileCharacteristics() { BlocksMovement=false, BlocksVision=false, Appearance=" ", Name="Open" },
+                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=true, Appearance=":", Name="Wall" }
                 }
             };
 
