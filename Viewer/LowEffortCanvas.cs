@@ -204,6 +204,14 @@ namespace BattlePlan.Viewer
             return Console.ReadKey(true);
         }
 
+        public ConsoleKeyInfo? ReadKeyWithoutBlocking()
+        {
+            if (Console.KeyAvailable)
+                return Console.ReadKey(true);
+            else
+                return null;
+        }
+
         public void WriteText(string text, int x, int y, int teamIdColor)
         {
             Console.ResetColor();
@@ -225,6 +233,22 @@ namespace BattlePlan.Viewer
                 Console.SetCursorPosition(x, y);
                 ClearToEndOfLine();
             }
+        }
+
+        public string PromptForInput(int x, int y, string prompt)
+        {
+            Console.ResetColor();
+            Console.CursorVisible = true;
+            Console.SetCursorPosition(x, y);
+            ClearToEndOfLine();
+
+            Console.Write(prompt);
+            var input = Console.ReadLine();
+
+            Console.SetCursorPosition(x, y);
+            ClearToEndOfLine();
+
+            return input;
         }
 
 
@@ -250,6 +274,8 @@ namespace BattlePlan.Viewer
             {
                 case ":": return ConsoleColor.White;
                 case " ": return ConsoleColor.DarkGray;
+                case "~": return ConsoleColor.Blue;
+                case "@": return ConsoleColor.White;
                 default: return ConsoleColor.Black;
             }
         }
@@ -259,6 +285,8 @@ namespace BattlePlan.Viewer
             {
                 case ":": return ConsoleColor.Gray;
                 case " ": return ConsoleColor.DarkGray;
+                case "~": return ConsoleColor.DarkBlue;
+                case "@": return ConsoleColor.DarkGray;
                 default: return ConsoleColor.White;
             }
         }

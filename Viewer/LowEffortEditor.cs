@@ -14,8 +14,28 @@ namespace BattlePlan.Viewer
     /// </summary>
     public class LowEffortEditor
     {
+        public void EditScenario(string filename)
+        {
+            // TODO: clean up various load scenarios
+
+            if (!String.IsNullOrWhiteSpace(filename))
+            {
+                var fileContentsAsString = File.ReadAllText(filename);
+                var newScenario = JsonConvert.DeserializeObject<Scenario>(fileContentsAsString);
+
+                _lastScenarioFilename = filename;
+                EditScenario(newScenario);
+            }
+            else
+            {
+                EditScenario((Scenario)null);
+            }
+        }
+
         public void EditScenario(Scenario foo)
         {
+            // TODO: Check terminal height/width and do something if they're too small.
+
             _scenario = foo;
             if (_scenario == null)
             {
@@ -25,9 +45,7 @@ namespace BattlePlan.Viewer
                 };
             }
             if (_scenario.Terrain == null)
-                _scenario.Terrain = GenerateTerrain();
-
-            // TODO: create _entities from scenario attack/defense plans.
+                _scenario.Terrain = Terrain.NewDefault();
 
             _canvas.Init();
             _cursorX = 0;
@@ -43,9 +61,11 @@ namespace BattlePlan.Viewer
                 _canvas.PaintTerrain(_scenario.Terrain, 0, 0);
                 _canvas.PaintSpawnPoints(_scenario.Terrain, 0, 0);
                 _canvas.PaintGoalPoints(_scenario.Terrain, 0, 0);
+                WriteStatusMessage();
                 _canvas.EndFrame();
 
-                // TODO: write menus and stuff
+                // Clear the status message after showing it once.
+                _statusMsg = null;
 
                 _canvas.ShowCursor(_cursorX, _cursorY);
                 ProcessUserInput();
@@ -62,47 +82,63 @@ namespace BattlePlan.Viewer
         private bool _exitEditor;
         private EditorMode _mode;
         private bool _paintEnabled;
+        private string _statusMsg;
+        private string _lastScenarioFilename;
 
         private void ProcessUserInput()
         {
             // Wait for a key press.
             var keyInfo = _canvas.ReadKey();
 
+            // First see if we can match on the key-code, for special keys like arrows.
             switch (keyInfo.Key)
             {
                 case ConsoleKey.UpArrow:
-                case ConsoleKey.K:
                     MoveCursor(0, -1);
-                    break;
+                    return;
                 case ConsoleKey.DownArrow:
-                case ConsoleKey.J:
                     MoveCursor(0, +1);
-                    break;
+                    return;
                 case ConsoleKey.LeftArrow:
-                case ConsoleKey.H:
                     MoveCursor(-1, 0);
-                    break;
+                    return;
                 case ConsoleKey.RightArrow:
-                case ConsoleKey.L:
                     MoveCursor(+1, 0);
-                    break;
+                    return;
                 case ConsoleKey.Escape:
                     _exitEditor = true;
                     break;
-                case ConsoleKey.C:
-                    if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
-                        _exitEditor = true;
-                    break;
                 case ConsoleKey.Enter:
                     CycleMode();
-                    break;
-                default:
-                    switch (_mode)
-                    {
-                        case EditorMode.Terrain:
-                            ProcessKeyTerrainMode(keyInfo);
-                            break;
-                    }
+                    return;
+                case ConsoleKey.C:
+                    // Intercept Ctrl-C nicely.
+                    if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
+                        _exitEditor = true;
+                    return;
+            }
+
+            // Now try to match on regular characters.  These aren't all represented in the ConsoleKey
+            // enum above.  Note that KeyChar gives you the proper shifted or ctrl'd ASCII code, so
+            // Shift-s is 'S'.
+            switch (keyInfo.KeyChar)
+            {
+                case 'l':
+                    PromptAndLoadScenario();
+                    return;
+                case 's':
+                    PromptAndSaveScenario();
+                    return;
+                case '`':
+                    _canvas.UseColor = !_canvas.UseColor;
+                    return;
+            }
+
+            // If we didn't return before now, look for mode-specific key handling.
+            switch (_mode)
+            {
+                case EditorMode.Terrain:
+                    ProcessKeyTerrainMode(keyInfo);
                     break;
             }
         }
@@ -181,6 +217,9 @@ namespace BattlePlan.Viewer
             }
 
             _canvas.ClearToRight(col, row++);
+            _canvas.WriteText("(`) toggle color", col, row++, 0);
+            _canvas.WriteText("(L) load scenario", col, row++, 0);
+            _canvas.WriteText("(S) save scenario", col, row++, 0);
             _canvas.WriteText("(ESC) exit", col, row++, 0);
 
             _canvas.ClearToRight(col, row, _scenario.Terrain.Height);
@@ -247,6 +286,63 @@ namespace BattlePlan.Viewer
         private void ClearAllTiles()
         {
             _scenario.Terrain.Tiles = null;
+        }
+
+        private void PromptAndLoadScenario()
+        {
+            var prompt = String.IsNullOrEmpty(_lastScenarioFilename)?
+                "Load file name: "
+                : $"Load file name (enter for {_lastScenarioFilename}): ";
+            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
+
+            try
+            {
+                var filename = String.IsNullOrEmpty(input)? _lastScenarioFilename : input;
+                var fileContentsAsString = File.ReadAllText(filename);
+                var newScenario = JsonConvert.DeserializeObject<Scenario>(fileContentsAsString);
+
+                // TODO: validate new scenario?
+                _scenario = newScenario;
+
+                _lastScenarioFilename = filename;
+            }
+            catch (IOException ioe)
+            {
+                _statusMsg = ioe.Message;
+            }
+            catch (JsonException)
+            {
+                _statusMsg = "File is not a valid scenario";
+            }
+        }
+
+        private void PromptAndSaveScenario()
+        {
+            var prompt = String.IsNullOrEmpty(_lastScenarioFilename)?
+                "Save file name: "
+                : $"Save file name (enter for {_lastScenarioFilename}): ";
+            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
+
+            try
+            {
+                var filename = String.IsNullOrEmpty(input)? _lastScenarioFilename : input;
+                var fileContentsAsString = JsonConvert.SerializeObject(_scenario);
+                File.WriteAllText(filename, fileContentsAsString);
+
+                _lastScenarioFilename = filename;
+            }
+            catch (IOException ioe)
+            {
+                _statusMsg = ioe.Message;
+            }
+        }
+
+        private void WriteStatusMessage()
+        {
+            if (!String.IsNullOrEmpty(_statusMsg))
+                _canvas.WriteText(_statusMsg, 0, _scenario.Terrain.Height, 0);
+            else
+                _canvas.WriteText("", 0, _scenario.Terrain.Height, 0);
         }
     }
 }

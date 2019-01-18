@@ -16,17 +16,27 @@ namespace BattlePlan
             if (args.Length>0)
                 verb = args[0];
 
+            string filename = null;
+            if (args.Length>1)
+                filename = args[1];
+
             if (verb.Equals("play", StringComparison.CurrentCultureIgnoreCase))
-                Play();
-            else if (verb.Equals("map", StringComparison.CurrentCultureIgnoreCase))
-                MapGen();
+                Play(filename);
             else if (verb.Equals("edit", StringComparison.CurrentCultureIgnoreCase))
-                Edit();
+                Edit(filename);
+            else
+                Help();
         }
 
-        private static void Play()
+        private static void Play(string filename)
         {
-            var fileContentsAsString = File.ReadAllText("scenarios/test1.json");
+            if (String.IsNullOrWhiteSpace(filename))
+            {
+                Console.WriteLine("Please provide a filename");
+                return;
+            }
+
+            var fileContentsAsString = File.ReadAllText(filename);
             var scenario = JsonConvert.DeserializeObject<Scenario>(fileContentsAsString);
 
             if (scenario.UnitTypes == null)
@@ -39,40 +49,17 @@ namespace BattlePlan
             viewer.ShowBattleResolution(result);
         }
 
-        private static void MapGen()
-        {
-            var opts = new GeneratorOptions()
-            {
-                Height = 36,
-                Width = 50,
-                ChunkSizeX = 7,
-                ChunkSizeY = 4,
-                PositiveCycleCount = 60,
-                NegativeCycleCount = 10,
-                SpawnPointCount = 3,
-                GoalCount = 3,
-            };
-
-            var generator = new Generator(opts);
-            var terrain = generator.Create();
-
-            var result = new BattleResolution()
-            {
-                Terrain = terrain,
-                Events = new List<BattleEvent>(),
-            };
-
-            var outputAsString = JsonConvert.SerializeObject(terrain, _serialOpts);
-            File.WriteAllText("scenarios/map1.json", outputAsString);
-
-            var viewer = new Viewer.LowEffortViewer();
-            viewer.ShowBattleResolution(result);
-        }
-
-        private static void Edit()
+        private static void Edit(string filename)
         {
             var viewer = new Viewer.LowEffortEditor();
-            viewer.EditScenario(null);
+            viewer.EditScenario(filename);
+        }
+
+        private static void Help()
+        {
+            Console.WriteLine("Usage: one of");
+            Console.WriteLine("  dotnet run play filename");
+            Console.WriteLine("  dotnet run edit [filename]");
         }
 
         private static JsonSerializerSettings _serialOpts = new JsonSerializerSettings()

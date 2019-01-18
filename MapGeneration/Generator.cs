@@ -54,20 +54,9 @@ namespace BattlePlan.MapGeneration
 
         private void InitTerrain()
         {
-            _terrain = new Terrain()
-            {
-                Height = _options.Height,
-                Width = _options.Width,
-                TileTypes = new List<TileCharacteristics>()
-                {
-                    new TileCharacteristics() { BlocksMovement=false, BlocksVision=false, Appearance=" ", Name="Open" },
-                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=true, Appearance=":", Name="Wall" }
-                }
-            };
-
-            _terrain.Tiles = new byte[_terrain.Height][];
-            for (int row=0; row<_terrain.Height; ++row)
-                _terrain.Tiles[row] = new byte[_terrain.Width];
+            _terrain = Terrain.NewDefault();
+            _terrain.Height = _options.Height;
+            _terrain.Width = _options.Width;
 
             _terrain.SpawnPointsMap = new Dictionary<int,IList<Vector2Di>>() { { _attackerTeamId, new List<Vector2Di>() } };
             _terrain.GoalPointsMap = new Dictionary<int,IList<Vector2Di>>() { { _attackerTeamId, new List<Vector2Di>() } };
@@ -88,7 +77,7 @@ namespace BattlePlan.MapGeneration
 
             for (int r=0; r<boundedHeight; ++r)
                 for (int c=0; c<boundedWidth; ++c)
-                    _terrain.Tiles[r+boundedY][c+boundedX] = value;
+                    _terrain.SetTileValue(c+boundedX, r+boundedY, value);
         }
 
         private void ApplyRandomRect(byte value)

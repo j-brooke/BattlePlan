@@ -22,6 +22,22 @@ namespace BattlePlan.Common
         /// </summary>
         public IDictionary<int,IList<Vector2Di>> GoalPointsMap { get; set; }
 
+        public static Terrain NewDefault()
+        {
+            return new Terrain()
+                {
+                    Width = 50,
+                    Height = 36,
+                    TileTypes = new List<TileCharacteristics>()
+                {
+                    new TileCharacteristics() { BlocksMovement=false, BlocksVision=false, Appearance=" ", Name="Open" },
+                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=true, Appearance=":", Name="Wall" },
+                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=false, Appearance="~", Name="Water" },
+                    new TileCharacteristics() { BlocksMovement=false, BlocksVision=true, Appearance="@", Name="Fog" },
+                },
+            };
+        }
+
         public TileCharacteristics GetTile(int x, int y)
         {
             var typeIndex = GetTileValue(x, y);

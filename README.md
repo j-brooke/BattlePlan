@@ -10,13 +10,26 @@ https://dotnet.microsoft.com/download
 
 ## Running
 
-Right now I'm assuming that anyone trying to run this is a dev, and so they have the SDK installed.  As such, to run,
-just navigate to the project directory and type:
+Right now I'm assuming that anyone trying to run this is a dev, and so they have the SDK installed.  As such, these
+instructions assume you're working from source code rather than a published app.
 
-    dotnet run play
+### Play
+
+To "play" an already setup scenario, type:
+
+    dotnet run play scenarios/test1.json
+
+You can set up scenarios by editing the JSON files, or using the editor (see below).
+
+
+### Edit
+
+To interactively edit a scenario (map, attack placement, defender placement, etc.), type:
+
+    dotnet run edit
 
 or
 
-    dotnet run map
+    dotnet run edit scenarios/somefile.json
 
-Don't worry, it'll get better, but these things take time.
+Not all features are supported yet.  But it looks nice!

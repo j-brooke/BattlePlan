@@ -5,12 +5,26 @@
       {
         "BlocksMovement": false,
         "BlocksVision": false,
-        "Appearance": " "
+        "Appearance": " ",
+        "Name": "Open"
       },
       {
         "BlocksMovement": true,
         "BlocksVision": true,
-        "Appearance": ":"
+        "Appearance": ":",
+        "Name": "Wall"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
       }
     ],
     "Width": 50,

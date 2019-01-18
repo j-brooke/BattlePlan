@@ -43,7 +43,8 @@ namespace BattlePlan.Viewer
             double time = 0.0;
             bool firstPass = true;
             var frameTimer = new System.Diagnostics.Stopwatch();
-            while (eventQueue.Count>0 || firstPass)
+            _exitRequested = false;
+            while ((eventQueue.Count>0 || firstPass) && !_exitRequested)
             {
                 // Reset the stopwatch so we know how long we're taking processing all this.
                 frameTimer.Restart();
@@ -81,6 +82,8 @@ namespace BattlePlan.Viewer
 
                 _canvas.EndFrame();
 
+                ProcessUserInput();
+
                 firstPass = false;
                 time += this.FrameTimeSeconds;
 
@@ -97,6 +100,7 @@ namespace BattlePlan.Viewer
         private Queue<BattleEvent> _rencentDamageEvents;
         private Queue<BattleEvent> _recentTextEvents;
         private Dictionary<string,UnitCharacteristics> _unitTypeMap;
+        private bool _exitRequested = false;
 
         private void ProcessEvent(BattleEvent evt)
         {
@@ -193,6 +197,18 @@ namespace BattlePlan.Viewer
         {
             while (_recentTextEvents.Count>maxNumberOfTextEvents)
                 _recentTextEvents.Dequeue();
+        }
+
+        private void ProcessUserInput()
+        {
+            var keyInfo = _canvas.ReadKeyWithoutBlocking();
+            if (keyInfo.HasValue)
+            {
+                if (keyInfo.Value.Key == ConsoleKey.C && (keyInfo.Value.Modifiers & ConsoleModifiers.Control)!=0)
+                    _exitRequested = true;
+
+                // TODO: add speed, rewind, etc.
+            }
         }
     }
 }
