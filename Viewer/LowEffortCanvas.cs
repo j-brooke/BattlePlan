@@ -251,6 +251,23 @@ namespace BattlePlan.Viewer
             return input;
         }
 
+        public void PaintDefensePlan(DefensePlan plan, IList<UnitCharacteristics> unitChars, int canvasOffsetX, int canvasOffsetY)
+        {
+            var teamColor = GetTeamColor(plan.TeamId);
+            var bgColor = GetTerrainBGColor(" ");
+            foreach (var placement in plan.Placements)
+            {
+                var unitClass = unitChars.FirstOrDefault( (cls) => cls.Name==placement.UnitType );
+                PaintTile(
+                    placement.Position.X,
+                    placement.Position.Y,
+                    (unitClass!=null)? unitClass.Symbol : '?',
+                    teamColor,
+                    bgColor,
+                    canvasOffsetX,
+                    canvasOffsetY);
+            }
+        }
 
         // Used to track where to put the cursor when we shut down.
         private int _maxRowDrawn = 0;

@@ -3,7 +3,7 @@
     "Name": "Grunt",
     "Symbol": "T",
     "CanAttack": true,
-    "CanDefend": false,
+    "CanDefend": true,
     "SpeedTilesPerSec": 1.0,
     "InitialHitPoints": 100,
     "WeaponUseTime": 0.5,

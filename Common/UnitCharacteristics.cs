@@ -6,7 +6,7 @@ namespace BattlePlan.Common
     public class UnitCharacteristics
     {
         public string Name { get; set; }
-        public char Symbol { get; set; } = '@';
+        public char Symbol { get; set; } = '?';
         public bool CanAttack { get; set; }
         public bool CanDefend { get; set; }
         public double SpeedTilesPerSec { get; set; }
