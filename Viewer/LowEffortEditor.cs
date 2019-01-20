@@ -171,6 +171,9 @@ namespace BattlePlan.Viewer
                 case EditorMode.Defenders:
                     ProcessKeyDefendersMode(keyInfo);
                     return;
+                case EditorMode.SpawnsAndGoals:
+                    ProcessKeySpawnsAndGoalsMode(keyInfo);
+                    return;
             }
         }
 
@@ -244,6 +247,9 @@ namespace BattlePlan.Viewer
                     break;
                 case EditorMode.Defenders:
                     WriteModeHelpDefenders(col, ref row);
+                    break;
+                case EditorMode.SpawnsAndGoals:
+                    WriteModeHelpSpawnsAndGoals(col, ref row);
                     break;
                 default:
                     _canvas.WriteText("Not implemented", col, row++, 0);
@@ -343,6 +349,45 @@ namespace BattlePlan.Viewer
             if (keyNumberValue>=2 && keyNumberValue<=_defenderClasses.Count+1)
             {
                 PlaceDefender(_defenderClasses[keyNumberValue-2]);
+            }
+        }
+
+        private void WriteModeHelpSpawnsAndGoals(int col, ref int row)
+        {
+            Debug.Assert(_mode==EditorMode.SpawnsAndGoals);
+
+            _canvas.WriteText($"(T) Team {_teamId}", col, row++, _teamId);
+
+            _canvas.ClearToRight(col, row++);
+            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
+            _canvas.WriteText("(1) remove", col, row++, 0);
+            _canvas.WriteText("(2) add spawn", col, row++, 0);
+            _canvas.WriteText("(2) add goal", col, row++, 0);
+        }
+
+        private void ProcessKeySpawnsAndGoalsMode(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.T:
+                    CycleTeam();
+                    return;
+                case ConsoleKey.Backspace:
+                    ClearSpawnsAndGoals();
+                    return;
+            }
+
+            switch (keyInfo.KeyChar)
+            {
+                case '1':
+                    ClearOneSpawnOrGoal();
+                    return;
+                case '2':
+                    AddOneSpawnPoint();
+                    return;
+                case '3':
+                    AddOneGoalPoint();
+                    return;
             }
         }
 
@@ -468,6 +513,48 @@ namespace BattlePlan.Viewer
                 Position = new Vector2Di(_cursorX, _cursorY)
             };
             plan.Placements.Add(placement);
+        }
+
+        private void ClearSpawnsAndGoals()
+        {
+            _scenario.Terrain.SpawnPointsMap.Remove(_teamId);
+            _scenario.Terrain.GoalPointsMap.Remove(_teamId);
+        }
+
+        private void ClearOneSpawnOrGoal()
+        {
+            var cursorPos = new Vector2Di(_cursorX, _cursorY);
+            IList<Vector2Di> spawnsForTeam = null;
+            _scenario.Terrain.SpawnPointsMap.TryGetValue(_teamId, out spawnsForTeam);
+            spawnsForTeam?.Remove(cursorPos);
+
+            IList<Vector2Di> goalsForTeam = null;
+            _scenario.Terrain.GoalPointsMap.TryGetValue(_teamId, out goalsForTeam);
+            goalsForTeam?.Remove(cursorPos);
+        }
+
+        private void AddOneSpawnPoint()
+        {
+            ClearOneSpawnOrGoal();
+            IList<Vector2Di> spawnsForTeam = null;
+            if (!_scenario.Terrain.SpawnPointsMap.TryGetValue(_teamId, out spawnsForTeam))
+            {
+                spawnsForTeam = new List<Vector2Di>();
+                _scenario.Terrain.SpawnPointsMap[_teamId] = spawnsForTeam;
+            }
+            spawnsForTeam.Add(new Vector2Di(_cursorX, _cursorY));
+        }
+
+        private void AddOneGoalPoint()
+        {
+            ClearOneSpawnOrGoal();
+            IList<Vector2Di> goalsForTeam = null;
+            if (!_scenario.Terrain.GoalPointsMap.TryGetValue(_teamId, out goalsForTeam))
+            {
+                goalsForTeam = new List<Vector2Di>();
+                _scenario.Terrain.GoalPointsMap[_teamId] = goalsForTeam;
+            }
+            goalsForTeam.Add(new Vector2Di(_cursorX, _cursorY));
         }
     }
 }

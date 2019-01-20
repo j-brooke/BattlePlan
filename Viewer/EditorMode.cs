@@ -5,8 +5,7 @@ namespace BattlePlan.Viewer
     internal enum EditorMode
     {
         Terrain,
-        Spawn,
-        Goal,
+        SpawnsAndGoals,
         Attackers,
         Defenders,
     }
