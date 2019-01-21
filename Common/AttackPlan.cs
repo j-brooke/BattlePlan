@@ -7,7 +7,7 @@ namespace BattlePlan.Common
     public class AttackPlan
     {
         public int TeamId { get; set; }
-        public IList<AttackerSpawn> Spawns { get; set; }
+        public IList<AttackerSpawn> Spawns { get; set; } = new List<AttackerSpawn>();
 
         public AttackPlan()
         {

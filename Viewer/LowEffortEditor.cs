@@ -88,6 +88,9 @@ namespace BattlePlan.Viewer
         private string _statusMsg;
         private string _lastScenarioFilename;
         private int _teamId;
+
+        private int _spawnTime;
+        private int _selectedSpawnPointIndex;
         private List<UnitCharacteristics> _attackerClasses;
         private List<UnitCharacteristics> _defenderClasses;
 
@@ -174,6 +177,9 @@ namespace BattlePlan.Viewer
                 case EditorMode.SpawnsAndGoals:
                     ProcessKeySpawnsAndGoalsMode(keyInfo);
                     return;
+                case EditorMode.Attackers:
+                    ProcessKeyAttackersMode(keyInfo);
+                    return;
             }
         }
 
@@ -250,6 +256,9 @@ namespace BattlePlan.Viewer
                     break;
                 case EditorMode.SpawnsAndGoals:
                     WriteModeHelpSpawnsAndGoals(col, ref row);
+                    break;
+                case EditorMode.Attackers:
+                    WriteModeHelpAttackers(col, ref row);
                     break;
                 default:
                     _canvas.WriteText("Not implemented", col, row++, 0);
@@ -362,7 +371,7 @@ namespace BattlePlan.Viewer
             _canvas.WriteText("(Backspace) clear all", col, row++, 0);
             _canvas.WriteText("(1) remove", col, row++, 0);
             _canvas.WriteText("(2) add spawn", col, row++, 0);
-            _canvas.WriteText("(2) add goal", col, row++, 0);
+            _canvas.WriteText("(3) add goal", col, row++, 0);
         }
 
         private void ProcessKeySpawnsAndGoalsMode(ConsoleKeyInfo keyInfo)
@@ -373,7 +382,7 @@ namespace BattlePlan.Viewer
                     CycleTeam();
                     return;
                 case ConsoleKey.Backspace:
-                    ClearSpawnsAndGoals();
+                    ClearSpawnsAndGoalsForTeam();
                     return;
             }
 
@@ -388,6 +397,99 @@ namespace BattlePlan.Viewer
                 case '3':
                     AddOneGoalPoint();
                     return;
+            }
+        }
+
+        private void WriteModeHelpAttackers(int col, ref int row)
+        {
+            Debug.Assert(_mode==EditorMode.Attackers);
+
+            if (_scenario.AttackPlans==null)
+                _scenario.AttackPlans = new List<AttackPlan>();
+            AttackPlan plan = _scenario.AttackPlans.FirstOrDefault( (ap) => ap.TeamId == _teamId);
+            if (plan == null)
+            {
+                plan = new AttackPlan() { TeamId = _teamId };
+                _scenario.AttackPlans.Add(plan);
+            }
+
+            var hasSpawnPoint = _scenario.Terrain.SpawnPointsMap.ContainsKey(_teamId)
+                && (_selectedSpawnPointIndex>=0 && _selectedSpawnPointIndex<_scenario.Terrain.SpawnPointsMap[_teamId].Count);
+
+            var spawnPointText = (hasSpawnPoint)? _scenario.Terrain.SpawnPointsMap[_teamId][_selectedSpawnPointIndex].ToString()
+                : "none";
+
+            // Make a list of all spawn times currently in use.
+            var existingSpawnTimes = plan.Spawns.Select( (sp) => sp.Time )
+                .Distinct()
+                .OrderBy( (time) => time )
+                .ToList();
+            var existingTimesStr = String.Join(", ", existingSpawnTimes);
+
+            // Basic selections: team, spawn point delay, spawn point index.
+            _canvas.WriteText($"(T) Team {_teamId}", col, row++, _teamId);
+            _canvas.WriteText($"(D) Spawn Delay Time {_spawnTime}", col, row++, 0);
+            _canvas.WriteText("  " + existingTimesStr, col, row++, 0);
+            _canvas.WriteText($"(P) Spawn Point {spawnPointText}" , col, row++, 0);
+
+            if (hasSpawnPoint)
+            {
+                _canvas.ClearToRight(col, row++);
+                _canvas.WriteText("(Backspace) clear all", col, row++, 0);
+                _canvas.WriteText($"(1) Clear for this time", col, row++, 0);
+
+                // Write a list of all available attacker types.  But the trick part is, we also
+                // want to include the count for that unit type already assigned.
+                // This obviously breaks if we have >7 attacker types.
+                for (int i=0; i<_attackerClasses.Count; ++i)
+                {
+                    Func<AttackerSpawn,bool> matchFunc = (sp) =>
+                    {
+                        return ((int)Math.Round(sp.Time))==_spawnTime
+                            && sp.SpawnPointIndex == _selectedSpawnPointIndex
+                            && sp.UnitType == _attackerClasses[i].Name;
+                    };
+
+                    var count = plan.Spawns.Where( (matchFunc) ).Count();
+                    _canvas.WriteText($"({i+2}) Add {_attackerClasses[i].Name} {count}", col, row++, 0);
+                }
+            }
+            else
+            {
+                _canvas.ClearToRight(col, row++);
+                _canvas.WriteText($"Please select a spawn point", col, row++, _teamId);
+            }
+        }
+
+        private void ProcessKeyAttackersMode(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.T:
+                    CycleTeam();
+                    return;
+                case ConsoleKey.D:
+                    PromptForSpawnDelay();
+                    return;
+                case ConsoleKey.P:
+                    CycleSpawnPointIndex();
+                    return;
+                case ConsoleKey.Backspace:
+                    ClearAllAttackersForTeam();
+                    return;
+            }
+
+            switch (keyInfo.KeyChar)
+            {
+                case '1':
+                    RemoveAttackersAtTime();
+                    return;
+            }
+
+            int keyNumberValue = keyInfo.KeyChar - '0';
+            if (keyNumberValue>=2 && keyNumberValue<=_attackerClasses.Count+1)
+            {
+                AddAttackerSpawn(_attackerClasses[keyNumberValue-2]);
             }
         }
 
@@ -515,7 +617,7 @@ namespace BattlePlan.Viewer
             plan.Placements.Add(placement);
         }
 
-        private void ClearSpawnsAndGoals()
+        private void ClearSpawnsAndGoalsForTeam()
         {
             _scenario.Terrain.SpawnPointsMap.Remove(_teamId);
             _scenario.Terrain.GoalPointsMap.Remove(_teamId);
@@ -555,6 +657,65 @@ namespace BattlePlan.Viewer
                 _scenario.Terrain.GoalPointsMap[_teamId] = goalsForTeam;
             }
             goalsForTeam.Add(new Vector2Di(_cursorX, _cursorY));
+        }
+
+        private void PromptForSpawnDelay()
+        {
+            const int maxSaneTime = 1000;
+            var prompt = $"Spawn Delay Time (enter for {_spawnTime}): ";
+            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
+
+            if (!String.IsNullOrWhiteSpace(input))
+            {
+                int newTime = 0;
+                int.TryParse(input, out newTime);
+                if (newTime >= 0 && newTime < maxSaneTime)
+                    _spawnTime = newTime;
+            }
+        }
+
+        private void CycleSpawnPointIndex()
+        {
+            if (!_scenario.Terrain.SpawnPointsMap.ContainsKey(_teamId))
+                _scenario.Terrain.SpawnPointsMap[_teamId] = new List<Vector2Di>();
+            _selectedSpawnPointIndex += 1;
+            if (_selectedSpawnPointIndex>=_scenario.Terrain.SpawnPointsMap[_teamId].Count)
+                _selectedSpawnPointIndex = 0;
+        }
+
+        private void RemoveAttackersAtTime()
+        {
+            AttackPlan plan = _scenario.AttackPlans.FirstOrDefault( (ap) => ap.TeamId == _teamId);
+            if (plan?.Spawns != null)
+            {
+                plan.Spawns = plan.Spawns
+                    .Where( (sp) => (int)Math.Round(sp.Time)!=_spawnTime)
+                    .ToList();
+            }
+        }
+
+        private void AddAttackerSpawn(UnitCharacteristics unitClass)
+        {
+            AttackPlan plan = _scenario.AttackPlans.FirstOrDefault( (ap) => ap.TeamId == _teamId);
+            if (plan == null)
+            {
+                plan = new AttackPlan() { TeamId=_teamId };
+                _scenario.AttackPlans.Add(plan);
+            }
+
+            var newUnit = new AttackerSpawn()
+            {
+                Time = _spawnTime,
+                UnitType = unitClass.Name,
+                SpawnPointIndex = _selectedSpawnPointIndex,
+            };
+            plan.Spawns.Add(newUnit);
+        }
+
+        private void ClearAllAttackersForTeam()
+        {
+            AttackPlan plan = _scenario.AttackPlans.FirstOrDefault( (ap) => ap.TeamId == _teamId);
+            plan?.Spawns.Clear();
         }
     }
 }

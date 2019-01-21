@@ -6,6 +6,6 @@ namespace BattlePlan.Common
     public class DefensePlan
     {
         public int TeamId { get; set; }
-        public IList<DefenderPlacement> Placements { get; set; }
+        public IList<DefenderPlacement> Placements { get; set; } = new List<DefenderPlacement>();
     }
 }
