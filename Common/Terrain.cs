@@ -14,13 +14,13 @@ namespace BattlePlan.Common
         /// Dictionary where the key is a TeamID and the value is a list of spawn points
         /// for that team.
         /// </summary>
-        public IDictionary<int,IList<Vector2Di>> SpawnPointsMap { get; set; }
+        public IDictionary<int,IList<Vector2Di>> SpawnPointsMap { get; set; } = new Dictionary<int,IList<Vector2Di>>();
 
         /// <summary>
         /// Dictionary where the key is a TeamID and the value is a list of goal points
         /// for that team.
         /// </summary>
-        public IDictionary<int,IList<Vector2Di>> GoalPointsMap { get; set; }
+        public IDictionary<int,IList<Vector2Di>> GoalPointsMap { get; set; } = new Dictionary<int,IList<Vector2Di>>();
 
         public static Terrain NewDefault()
         {
@@ -83,6 +83,60 @@ namespace BattlePlan.Common
                 Array.Resize(ref _tiles[y], this.Width);
 
             _tiles[y][x] = val;
+        }
+
+
+        public bool HasLineOfSight(Vector2Di fromPos, Vector2Di toPos)
+        {
+            // Quick and dirty ray-casting algorithm.  This might be adequate for our needs, but
+            // see this blog post for a discussion of different algorithms and their properties:
+            //   http://www.adammil.net/blog/v125_Roguelike_Vision_Algorithms.html#raycode
+
+            var dX = toPos.X - fromPos.X;
+            var dY = toPos.Y - fromPos.Y;
+            var absDX = Math.Abs(dX);
+            var absDY = Math.Abs(dY);
+
+            // A unit can always see into its tile, or an adjacent one.
+            if (absDX<=1 & absDY<=1)
+                return true;
+
+            // Figure out if we're going mostly up-down or mostly left-right.  We want the axis that changes
+            // more rapidly to be our independent axis.
+            if (absDX > absDY)
+            {
+                // For each integer X value, only look at the closest integer Y value alone the line.
+                short incX = (short)Math.Sign(dX);
+                double slope = (double)dY / (double)dX;
+                short lineX = fromPos.X;
+                do
+                {
+                    lineX += incX;
+                    double lineYfloat = (lineX-fromPos.X)*slope + fromPos.Y;
+                    short lineY = (short)Math.Round(lineYfloat);
+                    if (GetTile(lineX, lineY).BlocksVision)
+                        return false;
+                }
+                while (lineX != toPos.X);
+            }
+            else
+            {
+                // Same as above, except Y is the independent variable instead of X.
+                short incY = (short)Math.Sign(dY);
+                double slope = (double)dX / (double)dY;
+                short lineY = fromPos.Y;
+                do
+                {
+                    lineY += incY;
+                    double lineXfloat = (lineY-fromPos.Y)*slope + fromPos.X;
+                    short lineX = (short)Math.Round(lineXfloat);
+                    if (GetTile(lineX, lineY).BlocksVision)
+                        return false;
+                }
+                while (lineY != toPos.Y);
+            }
+
+            return true;
         }
 
         private byte[][] _tiles;

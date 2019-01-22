@@ -39,7 +39,7 @@ namespace BattlePlan.Viewer
         {
         }
 
-        public void PaintTerrain(Terrain terrain, int canvasOffsetX, int canvasOffsetY)
+        public void PaintTerrain(Terrain terrain, int[,] terrainOverride, int canvasOffsetX, int canvasOffsetY)
         {
             for (int row=0; row<terrain.Height; ++row)
             {
@@ -51,7 +51,19 @@ namespace BattlePlan.Viewer
                     if (this.UseColor)
                     {
                         Console.ForegroundColor = GetTerrainFGColor(tileChars.Appearance);
-                        Console.BackgroundColor = GetTerrainBGColor(tileChars.Appearance);
+
+                        var overrideTeam = (terrainOverride!=null)? terrainOverride[col,row] : 0;
+
+                        // Normally the background color should be the terrain BG color.  But if there's an override here,
+                        // it's either a team color (>=1) or -1 to indicate multiple teams.
+                        ConsoleColor bgColor;
+                        if (overrideTeam==0)
+                            bgColor = GetTerrainBGColor(tileChars.Appearance);
+                        else if (overrideTeam==-1)
+                            bgColor = GetDamageColor();
+                        else
+                            bgColor = GetTeamColor(overrideTeam);
+                        Console.BackgroundColor = bgColor;
                     }
                     Console.Write(tileChars.Appearance[0]);
                 }

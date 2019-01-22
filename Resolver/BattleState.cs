@@ -184,50 +184,6 @@ namespace BattlePlan.Resolver
             _entityPositions.Remove(position);
         }
 
-        internal bool HasLineOfSight(Vector2Di fromPos, Vector2Di toPos)
-        {
-            // Quick and dirty ray-casting algorithm.  This might be adequate for our needs, but
-            // see this blog post for a discussion of different algorithms and their properties:
-            //   http://www.adammil.net/blog/v125_Roguelike_Vision_Algorithms.html#raycode
-
-            // Quick check if the start and end locations are the same, to avoid division by zero.
-            if (fromPos==toPos)
-                return _terrain.GetTile(fromPos.X, fromPos.Y).BlocksVision;
-
-            var dX = toPos.X - fromPos.X;
-            var dY = toPos.Y - fromPos.Y;
-
-            // Figure out if we're going mostly up-down or mostly left-right.  We want the axis that changes
-            // more rapidly to be our independent axis.
-            if (Math.Abs(dX) > Math.Abs(dY))
-            {
-                // For each integer X value, only look at the closest integer Y value alone the line.
-                short incX = (short)Math.Sign(dX);
-                double slope = (double)dY / (double)dX;
-                for (short lineX=fromPos.X; lineX!=toPos.X; lineX += incX)
-                {
-                    double lineYfloat = (lineX-fromPos.X)*slope + fromPos.Y;
-                    short lineY = (short)Math.Round(lineYfloat);
-                    if (_terrain.GetTile(lineX, lineY).BlocksVision)
-                        return false;
-                }
-            }
-            else
-            {
-                short incY = (short)Math.Sign(dY);
-                double slope = (double)dX / (double)dY;
-                for (short lineY=fromPos.Y; lineY!=toPos.Y; lineY += incY)
-                {
-                    double lineXfloat = (lineY-fromPos.Y)*slope + fromPos.X;
-                    short lineX = (short)Math.Round(lineXfloat);
-                    if (_terrain.GetTile(lineX, lineY).BlocksVision)
-                        return false;
-                }
-            }
-
-            return true;
-        }
-
         internal IList<Vector2Di> GetGoalTiles(int teamId)
         {
             return this._terrain.GoalPointsMap[teamId];

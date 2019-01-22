@@ -53,10 +53,17 @@ namespace BattlePlan.Viewer
             _exitEditor = false;
             while (!_exitEditor)
             {
+                // If we're supposed to show defenders' range/line-of-site regions, make sure we've
+                // got the grid built.  We may have deleted it when we added/removed defenders.
+                if (_mode==EditorMode.Defenders && _showDefenderLOS && _defenderLOSTiles==null)
+                    BuildDefenderLOSMap();
+
+                var terrainOverride = (_mode==EditorMode.Defenders && _showDefenderLOS)? _defenderLOSTiles : null;
+
                 // Draw the map and everything on it.
                 _canvas.BeginFrame();
                 WriteModeHelp();
-                _canvas.PaintTerrain(_scenario.Terrain, 0, 0);
+                _canvas.PaintTerrain(_scenario.Terrain, terrainOverride, 0, 0);
                 _canvas.PaintSpawnPoints(_scenario.Terrain, 0, 0);
                 _canvas.PaintGoalPoints(_scenario.Terrain, 0, 0);
                 DrawDefenderPlacements();
@@ -93,6 +100,9 @@ namespace BattlePlan.Viewer
         private int _selectedSpawnPointIndex;
         private List<UnitCharacteristics> _attackerClasses;
         private List<UnitCharacteristics> _defenderClasses;
+        private bool _showDefenderLOS;
+        private int[,] _defenderLOSTiles;
+
 
         /// <summary>
         /// Called on start, or when a new scenario is loaded.  Rebuilds internal data and such.
@@ -114,6 +124,8 @@ namespace BattlePlan.Viewer
             _mode = EditorMode.Terrain;
             _teamId = _minimumTeamId;
             _paintEnabled = false;
+            _defenderLOSTiles = null;
+            _showDefenderLOS = false;
         }
 
         private void ProcessUserInput()
@@ -196,7 +208,12 @@ namespace BattlePlan.Viewer
             {
                 var tileVal = _scenario.Terrain.GetTileValue(oldX, oldY);
                 _scenario.Terrain.SetTileValue(_cursorX, _cursorY, tileVal);
+
+                // Invalidate the LoS map.
+                _defenderLOSTiles = null;
             }
+
+            _statusMsg = $"({_cursorX}, {_cursorY})";
         }
 
         private void CycleMode()
@@ -236,6 +253,10 @@ namespace BattlePlan.Viewer
 
             var mapGenerator = new Generator(_mapGenOptions);
             var terrain = mapGenerator.Create();
+
+            // Invalidate the LoS map.
+            _defenderLOSTiles = null;
+
             return terrain;
         }
 
@@ -318,6 +339,9 @@ namespace BattlePlan.Viewer
             if (keyNumberValue>=1 && keyNumberValue<=_scenario.Terrain.TileTypes.Count)
             {
                 _scenario.Terrain.SetTileValue(_cursorX, _cursorY, (byte)(keyNumberValue-1));
+
+                // Invalidate the LoS map.
+                _defenderLOSTiles = null;
             }
         }
 
@@ -328,6 +352,7 @@ namespace BattlePlan.Viewer
             _canvas.WriteText($"(T) Team {_teamId}", col, row++, _teamId);
 
             _canvas.ClearToRight(col, row++);
+            _canvas.WriteText("(\\) toggle LoS", col, row++, 0);
             _canvas.WriteText("(Backspace) clear all", col, row++, 0);
             _canvas.WriteText("(1) none", col, row++, 0);
 
@@ -351,6 +376,9 @@ namespace BattlePlan.Viewer
             {
                 case '1':
                     RemoveDefender();
+                    return;
+                case '\\':
+                    _showDefenderLOS = !_showDefenderLOS;
                     return;
             }
 
@@ -502,6 +530,9 @@ namespace BattlePlan.Viewer
             if (newTileVal >= _scenario.Terrain.TileTypes.Count)
                 newTileVal = 0;
             _scenario.Terrain.SetTileValue(_cursorX, _cursorY, newTileVal);
+
+            // Invalidate the LoS map.
+            _defenderLOSTiles = null;
         }
 
         private void ClearAllTiles()
@@ -590,12 +621,18 @@ namespace BattlePlan.Viewer
             foreach (var plan in _scenario.DefensePlans)
                 plan.Placements = plan.Placements.Where( (placement) => placement.Position!=cursorPos )
                     .ToList();
+
+            // Invalidate the LOS map.  It will be rebuilt later.
+            _defenderLOSTiles = null;
         }
 
         private void RemoveAllDefenders()
         {
             _scenario.DefensePlans = _scenario.DefensePlans.Where( (plan) => plan.TeamId!=_teamId )
                 .ToList();
+
+            // Invalidate the LOS map.  It will be rebuilt later.
+            _defenderLOSTiles = null;
         }
 
         private void PlaceDefender(UnitCharacteristics unitClass)
@@ -615,6 +652,9 @@ namespace BattlePlan.Viewer
                 Position = new Vector2Di(_cursorX, _cursorY)
             };
             plan.Placements.Add(placement);
+
+            // Invalidate the LOS map.  It will be rebuilt later.
+            _defenderLOSTiles = null;
         }
 
         private void ClearSpawnsAndGoalsForTeam()
@@ -716,6 +756,55 @@ namespace BattlePlan.Viewer
         {
             AttackPlan plan = _scenario.AttackPlans.FirstOrDefault( (ap) => ap.TeamId == _teamId);
             plan?.Spawns.Clear();
+        }
+
+        /// <summary>
+        /// Builds a grid indicating which tiles are visible from currently placed defenders.
+        /// </summary>
+        private void BuildDefenderLOSMap()
+        {
+            _defenderLOSTiles = new int[_scenario.Terrain.Width, _scenario.Terrain.Height];
+            foreach (var plan in _scenario.DefensePlans)
+            {
+                foreach (var defPlacement in plan.Placements)
+                {
+                    var unitClass = _scenario.UnitTypes.FirstOrDefault( (ut) => ut.Name==defPlacement.UnitType);
+                    var range = unitClass.WeaponRangeTiles;
+                    if (unitClass != null && unitClass.WeaponDamage>0 && range>0)
+                    {
+                        var minX = Math.Max(0, (int)Math.Round(defPlacement.Position.X - range));
+                        var minY = Math.Max(0, (int)Math.Round(defPlacement.Position.Y - range));
+                        var maxX = Math.Min(_scenario.Terrain.Width-1, (int)Math.Round(defPlacement.Position.X + range));
+                        var maxY = Math.Min(_scenario.Terrain.Height-1, (int)Math.Round(defPlacement.Position.Y + range));
+
+                        for (var y=minY; y<=maxY; ++y)
+                        {
+                            for (var x=minX; x<=maxX; ++x)
+                            {
+                                var pos = new Vector2Di(x, y);
+                                if (pos.DistanceTo(defPlacement.Position)>range)
+                                    continue;
+
+                                var currentVal = _defenderLOSTiles[x,y];
+
+                                // Using -1 to signify multiple teams have LOS on this spot.
+                                if (currentVal==-1)
+                                    continue;
+
+                                if (currentVal != plan.TeamId)
+                                {
+                                    var visible = _scenario.Terrain.HasLineOfSight(defPlacement.Position, pos);
+                                    if (visible && currentVal==0)
+                                        _defenderLOSTiles[x,y] = plan.TeamId;
+                                    else if (visible)
+                                        _defenderLOSTiles[x,y] = -1;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
         }
     }
 }

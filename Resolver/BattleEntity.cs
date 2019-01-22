@@ -293,7 +293,7 @@ namespace BattlePlan.Resolver
         {
             Func<BattleEntity,bool> isEnemy = (ent) => ent.TeamId != this.TeamId;
             Func<BattleEntity,bool> inRange = (ent) => this.Position.DistanceTo(ent.Position)<=this.Class.WeaponRangeTiles;
-            Func<BattleEntity,bool> visible = (ent) => battleState.HasLineOfSight(this.Position, ent.Position);
+            Func<BattleEntity,bool> visible = (ent) => battleState.Terrain.HasLineOfSight(this.Position, ent.Position);
 
             return battleState.GetAllEntities()
                 .Where(isEnemy)

@@ -74,7 +74,7 @@ namespace BattlePlan.Viewer
                 _canvas.WriteTextEvents(_recentTextEvents, resolution.Terrain.Width + 2, 0);
 
                 // Draw the map and everything on it.
-                _canvas.PaintTerrain(resolution.Terrain, 0, 0);
+                _canvas.PaintTerrain(resolution.Terrain, null, 0, 0);
                 _canvas.PaintSpawnPoints(resolution.Terrain, 0, 0);
                 _canvas.PaintGoalPoints(resolution.Terrain, 0, 0);
                 _canvas.PaintEntities(_entities.Values, 0, 0);
