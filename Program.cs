@@ -40,7 +40,7 @@ namespace BattlePlan
             var scenario = JsonConvert.DeserializeObject<Scenario>(fileContentsAsString);
 
             if (scenario.UnitTypes == null)
-                scenario.UnitTypes = LoadUnits("scenarios/units.json");
+                scenario.UnitTypes = LoadUnits("resources/units.json");
 
             var resolver = new BattleState();
             var result = resolver.Resolve(scenario);

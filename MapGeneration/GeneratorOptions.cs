@@ -9,13 +9,13 @@ namespace BattlePlan.MapGeneration
     /// </summary>
     public class GeneratorOptions
     {
-        public int Height { get; set; }
-        public int Width { get; set; }
-        public int ChunkSizeX { get; set; }
-        public int ChunkSizeY{ get; set; }
-        public int PositiveCycleCount { get; set; }
-        public int NegativeCycleCount { get; set; }
-        public int SpawnPointCount { get; set; }
-        public int GoalCount { get; set; }
+        public int Height { get; set; } = 50;
+        public int Width { get; set; } = 36;
+        public int ChunkSizeX { get; set; } = 7;
+        public int ChunkSizeY{ get; set; } = 4;
+        public int PositiveCycleCount { get; set; } = 60;
+        public int NegativeCycleCount { get; set; } = 10;
+        public int SpawnPointCount { get; set; } = 3;
+        public int GoalCount { get; set; } = 3;
     }
 }

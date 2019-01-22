@@ -14,6 +14,11 @@ namespace BattlePlan.Viewer
     /// </summary>
     public class LowEffortEditor
     {
+        public LowEffortEditor()
+        {
+            LoadOrCreateGeneratorOptions();
+        }
+
         public void EditScenario(string filename)
         {
             // TODO: clean up various load scenarios
@@ -82,7 +87,9 @@ namespace BattlePlan.Viewer
         private const int _minimumTeamId = 1;
         private const int _maximumTeamId = 2;
 
-        private const string _unitsFileName = "scenarios/units.json";
+        private const string _unitsFileName = "resources/units.json";
+
+        private const string _optionsFile = ".options.json";
 
         private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
         private GeneratorOptions _mapGenOptions;
@@ -110,10 +117,7 @@ namespace BattlePlan.Viewer
         private void InitFromScenario()
         {
             if (_scenario.UnitTypes == null)
-            {
-                var fileContentsAsString = File.ReadAllText(_unitsFileName);
-                _scenario.UnitTypes = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(fileContentsAsString);
-            }
+                _scenario.UnitTypes = LoadUnitsFile();
 
             // Make lists of which units can attack or defend, for spawn/placement menus.
             _attackerClasses = _scenario.UnitTypes.Where( (uc) => uc.CanAttack ).ToList();
@@ -227,15 +231,38 @@ namespace BattlePlan.Viewer
 
         private IList<UnitCharacteristics> LoadUnitsFile()
         {
-            var fileContentsAsString = File.ReadAllText("scenarios/units.json");
+            var fileContentsAsString = File.ReadAllText(_unitsFileName);
             var unitsList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(fileContentsAsString);
             return unitsList;
         }
 
         private Terrain GenerateTerrain()
         {
-            // TODO: add ability to edit generator options in the editor, and save/load
-            // as needed.
+            var mapGenerator = new Generator(_mapGenOptions);
+            var terrain = mapGenerator.Create();
+
+            // Invalidate the LoS map.
+            _defenderLOSTiles = null;
+
+            return terrain;
+        }
+
+        private void LoadOrCreateGeneratorOptions()
+        {
+            try
+            {
+                var fileContentsAsString = File.ReadAllText(_optionsFile);
+                _mapGenOptions = JsonConvert.DeserializeObject<GeneratorOptions>(fileContentsAsString);
+            }
+            catch (IOException)
+            {
+                // TODO: Add logging
+            }
+            catch (JsonException)
+            {
+                // TODO: Add logging
+            }
+
             if (_mapGenOptions ==  null)
             {
                 _mapGenOptions = new GeneratorOptions()
@@ -250,21 +277,35 @@ namespace BattlePlan.Viewer
                     GoalCount = 3,
                 };
             }
+        }
 
-            var mapGenerator = new Generator(_mapGenOptions);
-            var terrain = mapGenerator.Create();
+        private void SaveGeneratorOptions()
+        {
+            if (_mapGenOptions==null)
+                return;
 
-            // Invalidate the LoS map.
-            _defenderLOSTiles = null;
-
-            return terrain;
+            try
+            {
+                var fileContentsAsString = JsonConvert.SerializeObject(_mapGenOptions);
+                File.WriteAllText(_optionsFile, fileContentsAsString);
+            }
+            catch (IOException ioe)
+            {
+                // TODO: Add logging
+                _statusMsg = ioe.Message;
+            }
+            catch (JsonException je)
+            {
+                // TODO: Add logging
+                _statusMsg = je.Message;
+            }
         }
 
         private void WriteModeHelp()
         {
             int row = 0;
             int col = _scenario.Terrain.Width + 2;
-            _canvas.WriteText("(Enter) Mode:", col, row++, 0);
+            _canvas.WriteText("(Enter) mode:", col, row++, 0);
             _canvas.WriteText($"{_mode}", col, row++, 0);
 
             switch (_mode)
@@ -315,6 +356,7 @@ namespace BattlePlan.Viewer
             _canvas.WriteText("(Backspace) clear all", col, row++, 0);
             _canvas.WriteText($"(P) toggle paint mode ({paintModeIndicator})", col, row++, 0);
             _canvas.WriteText("(R) randomly generate", col, row++, 0);
+            _canvas.WriteText("(O) generator options", col, row++, 0);
         }
 
         private void ProcessKeyTerrainMode(ConsoleKeyInfo keyInfo)
@@ -332,6 +374,9 @@ namespace BattlePlan.Viewer
                     return;
                 case ConsoleKey.R:
                     _scenario.Terrain = GenerateTerrain();
+                    return;
+                case ConsoleKey.O:
+                    PromptToEditGeneratorOptions();
                     return;
             }
 
@@ -393,13 +438,13 @@ namespace BattlePlan.Viewer
         {
             Debug.Assert(_mode==EditorMode.SpawnsAndGoals);
 
-            _canvas.WriteText($"(T) Team {_teamId}", col, row++, _teamId);
+            _canvas.WriteText($"(T) team {_teamId}", col, row++, _teamId);
 
             _canvas.ClearToRight(col, row++);
             _canvas.WriteText("(Backspace) clear all", col, row++, 0);
             _canvas.WriteText("(1) remove", col, row++, 0);
-            _canvas.WriteText("(2) add spawn", col, row++, 0);
-            _canvas.WriteText("(3) add goal", col, row++, 0);
+            _canvas.WriteText("(2) add spawn O", col, row++, 0);
+            _canvas.WriteText("(3) add goal X", col, row++, 0);
         }
 
         private void ProcessKeySpawnsAndGoalsMode(ConsoleKeyInfo keyInfo)
@@ -455,16 +500,16 @@ namespace BattlePlan.Viewer
             var existingTimesStr = String.Join(", ", existingSpawnTimes);
 
             // Basic selections: team, spawn point delay, spawn point index.
-            _canvas.WriteText($"(T) Team {_teamId}", col, row++, _teamId);
-            _canvas.WriteText($"(D) Spawn Delay Time {_spawnTime}", col, row++, 0);
+            _canvas.WriteText($"(T) team {_teamId}", col, row++, _teamId);
+            _canvas.WriteText($"(D) spawn delay time {_spawnTime}", col, row++, 0);
             _canvas.WriteText("  " + existingTimesStr, col, row++, 0);
-            _canvas.WriteText($"(P) Spawn Point {spawnPointText}" , col, row++, 0);
+            _canvas.WriteText($"(P) spawn point {spawnPointText}" , col, row++, 0);
 
             if (hasSpawnPoint)
             {
                 _canvas.ClearToRight(col, row++);
                 _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-                _canvas.WriteText($"(1) Clear for this time", col, row++, 0);
+                _canvas.WriteText($"(1) clear for this time", col, row++, 0);
 
                 // Write a list of all available attacker types.  But the trick part is, we also
                 // want to include the count for that unit type already assigned.
@@ -545,7 +590,7 @@ namespace BattlePlan.Viewer
             var prompt = String.IsNullOrEmpty(_lastScenarioFilename)?
                 "Load file name: "
                 : $"Load file name (enter for {_lastScenarioFilename}): ";
-            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
+            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt, true);
 
             try
             {
@@ -575,7 +620,7 @@ namespace BattlePlan.Viewer
             var prompt = String.IsNullOrEmpty(_lastScenarioFilename)?
                 "Save file name: "
                 : $"Save file name (enter for {_lastScenarioFilename}): ";
-            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
+            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt, true);
 
             try
             {
@@ -703,7 +748,7 @@ namespace BattlePlan.Viewer
         {
             const int maxSaneTime = 1000;
             var prompt = $"Spawn Delay Time (enter for {_spawnTime}): ";
-            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
+            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt, true);
 
             if (!String.IsNullOrWhiteSpace(input))
             {
@@ -805,6 +850,38 @@ namespace BattlePlan.Viewer
                 }
 
             }
+        }
+
+        private void EditPoco<T>(T obj)
+        {
+            int row = 0;
+            _canvas.Init();
+            _canvas.BeginFrame();
+
+            _canvas.WriteText($"Edit values for {obj.GetType().Name} -", 0, row++, 0);
+
+            var props = obj.GetType().GetProperties();
+            foreach (var prop in props)
+            {
+                var curVal = Convert.ToString(prop.GetValue(obj));
+                var prompt = $"  {prop.Name} (enter for {curVal}):";
+                var input = _canvas.PromptForInput(0, row++, prompt, false);
+
+                if (!String.IsNullOrWhiteSpace(input))
+                {
+                    var newVal = Convert.ChangeType(input, prop.PropertyType);
+                    prop.SetValue(obj, newVal);
+                }
+            }
+
+            _canvas.EndFrame();
+            _canvas.Init();
+        }
+
+        private void PromptToEditGeneratorOptions()
+        {
+            EditPoco(_mapGenOptions);
+            SaveGeneratorOptions();
         }
     }
 }

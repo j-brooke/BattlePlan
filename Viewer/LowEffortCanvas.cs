@@ -247,7 +247,7 @@ namespace BattlePlan.Viewer
             }
         }
 
-        public string PromptForInput(int x, int y, string prompt)
+        public string PromptForInput(int x, int y, string prompt, bool clearLineAfter)
         {
             Console.ResetColor();
             Console.CursorVisible = true;
@@ -257,8 +257,11 @@ namespace BattlePlan.Viewer
             Console.Write(prompt);
             var input = Console.ReadLine();
 
-            Console.SetCursorPosition(x, y);
-            ClearToEndOfLine();
+            if (clearLineAfter)
+            {
+                Console.SetCursorPosition(x, y);
+                ClearToEndOfLine();
+            }
 
             return input;
         }
