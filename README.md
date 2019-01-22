@@ -10,8 +10,15 @@ https://dotnet.microsoft.com/download
 
 ## Running
 
-Right now I'm assuming that anyone trying to run this is a dev, and so they have the SDK installed.  As such, these
-instructions assume you're working from source code rather than a published app.
+If you're working from source code and the .NET Core SDK, you run the app like this:
+
+    dotnet run <some_args>
+
+If you're running from a published DLL, it's like this:
+
+    dotnet battleplan.dll <some_args>
+
+The rest of these instructions assume the earlier situation, but hopefully it's obvious how to adapt.
 
 ### Play
 
@@ -32,4 +39,7 @@ or
 
     dotnet run edit scenarios/somefile.json
 
-Not all features are supported yet.  But it looks nice!
+The right sidebar lists commands available in the current mode.  Hit Enter to change modes.  In some modes you can hit T to change which team you're editing for.  In Attacks mode, you must also pick a spawn point and time delay to add attackers at.
+
+In most other modes, you use the cursor keys to move around the map and then various keys to place terrain, spawns/goals, or defenders.
+

@@ -88,11 +88,16 @@ namespace BattlePlan.Path
                 path.Reverse();
             }
 
-            // TODO: replace with proper logging
-            Console.WriteLine($"Path searched between {startNode} and {destNode}: closedSetCount={closedSet.Count}; timeMS={timer.ElapsedMilliseconds}");
+            _logger.Debug("Path searched from {0} to {1}: closedSetCount={2}; timeMS={3}",
+                startNode,
+                destNode,
+                closedSet.Count,
+                timer.ElapsedMilliseconds);
 
             return path;
         }
+
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private class PathPiece<T>
         {

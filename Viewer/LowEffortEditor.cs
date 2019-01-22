@@ -91,6 +91,8 @@ namespace BattlePlan.Viewer
 
         private const string _optionsFile = ".options.json";
 
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
         private GeneratorOptions _mapGenOptions;
         private Scenario _scenario;
@@ -251,16 +253,19 @@ namespace BattlePlan.Viewer
         {
             try
             {
-                var fileContentsAsString = File.ReadAllText(_optionsFile);
-                _mapGenOptions = JsonConvert.DeserializeObject<GeneratorOptions>(fileContentsAsString);
+                if (File.Exists(_optionsFile))
+                {
+                    var fileContentsAsString = File.ReadAllText(_optionsFile);
+                    _mapGenOptions = JsonConvert.DeserializeObject<GeneratorOptions>(fileContentsAsString);
+                }
             }
-            catch (IOException)
+            catch (IOException ioe)
             {
-                // TODO: Add logging
+                _logger.Warn(ioe, "Error loading GeneratorOptions file");
             }
-            catch (JsonException)
+            catch (JsonException je)
             {
-                // TODO: Add logging
+                _logger.Warn(je, "Error loading GeneratorOptions file");
             }
 
             if (_mapGenOptions ==  null)
@@ -291,12 +296,12 @@ namespace BattlePlan.Viewer
             }
             catch (IOException ioe)
             {
-                // TODO: Add logging
+                _logger.Warn(ioe, "Error loading GeneratorOptions file");
                 _statusMsg = ioe.Message;
             }
             catch (JsonException je)
             {
-                // TODO: Add logging
+                _logger.Warn(je, "Error loading GeneratorOptions file");
                 _statusMsg = je.Message;
             }
         }

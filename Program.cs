@@ -12,6 +12,8 @@ namespace BattlePlan
     {
         static void Main(string[] args)
         {
+            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("resources/NLog.config");
+
             string verb = "play";
             if (args.Length>0)
                 verb = args[0];
@@ -26,7 +28,11 @@ namespace BattlePlan
                 Edit(filename);
             else
                 Help();
+
+            NLog.LogManager.Shutdown();
         }
+
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private static void Play(string filename)
         {
