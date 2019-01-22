@@ -11,3 +11,4 @@
     * Berserker - melee that seeks out combat over following path
     * Scout - high damage avoidance, high speed
     * Archer - on attack, stops to shoot whenever possible
+* Viewer: Fix flickering (mostly on Windows)

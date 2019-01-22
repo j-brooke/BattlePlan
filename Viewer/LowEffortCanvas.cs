@@ -19,6 +19,11 @@ namespace BattlePlan.Viewer
             Console.TreatControlCAsInput = true;
             Console.Clear();
             _maxRowDrawn = 0;
+
+            // Create an array of spaces.  Used for clearing lines.
+            var numSpaces = Math.Max(80, Console.BufferWidth);
+            _lotsOfSpaces = new char[numSpaces];
+            Array.Fill(_lotsOfSpaces, ' ');
         }
 
         public void Shutdown()
@@ -254,6 +259,7 @@ namespace BattlePlan.Viewer
             Console.SetCursorPosition(x, y);
             ClearToEndOfLine();
 
+            Console.SetCursorPosition(x, y);
             Console.Write(prompt);
             var input = Console.ReadLine();
 
@@ -287,6 +293,9 @@ namespace BattlePlan.Viewer
         // Used to track where to put the cursor when we shut down.
         private int _maxRowDrawn = 0;
 
+        // An array of just spaces, used for clearing lines.
+        private char[] _lotsOfSpaces;
+
         private void WriteText(string text, ConsoleColor color)
         {
             if (this.UseColor)
@@ -296,7 +305,19 @@ namespace BattlePlan.Viewer
 
         private void ClearToEndOfLine()
         {
-            Console.Write("\u001B[K");
+            // Windows doesn't recognize ANSI command sequences like the one to clear to the end of the line, so
+            // for it we have to just write a lot of spaces.  Using spaces on Mac causes horrible flickering,
+            // which is otherwise absent for me.  Maybe the use of ANSI commands changes its buffering strategy
+            // or something.  Windows flickers horribly no matter what and will require refactoring to fix.
+            if (Environment.OSVersion.Platform==PlatformID.Win32NT)
+            {
+                var spaceCount = Console.BufferWidth - Console.CursorLeft;
+                Console.Write(_lotsOfSpaces, 0, spaceCount);
+            }
+            else
+            {
+                Console.Write("\u001B[K");
+            }
         }
 
         // TODO: Color values should probably come from a config file.
