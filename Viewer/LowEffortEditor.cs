@@ -93,6 +93,13 @@ namespace BattlePlan.Viewer
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
+        // Write stuff as nicely-formatted JSON.
+        // TODO: Make this optional?
+        private static JsonSerializerSettings _jsonOpts = new JsonSerializerSettings()
+        {
+            Formatting = Formatting.Indented,
+        };
+
         private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
         private GeneratorOptions _mapGenOptions;
         private Scenario _scenario;
@@ -291,7 +298,7 @@ namespace BattlePlan.Viewer
 
             try
             {
-                var fileContentsAsString = JsonConvert.SerializeObject(_mapGenOptions);
+                var fileContentsAsString = JsonConvert.SerializeObject(_mapGenOptions, _jsonOpts);
                 File.WriteAllText(_optionsFile, fileContentsAsString);
             }
             catch (IOException ioe)
@@ -630,7 +637,7 @@ namespace BattlePlan.Viewer
             try
             {
                 var filename = String.IsNullOrEmpty(input)? _lastScenarioFilename : input;
-                var fileContentsAsString = JsonConvert.SerializeObject(_scenario);
+                var fileContentsAsString = JsonConvert.SerializeObject(_scenario, _jsonOpts);
                 File.WriteAllText(filename, fileContentsAsString);
 
                 _lastScenarioFilename = filename;

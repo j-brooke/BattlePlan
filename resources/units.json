@@ -10,6 +10,8 @@
     "WeaponReloadTime": 0.5,
     "WeaponRangeTiles": 1.5,
     "WeaponDamage": 60,
+    "CrowdAversionBias": 2.0,
+    "HurtAversionBias": 2.0,
     "ResourceCost": 100
   },
   {
@@ -23,6 +25,8 @@
     "WeaponReloadTime": 0.5,
     "WeaponRangeTiles": 1.5,
     "WeaponDamage": 40,
+    "CrowdAversionBias": 5.0,
+    "HurtAversionBias": 100.0,
     "ResourceCost": 100
   },
   {
@@ -36,6 +40,8 @@
     "WeaponReloadTime": 0.7,
     "WeaponRangeTiles": 8.0,
     "WeaponDamage": 20,
+    "CrowdAversionBias": 1.0,
+    "HurtAversionBias": 1.0,
     "ResourceCost": 100
   },
   {
@@ -49,6 +55,8 @@
     "WeaponReloadTime": 0.0,
     "WeaponRangeTiles": 0.0,
     "WeaponDamage": 0,
+    "CrowdAversionBias": 0,
+    "HurtAversionBias": 0,
     "ResourceCost": 100
   }
 ]

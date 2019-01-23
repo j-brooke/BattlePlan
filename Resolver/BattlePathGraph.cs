@@ -9,6 +9,8 @@ namespace BattlePlan.Resolver
     /// <summary>
     /// Class that provides graph-theory type answers to the pathfinding algorithm based on the 2D tile map
     /// used by the game.
+    ///
+    /// TODO: Given how coupled this is with BattleState, maybe it shouldn't be a separate class.
     /// </summary>
     internal class BattlePathGraph : IPathGraph<Vector2Di>
     {
@@ -30,6 +32,10 @@ namespace BattlePlan.Resolver
         /// </summary>
         public double Cost(Vector2Di fromNode, Vector2Di toNode)
         {
+            // Don't bother penalizing friendly obstructions further away than this.  Odds are
+            // whoever it is will have moved or died before we get there.
+            const double crowdAversionRange = 8.0;
+
             if (toNode.Equals(_afterGoalNode))
             {
                 if (_goals.Contains(fromNode))
@@ -42,9 +48,10 @@ namespace BattlePlan.Resolver
             double distance = Math.Sqrt(delta.X*delta.X + delta.Y*delta.Y);
             double timeToMove = distance/_unitSpeedTilesPerSecond;
 
+            double penalty = 0.0;
+
             // Possibly add penalties for things in the way.  We want units to look for routes around things
             // if it's not too much of a hassle, but wait or attack other times.
-            double penalty = 0.0;
             if (_battleState != null && _searchForEntity != null)
             {
                 var blockingEnt = _battleState.GetEntityAt(toNode);
@@ -55,14 +62,14 @@ namespace BattlePlan.Resolver
                         if (blockingEnt.SpeedTilesPerSec<=0.0)
                         {
                             // If the blocking entity can't move, strongly incentivise this one to go around.
-                            // (Does this work?  Not sure how math goes with PositiveInfinity.)
                             penalty = double.PositiveInfinity;
                         }
                         else
                         {
                             // If the blocking entity is mobile, make a penalty based on its speed and how far away
                             // it is.  We don't want to worry too much about distant obstacles.
-                            penalty = 2.0/blockingEnt.SpeedTilesPerSec;
+                            if (_searchForEntity.Position.DistanceTo(blockingEnt.Position)<crowdAversionRange)
+                                penalty = _searchForEntity.Class.CrowdAversionBias/blockingEnt.SpeedTilesPerSec;
                         }
                     }
                     else
@@ -77,9 +84,27 @@ namespace BattlePlan.Resolver
                 }
             }
 
-            return timeToMove + penalty;
+            // Add a penalty for tiles where this entity will take damage.
+            var enemyDpsInTile = _battleState.HurtMap.GetHurtFactor(toNode, _searchForEntity.TeamId);
+            {
+                // Normalize the DPS relative to the unit's health.  (Should this be it's starting HP instead?)
+                var myDeathPerSecond = enemyDpsInTile / _searchForEntity.HitPoints;
+                penalty += _searchForEntity.Class.HurtAversionBias * myDeathPerSecond;
+
+                // TODO: A possibly better approach would be to sum all the time-based penalties and time to move,
+                // above, and then assess a hurt penalty based on the DPS and how long we expect to stay in the tile.
+                // A barrier with an archer covering it should count for more than a separate barrier and archer at
+                // different places on the path.  On the other hand, if you make things too smart, it takes the fun out.
+                // Plus, this wouldn't allow for a unit to know how much team help it has.
+            }
+
+            return Math.Max(timeToMove + penalty, 0.0);
         }
 
+        /// <summary>
+        /// Returns an estimate of the cost of the path between two (potentially distant) points.
+        /// This is what the A* algorithm often calls the "heuristic".
+        /// </summary>
         public double EstimatedDistance(Vector2Di fromNode, Vector2Di toNode)
         {
             // _afterGoalNode is a special consolidating-node that only our official goal nodes

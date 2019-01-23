@@ -22,6 +22,7 @@ namespace BattlePlan.Path
 
         /// <summary>
         /// Estimated cost for the entire path from one node to any other one (not necessarily a neighbor).
+        /// This is what the A* algorithm often calls the "heuristic".
         /// </summary>
         double EstimatedDistance(T fromNode, T toNode);
     }

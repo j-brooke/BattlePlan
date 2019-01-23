@@ -12,7 +12,8 @@ namespace BattlePlan.Resolver
     /// </summary>
     public sealed class BattleState
     {
-        public Terrain Terrain { get { return _terrain; } }
+        public Terrain Terrain => _terrain;
+        internal HurtMap HurtMap => _hurtMap;
 
         public BattleResolution Resolve(Scenario scenario)
         {
@@ -35,6 +36,7 @@ namespace BattlePlan.Resolver
             _entities = new List<BattleEntity>();
             _entityPositions = new Dictionary<Vector2Di, BattleEntity>();
             _pathGraph = new BattlePathGraph(this);
+            _hurtMap = new HurtMap(_terrain);
 
             var attackerBreachCounts = new Dictionary<int,int>();
 
@@ -46,7 +48,7 @@ namespace BattlePlan.Resolver
                 var copy = new AttackPlan()
                 {
                     TeamId = plan.TeamId,
-                    Spawns = new List<AttackerSpawn>(plan.Spawns),
+                    Spawns = plan.Spawns.OrderBy( (spawn) => spawn.Time ).ToList(),
                 };
                 remainingAttackerSpawns.Add(copy);
 
@@ -66,6 +68,9 @@ namespace BattlePlan.Resolver
                     _events.Add(CreateEvent(0.0, BattleEventType.Spawn, newEntity, null));
                 }
             }
+
+            // Update the hurtmap with the initial defenders list.
+            _hurtMap.Update(_entities);
 
             var previousTime = 0.0;
             var time = 0.0;
@@ -114,6 +119,7 @@ namespace BattlePlan.Resolver
                     _events.Add(CreateEvent(time, BattleEventType.Die, deadEnt, null));
                     _events.Add(CreateEvent(time, BattleEventType.Despawn, deadEnt, null));
                     deadEnt.PrepareToDespawn(this);
+                    _hurtMap.InvalidateTeam(deadEnt.TeamId);
                 }
 
                 // Spawn new entities
@@ -134,6 +140,9 @@ namespace BattlePlan.Resolver
                         }
                     }
                 }
+
+                // Update the hurtmap.
+                _hurtMap.Update(_entities);
 
                 // End things if there are no attacker units left (and nothing left to spawn),
                 // or if the time gets too high.
@@ -209,6 +218,7 @@ namespace BattlePlan.Resolver
         private Dictionary<string, UnitCharacteristics> _unitTypeMap;
 
         private int _nextId;
+        private HurtMap _hurtMap;
 
         private static readonly double _maxTime = 300.0;
         private static readonly double _timeSlice = 0.1;

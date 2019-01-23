@@ -16,5 +16,7 @@ namespace BattlePlan.Common
         public double WeaponRangeTiles { get; set; }
         public int WeaponDamage { get; set; }
         public int ResourceCost { get; set; }
+        public double CrowdAversionBias { get; set; }
+        public double HurtAversionBias { get; set; }
     }
 }
