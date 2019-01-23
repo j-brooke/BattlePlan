@@ -22,6 +22,8 @@ namespace BattlePlan
             if (args.Length>1)
                 filename = args[1];
 
+            _logger.Info("===Beginning {0} {1}", verb, filename);
+
             if (verb.Equals("play", StringComparison.CurrentCultureIgnoreCase))
                 Play(filename);
             else if (verb.Equals("edit", StringComparison.CurrentCultureIgnoreCase))

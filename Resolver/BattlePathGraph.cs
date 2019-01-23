@@ -62,7 +62,7 @@ namespace BattlePlan.Resolver
                         {
                             // If the blocking entity is mobile, make a penalty based on its speed and how far away
                             // it is.  We don't want to worry too much about distant obstacles.
-                            penalty = 2.0/blockingEnt.SpeedTilesPerSec/_searchForEntity.Position.DistanceTo(toNode);
+                            penalty = 2.0/blockingEnt.SpeedTilesPerSec;
                         }
                     }
                     else
@@ -82,13 +82,24 @@ namespace BattlePlan.Resolver
 
         public double EstimatedDistance(Vector2Di fromNode, Vector2Di toNode)
         {
+            // _afterGoalNode is a special consolidating-node that only our official goal nodes
+            // are connected to.  It doesn't represent an actual point in grid-space.  If
+            // we're estimating a distance to it, what we really want is the shortest estimate
+            // to our goal nodes.
+            double dist;
             if (toNode.Equals(_afterGoalNode))
-                return 0.0;
+            {
+                dist = _goals
+                    .Select( (goalNode) => DiagonalDistance(fromNode, goalNode) )
+                    .Min();
+            }
+            else
+            {
+                dist = DiagonalDistance(fromNode, toNode);
+            }
 
-            var dist = _terrain.GoalPointsMap[1]
-                .Select( (goalNode) => DiagonalDistance(fromNode, goalNode) )
-                .Min();
-            return dist;
+            var time = dist/_unitSpeedTilesPerSecond;
+            return time;
         }
 
         public IEnumerable<Vector2Di> Neighbors(Vector2Di fromNode)
@@ -178,6 +189,7 @@ namespace BattlePlan.Resolver
             return visited;
         }
 
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static double _sqrt2 = Math.Sqrt(2.0);
 
         // Special non-Euclidean point used as a single destination to which all "real" destinations are connected.

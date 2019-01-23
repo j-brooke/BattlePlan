@@ -9,8 +9,20 @@ namespace BattlePlan.Path
     /// </summary>
     public interface IPathGraph<T>
     {
+        /// <summary>
+        /// Returns a collection of nodes that are directly connected to the given one.
+        /// </summary>
         IEnumerable<T> Neighbors(T fromNode);
+
+        /// <summary>
+        /// Returns the actual cost of moving from one node to one of its neihbors.  This could be
+        /// a distance, time, monetary value, or whatever.  The cost must be non-negative.
+        /// </summary>
         double Cost(T fromNode, T toNode);
+
+        /// <summary>
+        /// Estimated cost for the entire path from one node to any other one (not necessarily a neighbor).
+        /// </summary>
         double EstimatedDistance(T fromNode, T toNode);
     }
 }
