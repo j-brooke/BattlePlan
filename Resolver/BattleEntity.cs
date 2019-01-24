@@ -96,7 +96,17 @@ namespace BattlePlan.Resolver
 
         private BattleEvent UpdateNone(BattleState battleState, double time, double deltaSeconds)
         {
-            return ChooseActionDefault(battleState, time, deltaSeconds);
+            switch (this.Class.Behavior)
+            {
+                case UnitBehavior.None:
+                    return ChooseActionNone(battleState, time, deltaSeconds);
+                case UnitBehavior.Rusher:
+                    return ChooseActionRusher(battleState, time, deltaSeconds);
+                case UnitBehavior.Marcher:
+                    return ChooseActionMarcher(battleState, time, deltaSeconds);
+                default:
+                    throw new NotImplementedException("Unit behavior not implemented.");
+            }
         }
         private BattleEvent UpdateMove(BattleState battleState, double time, double deltaSeconds)
         {
@@ -231,11 +241,24 @@ namespace BattlePlan.Resolver
         }
 
         /// <summary>
-        /// Chooses the unit's next action, using default AI.
+        /// Don't do anything.  Don't even dream about doing things.
         /// </summary>
-        private BattleEvent ChooseActionDefault(BattleState battleState, double time, double deltaSeconds)
+        private BattleEvent ChooseActionNone(BattleState battleState, double time, double deltaSeconds)
         {
             Debug.Assert(this.CurrentAction==Action.None);
+            Debug.Assert(this.Class.Behavior==UnitBehavior.None);
+
+            return null;
+        }
+
+        /// <summary>
+        /// Chooses the unit's next action, using the Rusher behavior.  Rushers try to move whenever they can
+        /// and only attack when their path is blocked.
+        /// </summary>
+        private BattleEvent ChooseActionRusher(BattleState battleState, double time, double deltaSeconds)
+        {
+            Debug.Assert(this.CurrentAction==Action.None);
+            Debug.Assert(this.Class.Behavior==UnitBehavior.Rusher);
 
             // If this is a mobile unit, try to move, or attack whatever's in the way.
             // Defenders can't move, even if their class can when they're on attack.
@@ -281,6 +304,70 @@ namespace BattlePlan.Resolver
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Chooses the unit's next action, using the Marcher behavior.  Marchers will attack when there's
+        /// an enemy in range and their weapon is ready, but otherwise they will keep moving.
+        /// </summary>
+        private BattleEvent ChooseActionMarcher(BattleState battleState, double time, double deltaSeconds)
+        {
+            Debug.Assert(this.CurrentAction==Action.None);
+            Debug.Assert(this.Class.Behavior==UnitBehavior.Marcher);
+
+            BattleEvent actionEvent = null;
+            if (this.Class.WeaponRangeTiles>0 && this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime)
+            {
+                // If we're able to attack, prioritize whatever is directly in our path.  The point here is
+                // to reduce the time Marchers might block a bottleneck.
+                if (this.PlannedPath!=null && this.PlannedPath.Count>0)
+                {
+                    var entityInNextPos = battleState.GetEntityAt(this.PlannedPath.Peek());
+                    if (entityInNextPos!=null && entityInNextPos.TeamId!=this.TeamId)
+                        actionEvent = TryBeginAttack(battleState, time, deltaSeconds, entityInNextPos);
+                }
+
+                // The next priority is the closest in-range enemy, if there is one.
+                if (actionEvent==null)
+                {
+                    var closestEnemy = ListEnemiesInRange(battleState)
+                        .OrderBy( (ent) => this.Position.DistanceTo(ent.Position) )
+                        .FirstOrDefault();
+                    if (closestEnemy != null)
+                        actionEvent = TryBeginAttack(battleState, time, deltaSeconds, closestEnemy);
+                }
+            }
+
+            // If this is a mobile unit and we didn't attack, try to move.
+            // Defenders can't move, even if their class can when they're on attack.
+            if (actionEvent==null && this.SpeedTilesPerSec>0 && this.IsAttacker)
+            {
+                if (this.PlannedPath==null || this.PlannedPath.Count==0)
+                    ChoosePath(battleState);
+
+                var nextPos = this.PlannedPath.Peek();
+
+                // This should be an adjacent tile.
+                Debug.Assert(this.Position.DistanceTo(nextPos)<=1.5);
+
+                var entityInNextPos = battleState.GetEntityAt(nextPos);
+
+                if (entityInNextPos==null)
+                {
+                    // Nothing to stop us moving into the next tile in out planned path.
+                    this.PlannedPath.Dequeue();
+                    actionEvent = TryBeginMove(battleState, time, deltaSeconds, nextPos);
+                }
+                else
+                {
+                    // The thing in our way is a friend.  Make sure we look for a new path next tick,
+                    // but then fall through to the block below to look for something to attack.
+                    // (This might get really expensive on the pathfinding.)
+                    this.PlannedPath = null;
+                }
+            }
+
+            return actionEvent;
         }
 
         private void ChoosePath(BattleState battleState)

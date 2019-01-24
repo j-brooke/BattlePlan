@@ -2,6 +2,7 @@
   {
     "Name": "Grunt",
     "Symbol": "T",
+    "Behavior": "Rusher",
     "CanAttack": true,
     "CanDefend": true,
     "SpeedTilesPerSec": 1.0,
@@ -17,6 +18,7 @@
   {
     "Name": "Scout",
     "Symbol": "i",
+    "Behavior": "Rusher",
     "CanAttack": true,
     "CanDefend": false,
     "SpeedTilesPerSec": 2.0,
@@ -32,6 +34,7 @@
   {
     "Name": "Archer",
     "Symbol": "{",
+    "Behavior": "Marcher",
     "CanAttack": true,
     "CanDefend": true,
     "SpeedTilesPerSec": 1.0,
@@ -47,6 +50,7 @@
   {
     "Name": "Barrier",
     "Symbol": "#",
+    "Behavior": "None",
     "CanAttack": false,
     "CanDefend": true,
     "SpeedTilesPerSec": 0.0,

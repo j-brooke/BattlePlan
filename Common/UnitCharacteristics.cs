@@ -7,6 +7,7 @@ namespace BattlePlan.Common
     {
         public string Name { get; set; }
         public char Symbol { get; set; } = '?';
+        public UnitBehavior Behavior { get; set; } = UnitBehavior.None;
         public bool CanAttack { get; set; }
         public bool CanDefend { get; set; }
         public double SpeedTilesPerSec { get; set; }
