@@ -30,7 +30,7 @@ namespace BattlePlan.Resolver
             // * terrain is passable from spawn to goal
             // * attack and defense plans use only legal units
             // * defenders placed in legal locations
-            // * attack spawns are in legal places and times
+            // * attack spawns are in legal places
 
             _events = new List<BattleEvent>();
             _entities = new List<BattleEntity>();
@@ -38,22 +38,12 @@ namespace BattlePlan.Resolver
             _pathGraph = new BattlePathGraph(this);
             _hurtMap = new HurtMap(_terrain);
 
+            // Make a bunch of queues for the attackers remaining to be spawned.
+            _remainingAttackerSpawns = new SpawnQueueCluster(_terrain, _attackPlans);
+
             var attackerBreachCounts = new Dictionary<int,int>();
-
-            // Make copies of the attack plans to keep track of what's left to spawn.
-            // TODO: replace with an appropriate data structure.
-            var remainingAttackerSpawns = new List<AttackPlan>();
-            foreach (var plan in _attackPlans)
-            {
-                var copy = new AttackPlan()
-                {
-                    TeamId = plan.TeamId,
-                    Spawns = plan.Spawns.OrderBy( (spawn) => spawn.Time ).ToList(),
-                };
-                remainingAttackerSpawns.Add(copy);
-
-                attackerBreachCounts[plan.TeamId] = 0;
-            }
+            foreach (var teamId in _remainingAttackerSpawns.AttackerTeamIds)
+                attackerBreachCounts[teamId] = 0;
 
             // Spawn all defenders
             foreach (var plan in _defensePlans)
@@ -123,23 +113,7 @@ namespace BattlePlan.Resolver
                 }
 
                 // Spawn new entities
-                foreach (var plan in remainingAttackerSpawns)
-                {
-                    bool keepSpawning = true;
-                    while (keepSpawning)
-                    {
-                        var newEntity = TrySpawnNextAttacker(time, plan);
-                        if (newEntity != null)
-                        {
-                            _entities.Add(newEntity);
-                            _events.Add(CreateEvent(time, BattleEventType.Spawn, newEntity, null));
-                        }
-                        else
-                        {
-                            keepSpawning = false;
-                        }
-                    }
-                }
+                SpawnAttackers(time);
 
                 // Update the hurtmap.
                 _hurtMap.Update(_entities);
@@ -147,7 +121,7 @@ namespace BattlePlan.Resolver
                 // End things if there are no attacker units left (and nothing left to spawn),
                 // or if the time gets too high.
                 var noMobileUnitsLeft = false;
-                var spawnListsAreEmpty = remainingAttackerSpawns.All( (plan) => plan.Spawns.Count==0 );
+                var spawnListsAreEmpty = _remainingAttackerSpawns.Count == 0;
                 if (spawnListsAreEmpty)
                 {
                     noMobileUnitsLeft = !_entities.Any( (ent) => ent.IsAttacker );
@@ -219,6 +193,7 @@ namespace BattlePlan.Resolver
 
         private int _nextId;
         private HurtMap _hurtMap;
+        private SpawnQueueCluster _remainingAttackerSpawns;
 
         private static readonly double _maxTime = 300.0;
         private static readonly double _timeSlice = 0.1;
@@ -262,6 +237,37 @@ namespace BattlePlan.Resolver
             }
 
             return null;
+        }
+
+        private void SpawnAttackers(double time)
+        {
+            // Loop through each spawn point for each attacking team.
+            foreach (var teamId in _remainingAttackerSpawns.AttackerTeamIds)
+            {
+                var spawnsPtsForTeam = _terrain.SpawnPointsMap[teamId];
+                for (int spawnPtIdx=0; spawnPtIdx<spawnsPtsForTeam.Count; ++spawnPtIdx)
+                {
+                    var pos = spawnsPtsForTeam[spawnPtIdx];
+
+                    // Skip this spawn point for now if there's something already on that tile.
+                    if (GetEntityAt(pos) != null)
+                        continue;
+
+                    // Get the next spawn command for this team and spawnPoint, if any, as long as its
+                    // spawn time is <= the current time.
+                    var spawnDef = _remainingAttackerSpawns.GetNext(teamId, spawnPtIdx, time);
+                    if (spawnDef != null)
+                    {
+                        var id = GenerateId(time, spawnDef.UnitType);
+                        var classChar = _unitTypeMap[spawnDef.UnitType];
+                        var newEntity = new BattleEntity(id, classChar, teamId, true);
+                        newEntity.Spawn(this, pos);
+
+                        _entities.Add(newEntity);
+                        _events.Add(CreateEvent(time, BattleEventType.Spawn, newEntity, null));
+                    }
+                }
+            }
         }
 
         private string GenerateId(double time, string cls)
