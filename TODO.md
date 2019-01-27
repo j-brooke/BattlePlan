@@ -1,14 +1,7 @@
 * Pathing: more efficient data structs
-* General: Add logging
-* General: code comments, for the love of God!
 * General: exceptions and data validation
-* AI: create different behavior types: rush, march, berserk.
-* Pathing: add hurt-map to allow attackers to avoid especially dangerous places.
-* AI: add unit-specific pathfinding params for crowing, hurt-avoidance, etc.
-* Units: new or improved types
-    * Pikemen - range 2 melee for attacking over barriers
-    * Knight - high hp/dmg melee.  (Slow?)
-    * Berserker - melee that seeks out combat over following path
-    * Scout - high damage avoidance, high speed
-    * Archer - on attack, stops to shoot whenever possible
 * Viewer: Fix flickering (mostly on Windows)
+* Editor: play button
+* Viewer: speed/pause/rewind, etc.
+* General: formalized concepts of goals and victory
+* Units: tuning, including resource cost

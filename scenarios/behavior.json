@@ -1,0 +1,471 @@
+{
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Wall"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 50,
+    "Height": 36,
+    "Tiles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        {
+          "X": 1,
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 7
+        },
+        {
+          "X": 1,
+          "Y": 13
+        },
+        {
+          "X": 1,
+          "Y": 19
+        },
+        {
+          "X": 1,
+          "Y": 25
+        },
+        {
+          "X": 1,
+          "Y": 31
+        }
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        {
+          "X": 48,
+          "Y": 1
+        },
+        {
+          "X": 48,
+          "Y": 7
+        },
+        {
+          "X": 48,
+          "Y": 13
+        },
+        {
+          "X": 48,
+          "Y": 19
+        },
+        {
+          "X": 48,
+          "Y": 25
+        },
+        {
+          "X": 48,
+          "Y": 31
+        }
+      ]
+    }
+  },
+
+  "AttackPlans": [
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 3
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 4
+        }
+      ]
+    },
+    {
+      "TeamId": 2,
+      "Spawns": []
+    }
+  ],
+  "DefensePlans": [
+    {
+      "TeamId": 2,
+      "Placements": [
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 24,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 3
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 24,
+            "Y": 3
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 3
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 24,
+            "Y": 10
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 10
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 9
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 24,
+            "Y": 9
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 9
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 10
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 24,
+            "Y": 16
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 16
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 15
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 24,
+            "Y": 15
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 15
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 16
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 24,
+            "Y": 22
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 22
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 21
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 24,
+            "Y": 21
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 21
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 22
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 24,
+            "Y": 35
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 35
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 23,
+            "Y": 34
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 24,
+            "Y": 34
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 34
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 25,
+            "Y": 35
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 18,
+            "Y": 6
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 17,
+            "Y": 6
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 17,
+            "Y": 7
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 18,
+            "Y": 7
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 19,
+            "Y": 7
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 19,
+            "Y": 6
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 30,
+            "Y": 7
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 29,
+            "Y": 6
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 29,
+            "Y": 7
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 29,
+            "Y": 8
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 29,
+            "Y": 9
+          }
+        },
+        {
+          "UnitType": "Barrier",
+          "Position": {
+            "X": 29,
+            "Y": 10
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 24,
+            "Y": 28
+          }
+        }
+      ]
+    }
+  ]
+}

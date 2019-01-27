@@ -24,6 +24,8 @@ namespace BattlePlan.Resolver
         public int TeamId { get; }
         public double WeaponReloadElapsedTime { get; private set; }
         public Queue<Vector2Di> PlannedPath { get; private set; }
+        public Queue<Vector2Di> PlannedBerserkPath { get; private set; }
+        public string BerserkTargetId { get; private set; }
 
         public BattleEntity(string id, UnitCharacteristics clsChar, int teamId, bool isAttacker)
         {
@@ -94,6 +96,8 @@ namespace BattlePlan.Resolver
             return this.Id.GetHashCode();
         }
 
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         private BattleEvent UpdateNone(BattleState battleState, double time, double deltaSeconds)
         {
             switch (this.Class.Behavior)
@@ -104,6 +108,8 @@ namespace BattlePlan.Resolver
                     return ChooseActionRusher(battleState, time, deltaSeconds);
                 case UnitBehavior.Marcher:
                     return ChooseActionMarcher(battleState, time, deltaSeconds);
+                case UnitBehavior.Berserker:
+                    return ChooseActionBerserker(battleState, time, deltaSeconds);
                 default:
                     throw new NotImplementedException("Unit behavior not implemented.");
             }
@@ -260,6 +266,140 @@ namespace BattlePlan.Resolver
             Debug.Assert(this.CurrentAction==Action.None);
             Debug.Assert(this.Class.Behavior==UnitBehavior.Rusher);
 
+            BattleEvent actionEvent = null;
+
+            // Move, if possible.
+            actionEvent = ChooseActionMoveIfPossible(battleState, time, deltaSeconds);
+
+            // If we can't move, try to attack something - preferably whatever's blocking our path if
+            // it's an enemy.
+            if (actionEvent==null)
+                actionEvent = ChooseActionAttackIfPossible(battleState, time, deltaSeconds);
+
+            if (actionEvent==null)
+            {
+                if (this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime && this.SpeedTilesPerSec>0)
+                {
+                    // If we could neither move nor attack, and yet our weapon is ready, there must be
+                    // a friendly unit in the way.  Replot path next time around.
+                    this.PlannedPath = null;
+                    _logger.Debug("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                }
+            }
+
+            return actionEvent;
+        }
+
+        /// <summary>
+        /// Chooses the unit's next action, using the Marcher behavior.  Marchers will attack when there's
+        /// an enemy in range and their weapon is ready, but otherwise they will keep moving.
+        /// </summary>
+        private BattleEvent ChooseActionMarcher(BattleState battleState, double time, double deltaSeconds)
+        {
+            Debug.Assert(this.CurrentAction==Action.None);
+            Debug.Assert(this.Class.Behavior==UnitBehavior.Marcher);
+
+            BattleEvent actionEvent = null;
+
+            // Attack something, if anything is in range/LOS and our weapon is ready.
+            actionEvent = ChooseActionAttackIfPossible(battleState, time, deltaSeconds);
+
+            // Try to move if there's nothing to attack.
+            if (actionEvent==null)
+                actionEvent = ChooseActionMoveIfPossible(battleState, time, deltaSeconds);
+
+            if (actionEvent==null)
+            {
+                if (this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime && this.SpeedTilesPerSec>0)
+                {
+                    // If we could neither move nor attack, and yet our weapon is ready, there must be
+                    // a friendly unit in the way.  Replot path next time around.
+                    this.PlannedPath = null;
+                    _logger.Debug("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                }
+            }
+
+            return actionEvent;
+        }
+
+        private BattleEvent ChooseActionBerserker(BattleState battleState, double time, double deltaSeconds)
+        {
+            Debug.Assert(this.CurrentAction==Action.None);
+            Debug.Assert(this.Class.Behavior==UnitBehavior.Berserker);
+
+            BattleEvent actionEvent = null;
+
+            // First priority of a berserker, ATTAAAAACCCKKKK!!!
+            actionEvent = ChooseActionAttackIfPossible(battleState, time, deltaSeconds);
+
+            // Second priority of a berserker, run toward someone you can ATTAAAAACCCKKKK!!!
+            if (actionEvent==null)
+                actionEvent = ChooseActionMoveTowardEnemy(battleState, time, deltaSeconds);
+
+            // Third priority of a berserker, I don't know, march down the road or something.
+            if (actionEvent==null && this.PlannedBerserkPath==null)
+                actionEvent = ChooseActionMoveIfPossible(battleState, time, deltaSeconds);
+
+            if (actionEvent==null && this.PlannedBerserkPath==null)
+            {
+                if (this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime && this.SpeedTilesPerSec>0)
+                {
+                    // If we could neither move nor attack, and yet our weapon is ready, there must be
+                    // a friendly unit in the way.  Replot path next time around.
+                    this.PlannedPath = null;
+                    _logger.Debug("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                }
+            }
+
+            return actionEvent;
+        }
+
+        private BattleEvent ChooseActionAttackIfPossible(BattleState battleState, double time, double deltaSeconds)
+        {
+            BattleEvent actionEvent = null;
+
+            bool weaponReady = this.Class.WeaponDamage>0
+                && this.Class.WeaponRangeTiles>0
+                && this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime;
+            if (weaponReady)
+            {
+                // If we're able to attack, prioritize whatever is directly in our path.  The point here is
+                // to reduce the time attackers might block a bottleneck.
+                if (this.PlannedPath!=null && this.PlannedPath.Count>0)
+                {
+                    var entityInNextPos = battleState.GetEntityAt(this.PlannedPath.Peek());
+                    if (entityInNextPos!=null && entityInNextPos.TeamId!=this.TeamId)
+                    {
+                        actionEvent = TryBeginAttack(battleState, time, deltaSeconds, entityInNextPos);
+
+                        if (_logger.IsDebugEnabled && actionEvent!=null)
+                            _logger.Debug("{0} is attacking {1} because it's in their path", this.Id, entityInNextPos.Id);
+
+                    }
+                }
+
+                // The next priority is the closest in-range enemy, if there is one.
+                // (We might need to allow different target priorites at some point.)
+                if (actionEvent==null)
+                {
+                    var closestEnemy = ListEnemiesInRange(battleState)
+                        .OrderBy( (ent) => this.Position.DistanceTo(ent.Position) )
+                        .FirstOrDefault();
+                    if (closestEnemy != null)
+                        actionEvent = TryBeginAttack(battleState, time, deltaSeconds, closestEnemy);
+
+                    if (_logger.IsDebugEnabled && actionEvent!=null)
+                        _logger.Debug("{0} is attacking {1} because it's in range", this.Id, closestEnemy.Id);
+                }
+            }
+
+            return actionEvent;
+        }
+
+        private BattleEvent ChooseActionMoveIfPossible(BattleState battleState, double time, double deltaSeconds)
+        {
+            BattleEvent actionEvent = null;
+
             // If this is a mobile unit, try to move, or attack whatever's in the way.
             // Defenders can't move, even if their class can when they're on attack.
             if (this.SpeedTilesPerSec>0 && this.IsAttacker)
@@ -278,92 +418,71 @@ namespace BattlePlan.Resolver
                 {
                     // Nothing to stop us moving into the next tile in out planned path.
                     this.PlannedPath.Dequeue();
-                    return TryBeginMove(battleState, time, deltaSeconds, nextPos);
-                }
-                else if (entityInNextPos.TeamId!=this.TeamId)
-                {
-                    // The thing in our way is an enemy.  KILL IT!
-                    return TryBeginAttack(battleState, time, deltaSeconds, entityInNextPos);
-                }
-                else
-                {
-                    // The thing in our way is a friend.  Make sure we look for a new path next tick,
-                    // but then fall through to the block below to look for something to attack.
-                    // (This might get really expensive on the pathfinding.)
-                    this.PlannedPath = null;
+                    actionEvent = TryBeginMove(battleState, time, deltaSeconds, nextPos);
+
+                    if (_logger.IsDebugEnabled && actionEvent!=null)
+                        _logger.Debug("{0} is moving toward {1} because it's in their path", this.Id, nextPos);
                 }
             }
 
-            if (this.Class.WeaponRangeTiles>0)
-            {
-                var closestEnemy = ListEnemiesInRange(battleState)
-                    .OrderBy( (ent) => this.Position.DistanceTo(ent.Position) )
-                    .FirstOrDefault();
-                if (closestEnemy != null)
-                    return TryBeginAttack(battleState, time, deltaSeconds, closestEnemy);
-            }
-
-            return null;
+            return actionEvent;
         }
 
-        /// <summary>
-        /// Chooses the unit's next action, using the Marcher behavior.  Marchers will attack when there's
-        /// an enemy in range and their weapon is ready, but otherwise they will keep moving.
-        /// </summary>
-        private BattleEvent ChooseActionMarcher(BattleState battleState, double time, double deltaSeconds)
+        private BattleEvent ChooseActionMoveTowardEnemy(BattleState battleState, double time, double deltaSeconds)
         {
-            Debug.Assert(this.CurrentAction==Action.None);
-            Debug.Assert(this.Class.Behavior==UnitBehavior.Marcher);
+            const double berserkerAggroRange = 12;
 
             BattleEvent actionEvent = null;
-            if (this.Class.WeaponRangeTiles>0 && this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime)
+
+            if (this.SpeedTilesPerSec>0 && this.IsAttacker)
             {
-                // If we're able to attack, prioritize whatever is directly in our path.  The point here is
-                // to reduce the time Marchers might block a bottleneck.
-                if (this.PlannedPath!=null && this.PlannedPath.Count>0)
+                // If our last target has despawned, clear the path.
+                if (this.PlannedBerserkPath!=null)
                 {
-                    var entityInNextPos = battleState.GetEntityAt(this.PlannedPath.Peek());
-                    if (entityInNextPos!=null && entityInNextPos.TeamId!=this.TeamId)
-                        actionEvent = TryBeginAttack(battleState, time, deltaSeconds, entityInNextPos);
+                    if (battleState.GetEntityById(this.BerserkTargetId)==null)
+                    {
+                        this.PlannedBerserkPath = null;
+                        this.BerserkTargetId = null;
+                        _logger.Debug("{0} is rethinking its berserk path because its target is dead", this.Id);
+                    }
                 }
 
-                // The next priority is the closest in-range enemy, if there is one.
-                if (actionEvent==null)
+                // If there's an enemy that we have a straight path to, remember the path.
+                if (this.PlannedBerserkPath==null)
                 {
-                    var closestEnemy = ListEnemiesInRange(battleState)
+                    var target = ListBerserkerTargetsInRange(battleState, berserkerAggroRange)
                         .OrderBy( (ent) => this.Position.DistanceTo(ent.Position) )
                         .FirstOrDefault();
-                    if (closestEnemy != null)
-                        actionEvent = TryBeginAttack(battleState, time, deltaSeconds, closestEnemy);
+                    if (target != null)
+                    {
+                        this.BerserkTargetId = target.Id;
+                        this.PlannedBerserkPath = new Queue<Vector2Di>(
+                            battleState.Terrain.StraightWalkablePath(this.Position, target.Position));
+                        this.PlannedPath = null;
+                        _logger.Debug("{0} is planning a berserker charge on {1}", this.Id, target.Id);
+                    }
                 }
-            }
 
-            // If this is a mobile unit and we didn't attack, try to move.
-            // Defenders can't move, even if their class can when they're on attack.
-            if (actionEvent==null && this.SpeedTilesPerSec>0 && this.IsAttacker)
-            {
-                if (this.PlannedPath==null || this.PlannedPath.Count==0)
-                    ChoosePath(battleState);
-
-                var nextPos = this.PlannedPath.Peek();
-
-                // This should be an adjacent tile.
-                Debug.Assert(this.Position.DistanceTo(nextPos)<=1.5);
-
-                var entityInNextPos = battleState.GetEntityAt(nextPos);
-
-                if (entityInNextPos==null)
+                if (this.PlannedBerserkPath!=null)
                 {
-                    // Nothing to stop us moving into the next tile in out planned path.
-                    this.PlannedPath.Dequeue();
-                    actionEvent = TryBeginMove(battleState, time, deltaSeconds, nextPos);
-                }
-                else
-                {
-                    // The thing in our way is a friend.  Make sure we look for a new path next tick,
-                    // but then fall through to the block below to look for something to attack.
-                    // (This might get really expensive on the pathfinding.)
-                    this.PlannedPath = null;
+                    var nextPos = this.PlannedBerserkPath.Peek();
+                    var entityInNextPos = battleState.GetEntityAt(nextPos);
+
+                    if (entityInNextPos==null)
+                    {
+                        // Nothing to stop us moving into the next tile in out planned path.
+                        this.PlannedBerserkPath.Dequeue();
+                        actionEvent = TryBeginMove(battleState, time, deltaSeconds, nextPos);
+
+                        if (_logger.IsDebugEnabled && actionEvent!=null)
+                            _logger.Debug("{0} is berserker charging into {1}", this.Id, nextPos);
+                    }
+                    else
+                    {
+                        // If the thing in our way is an enemy, do nothing while we ready our weapon to hit
+                        // it again.  If it's a friend, wait for it to go away.
+                        _logger.Debug("{0} is not moving - something is in its berserker path.", this.Id);
+                    }
                 }
             }
 
@@ -386,6 +505,20 @@ namespace BattlePlan.Resolver
                 .Where(isEnemy)
                 .Where(inRange)
                 .Where(visible);
+        }
+
+        private IEnumerable<BattleEntity> ListBerserkerTargetsInRange(BattleState battleState, double range)
+        {
+            Func<BattleEntity,bool> isEnemy = (ent) => ent.TeamId != this.TeamId;
+            Func<BattleEntity,bool> canFight = (ent) => ent.Class.WeaponDamage>0 && ent.Class.WeaponRangeTiles>0;
+            Func<BattleEntity,bool> inRange = (ent) => this.Position.DistanceTo(ent.Position)<=range;
+            Func<BattleEntity,bool> reachable = (ent) => battleState.Terrain.StraightWalkablePath(this.Position, ent.Position)!=null;
+
+            return battleState.GetAllEntities()
+                .Where(isEnemy)
+                .Where(canFight)
+                .Where(inRange)
+                .Where(reachable);
         }
     }
 }
