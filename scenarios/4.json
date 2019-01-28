@@ -1,0 +1,222 @@
+{
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Wall"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 50,
+    "Height": 36,
+    "Tiles": [
+      "AQEBAQEBAQEAAQEBAQEBAQABAQAAAAEBAQEBAQEAAAAAAAAAAAAAAQEAAAAAAAAAAAA=",
+      "AQEBAQEBAQEAAQEBAQEBAQABAQAAAAEBAQEBAQEBAQEAAAAAAAAAAQEAAAAAAAAAAAA=",
+      "AQEBAQEBAQEAAQEBAQEBAQABAQAAAAEBAQEBAQEBAQEBAQEAAAAAAQEAAAAAAAAAAAA=",
+      "AQEBAQEBAQEAAAAAAAAAAAAAAQEAAAEBAQEBAQEBAQEBAQEAAAAAAQEAAAAAAAAAAAA=",
+      "AQEBAQEBAQEAAAAAAQEBAQEBAQEAAAEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAA=",
+      "AQEBAAAAAAAAAAAAAQEBAQEBAQEAAAEBAQEBAQEBAQEBAQEAAAAAAAAAAQEAAAAAAAA=",
+      "AQEBAAAAAAAAAAAAAQEBAQEBAQEAAAAAAAAAAQEBAQEBAQAAAQEBAQEBAQEAAAAAAAA=",
+      "AQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQAAAQEBAQEBAQAAAAAAAAA=",
+      "AQEBAAAAAAAAAAAAAAAAAQEBAAEAAAAAAAAAAQEBAQEBAQAAAQEBAQEBAQAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAABAQEBAQAAAAAAAAAAAAAAAAAAAAA=",
+      "AAEBAQEBAQEBAQEBAQEAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAE=",
+      "AAEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=",
+      "AAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAA=",
+      "AAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAQEBAQEBAQEAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAQEBAQEBAQEAAAA=",
+      "AAABAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEAAAA=",
+      "AAABAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQE=",
+      "AAABAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAQEAAAAAAAEBAQE=",
+      "AAABAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEAAAAAAAAAAAEBAQE=",
+      "AAABAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAQEBAQAAAAEBAQE=",
+      "AAABAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEAAAAAAAAAAQEBAQAAAAAAAAE=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAAAAAABAQAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAABAQAAAAA=",
+      "AAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAABAQAAAAA=",
+      "AQEBAQEBAQEBAQEAAAABAQEAAAEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAABAQAAAAA=",
+      "AAAAAAAAAAAAAAAAAAABAQEAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAQEBAQEBAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAA=",
+      null,
+      "AQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AQEBAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAAABAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        {
+          "X": 7,
+          "Y": 8
+        }
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        {
+          "X": 48,
+          "Y": 1
+        },
+        {
+          "X": 48,
+          "Y": 34
+        },
+        {
+          "X": 1,
+          "Y": 34
+        }
+      ]
+    }
+  },
+  "AttackPlans": [
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 6.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 30.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 0
+        }
+      ]
+    }
+  ],
+  "DefensePlans": []
+}

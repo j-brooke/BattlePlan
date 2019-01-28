@@ -13,7 +13,7 @@
     "WeaponDamage": 60,
     "CrowdAversionBias": 2.0,
     "HurtAversionBias": 2.0,
-    "ResourceCost": 100
+    "ResourceCost": 20
   },
   {
     "Name": "Scout",
@@ -29,7 +29,7 @@
     "WeaponDamage": 40,
     "CrowdAversionBias": 5.0,
     "HurtAversionBias": 100.0,
-    "ResourceCost": 100
+    "ResourceCost": 50
   },
   {
     "Name": "Berserker",
@@ -45,7 +45,7 @@
     "WeaponDamage": 75,
     "CrowdAversionBias": 5.0,
     "HurtAversionBias": 0.0,
-    "ResourceCost": 100
+    "ResourceCost": 150
   },
   {
     "Name": "Crossbowman",
@@ -93,7 +93,7 @@
     "WeaponDamage": 60,
     "CrowdAversionBias": 2.0,
     "HurtAversionBias": 2.0,
-    "ResourceCost": 100
+    "ResourceCost": 75
   },
   {
     "Name": "Barrier",
@@ -109,6 +109,6 @@
     "WeaponDamage": 0,
     "CrowdAversionBias": 0,
     "HurtAversionBias": 0,
-    "ResourceCost": 100
+    "ResourceCost": 25
   }
 ]

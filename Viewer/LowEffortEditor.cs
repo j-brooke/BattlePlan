@@ -118,6 +118,7 @@ namespace BattlePlan.Viewer
         private List<UnitCharacteristics> _defenderClasses;
         private bool _showDefenderLOS;
         private int[,] _defenderLOSTiles;
+        private int _totalResourceCost;
 
 
         /// <summary>
@@ -236,6 +237,8 @@ namespace BattlePlan.Viewer
                 temp = 0;
             _mode = temp;
             _paintEnabled = false;
+
+            RecalculateResourceCost();
         }
 
         private IList<UnitCharacteristics> LoadUnitsFile()
@@ -415,6 +418,9 @@ namespace BattlePlan.Viewer
 
             for (int i=0; i<_defenderClasses.Count; ++i)
                 _canvas.WriteText($"({i+2}) {_defenderClasses[i].Name}", col, row++, 0);
+
+            _canvas.ClearToRight(col, row++);
+            _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
         }
 
         private void ProcessKeyDefendersMode(ConsoleKeyInfo keyInfo)
@@ -538,6 +544,9 @@ namespace BattlePlan.Viewer
                     var count = plan.Spawns.Where( (matchFunc) ).Count();
                     _canvas.WriteText($"({i+2}) Add {_attackerClasses[i].Name} {count}", col, row++, 0);
                 }
+
+                _canvas.ClearToRight(col, row++);
+                _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
             }
             else
             {
@@ -661,6 +670,7 @@ namespace BattlePlan.Viewer
             _teamId += 1;
             if (_teamId>_maximumTeamId)
                 _teamId = _minimumTeamId;
+            RecalculateResourceCost();
         }
 
         private void DrawDefenderPlacements()
@@ -681,6 +691,8 @@ namespace BattlePlan.Viewer
 
             // Invalidate the LOS map.  It will be rebuilt later.
             _defenderLOSTiles = null;
+
+            RecalculateResourceCost();
         }
 
         private void RemoveAllDefenders()
@@ -690,6 +702,8 @@ namespace BattlePlan.Viewer
 
             // Invalidate the LOS map.  It will be rebuilt later.
             _defenderLOSTiles = null;
+
+            RecalculateResourceCost();
         }
 
         private void PlaceDefender(UnitCharacteristics unitClass)
@@ -712,6 +726,8 @@ namespace BattlePlan.Viewer
 
             // Invalidate the LOS map.  It will be rebuilt later.
             _defenderLOSTiles = null;
+
+            RecalculateResourceCost();
         }
 
         private void ClearSpawnsAndGoalsForTeam()
@@ -789,6 +805,8 @@ namespace BattlePlan.Viewer
                     .Where( (sp) => (int)Math.Round(sp.Time)!=_spawnTime)
                     .ToList();
             }
+
+            RecalculateResourceCost();
         }
 
         private void AddAttackerSpawn(UnitCharacteristics unitClass)
@@ -807,12 +825,16 @@ namespace BattlePlan.Viewer
                 SpawnPointIndex = _selectedSpawnPointIndex,
             };
             plan.Spawns.Add(newUnit);
+
+            RecalculateResourceCost();
         }
 
         private void ClearAllAttackersForTeam()
         {
             AttackPlan plan = _scenario.AttackPlans.FirstOrDefault( (ap) => ap.TeamId == _teamId);
             plan?.Spawns.Clear();
+
+            RecalculateResourceCost();
         }
 
         /// <summary>
@@ -894,6 +916,38 @@ namespace BattlePlan.Viewer
         {
             EditPoco(_mapGenOptions);
             SaveGeneratorOptions();
+        }
+
+        private void RecalculateResourceCost()
+        {
+            _totalResourceCost = 0;
+
+            switch (_mode)
+            {
+                case EditorMode.Attackers:
+                {
+                    var plans = _scenario.AttackPlans.Where( (ap) => ap.TeamId == _teamId );
+                    var spawnList = plans.SelectMany( (ap) => ap.Spawns );
+                    foreach (var spawn in spawnList)
+                    {
+                        var unitChars = _attackerClasses.FirstOrDefault( (cls) => cls.Name == spawn.UnitType );
+                        _totalResourceCost += (unitChars!=null)? unitChars.ResourceCost : 0;
+                    }
+                    break;
+                }
+                case EditorMode.Defenders:
+                {
+                    var plans = _scenario.DefensePlans.Where( (dp) => dp.TeamId == _teamId );
+                    var placementList = plans.SelectMany( (dp) => dp.Placements );
+                    foreach (var placement in placementList)
+                    {
+                        var unitChars = _defenderClasses.FirstOrDefault( (cls) => cls.Name == placement.UnitType );
+                        _totalResourceCost += (unitChars!=null)? unitChars.ResourceCost : 0;
+                    }
+
+                    break;
+                }
+            }
         }
     }
 }
