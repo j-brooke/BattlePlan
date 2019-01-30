@@ -14,6 +14,12 @@ namespace BattlePlan.Viewer
     {
         public bool UseColor { get; set; } = true;
 
+
+        public Vector2Di GetDisplaySize()
+        {
+            return new Vector2Di(Console.BufferWidth, Console.BufferHeight);
+        }
+
         public void Init()
         {
             Console.TreatControlCAsInput = true;

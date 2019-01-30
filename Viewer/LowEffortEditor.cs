@@ -40,14 +40,15 @@ namespace BattlePlan.Viewer
 
         public void EditScenario(Scenario scenario)
         {
-            // TODO: Check terminal height/width and do something if they're too small.
-
             _scenario = scenario;
             if (_scenario == null)
                 _scenario = new Scenario();
             if (_scenario.Terrain == null)
                 _scenario.Terrain = Terrain.NewDefault();
             InitFromScenario();
+
+            if (!TestScreenSize(_scenario.Terrain))
+                return;
 
             _canvas.Init();
 
@@ -931,6 +932,31 @@ namespace BattlePlan.Viewer
                     break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks that the terminal is big enough for the editor.  If it's not, prints an message
+        /// and returns false.  If it is big enough, returns true.
+        /// </summary>
+        private bool TestScreenSize(Terrain terrain)
+        {
+            var minX = terrain.Width;
+            var minY = terrain.Height+1;
+            var suggestedX = minX + 20;
+            var suggestedY = minY;
+
+            var screen = _canvas.GetDisplaySize();
+            if (screen.X<minX || screen.Y<minY)
+            {
+                var msg = "Your terminal window is too small for this application.  "
+                    + $"Minimum=({minX}, {minY}); recommended=({suggestedX}, {suggestedY})";
+
+                _logger.Warn(msg);
+                Console.WriteLine(msg);
+                return false;
+            }
+
+            return true;
         }
     }
 }
