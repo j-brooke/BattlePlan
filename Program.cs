@@ -36,6 +36,8 @@ namespace BattlePlan
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private const string _unitsFileName = "resources/units.json";
+
         private static void Play(string filename)
         {
             if (String.IsNullOrWhiteSpace(filename))
@@ -44,14 +46,14 @@ namespace BattlePlan
                 return;
             }
 
-            var fileContentsAsString = File.ReadAllText(filename);
-            var scenario = JsonConvert.DeserializeObject<Scenario>(fileContentsAsString);
+            var scenarioFileContents = File.ReadAllText(filename);
+            var scenario = JsonConvert.DeserializeObject<Scenario>(scenarioFileContents);
 
-            if (scenario.UnitTypes == null)
-                scenario.UnitTypes = LoadUnits("resources/units.json");
+            var unitsFileContents = File.ReadAllText(_unitsFileName);
+            var unitsList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(unitsFileContents);
 
             var resolver = new BattleState();
-            var result = resolver.Resolve(scenario);
+            var result = resolver.Resolve(scenario, unitsList);
 
             var viewer = new Viewer.LowEffortViewer();
             viewer.ShowBattleResolution(result);

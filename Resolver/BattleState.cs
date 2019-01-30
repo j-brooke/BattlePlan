@@ -13,7 +13,7 @@ namespace BattlePlan.Resolver
     public sealed class BattleState
     {
         public Terrain Terrain => _terrain;
-        public BattleResolution Resolve(Scenario scenario)
+        public BattleResolution Resolve(Scenario scenario, IList<UnitCharacteristics> unitTypes)
         {
             _terrain = scenario.Terrain;
             _attackPlans = new List<AttackPlan>(scenario.AttackPlans);
@@ -21,7 +21,7 @@ namespace BattlePlan.Resolver
 
             // Make a lookup table for unit types.
             _unitTypeMap = new Dictionary<string, UnitCharacteristics>();
-            foreach (var unitType in scenario.UnitTypes)
+            foreach (var unitType in unitTypes)
                 _unitTypeMap.Add(unitType.Name, unitType);
 
             // TODO: validate
@@ -132,7 +132,7 @@ namespace BattlePlan.Resolver
             return new BattleResolution()
             {
                 Terrain = _terrain,
-                UnitTypes = scenario.UnitTypes,
+                UnitTypes = _unitTypeMap.Values.ToList(),
                 Events = _events,
                 AttackerBreachCounts = attackerBreachCounts,
             };

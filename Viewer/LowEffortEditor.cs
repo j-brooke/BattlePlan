@@ -17,6 +17,7 @@ namespace BattlePlan.Viewer
         public LowEffortEditor()
         {
             LoadOrCreateGeneratorOptions();
+            _unitTypes = LoadUnitsFile();
         }
 
         public void EditScenario(string filename)
@@ -43,12 +44,7 @@ namespace BattlePlan.Viewer
 
             _scenario = scenario;
             if (_scenario == null)
-            {
-                _scenario = new Scenario()
-                {
-                    UnitTypes = LoadUnitsFile(),
-                };
-            }
+                _scenario = new Scenario();
             if (_scenario.Terrain == null)
                 _scenario.Terrain = Terrain.NewDefault();
             InitFromScenario();
@@ -119,6 +115,7 @@ namespace BattlePlan.Viewer
         private bool _showDefenderLOS;
         private int[,] _defenderLOSTiles;
         private int _totalResourceCost;
+        private IList<UnitCharacteristics> _unitTypes;
 
 
         /// <summary>
@@ -126,12 +123,9 @@ namespace BattlePlan.Viewer
         /// </summary>
         private void InitFromScenario()
         {
-            if (_scenario.UnitTypes == null)
-                _scenario.UnitTypes = LoadUnitsFile();
-
             // Make lists of which units can attack or defend, for spawn/placement menus.
-            _attackerClasses = _scenario.UnitTypes.Where( (uc) => uc.CanAttack ).ToList();
-            _defenderClasses = _scenario.UnitTypes.Where( (uc) => uc.CanDefend ).ToList();
+            _attackerClasses = _unitTypes.Where( (uc) => uc.CanAttack ).ToList();
+            _defenderClasses = _unitTypes.Where( (uc) => uc.CanDefend ).ToList();
 
             _cursorX = 0;
             _cursorY = 0;
@@ -667,8 +661,7 @@ namespace BattlePlan.Viewer
         {
             foreach (var plan in _scenario.DefensePlans)
             {
-                // TODO: maybe add vision overlays?
-                _canvas.PaintDefensePlan(plan, _scenario.UnitTypes, 0, 0);
+                _canvas.PaintDefensePlan(plan, _unitTypes, 0, 0);
             }
         }
 
@@ -837,7 +830,7 @@ namespace BattlePlan.Viewer
             {
                 foreach (var defPlacement in plan.Placements)
                 {
-                    var unitClass = _scenario.UnitTypes.FirstOrDefault( (ut) => ut.Name==defPlacement.UnitType);
+                    var unitClass = _unitTypes.FirstOrDefault( (ut) => ut.Name==defPlacement.UnitType);
                     var range = unitClass.WeaponRangeTiles;
                     if (unitClass != null && unitClass.WeaponDamage>0 && range>0)
                     {
