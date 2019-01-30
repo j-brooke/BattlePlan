@@ -48,6 +48,11 @@ namespace BattlePlan.Common
             return TileTypes[typeIndex];
         }
 
+        public TileCharacteristics GetTile(Vector2Di pos)
+        {
+            return GetTile(pos.X, pos.Y);
+        }
+
         public byte GetTileValue(int x, int y)
         {
             if (x<0 || x>=Width)
@@ -64,6 +69,11 @@ namespace BattlePlan.Common
             }
 
             return typeIndex;
+        }
+
+        public byte GetTileValue(Vector2Di pos)
+        {
+            return GetTileValue(pos.X, pos.Y);
         }
 
         public void SetTileValue(int x, int y, byte val)
@@ -84,6 +94,11 @@ namespace BattlePlan.Common
                 Array.Resize(ref _tiles[y], this.Width);
 
             _tiles[y][x] = val;
+        }
+
+        public void SetTileValue(Vector2Di pos, byte val)
+        {
+            SetTileValue(pos.X, pos.Y, val);
         }
 
 

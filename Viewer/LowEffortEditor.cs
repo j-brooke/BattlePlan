@@ -280,17 +280,7 @@ namespace BattlePlan.Viewer
 
             if (_mapGenOptions ==  null)
             {
-                _mapGenOptions = new GeneratorOptions()
-                {
-                    Height = 36,
-                    Width = 50,
-                    ChunkSizeX = 7,
-                    ChunkSizeY = 4,
-                    PositiveCycleCount = 60,
-                    NegativeCycleCount = 10,
-                    SpawnPointCount = 3,
-                    GoalCount = 3,
-                };
+                _mapGenOptions = new GeneratorOptions();
             }
         }
 

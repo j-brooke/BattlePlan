@@ -31,8 +31,12 @@ namespace BattlePlan.Resolver
             // Put every spawn command from the attack plans into the right queue, or throw an exception
             // if the team or spawn point doesn't exist.
             int spawnCount = 0;
+            this.AttackerTeamIds = new List<int>();
             foreach (var plan in attackPlans)
             {
+                if (plan.Spawns == null || plan.Spawns.Count == 0)
+                    continue;
+
                 if (plan.TeamId<1 || plan.TeamId>maxSpawnPointTeamId)
                     throw new InvalidScenarioException($"AttackPlan exists for team {plan.TeamId} but no spawn points are defined");
 
@@ -45,11 +49,9 @@ namespace BattlePlan.Resolver
                     teamQueues[spawnDef.SpawnPointIndex].Enqueue(spawnDef);
                     spawnCount += 1;
                 }
-            }
 
-            this.AttackerTeamIds = attackPlans.Select( (plan) => plan.TeamId )
-                .Distinct()
-                .ToList();
+                this.AttackerTeamIds.Add(plan.TeamId);
+            }
 
             this.Count = spawnCount;
         }
