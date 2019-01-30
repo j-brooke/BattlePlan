@@ -13,8 +13,6 @@ namespace BattlePlan.Resolver
     public sealed class BattleState
     {
         public Terrain Terrain => _terrain;
-        internal HurtMap HurtMap => _hurtMap;
-
         public BattleResolution Resolve(Scenario scenario)
         {
             _terrain = scenario.Terrain;
@@ -139,6 +137,8 @@ namespace BattlePlan.Resolver
                 AttackerBreachCounts = attackerBreachCounts,
             };
         }
+
+        internal HurtMap HurtMap => _hurtMap;
 
         internal BattleEntity GetEntityAt(Vector2Di position)
         {

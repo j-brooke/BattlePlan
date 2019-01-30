@@ -23,8 +23,6 @@ namespace BattlePlan.Resolver
         public string AttackTargetId { get; private set; }
         public int TeamId { get; }
         public double WeaponReloadElapsedTime { get; private set; }
-        public Queue<Vector2Di> PlannedPath { get; private set; }
-        public Queue<Vector2Di> PlannedBerserkPath { get; private set; }
         public string BerserkTargetId { get; private set; }
 
         public BattleEntity(string id, UnitCharacteristics clsChar, int teamId, bool isAttacker)
@@ -97,6 +95,8 @@ namespace BattlePlan.Resolver
         }
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        public Queue<Vector2Di> _plannedPath;
+        public Queue<Vector2Di> _plannedBerserkPath;
 
         private BattleEvent UpdateNone(BattleState battleState, double time, double deltaSeconds)
         {
@@ -282,7 +282,7 @@ namespace BattlePlan.Resolver
                 {
                     // If we could neither move nor attack, and yet our weapon is ready, there must be
                     // a friendly unit in the way.  Replot path next time around.
-                    this.PlannedPath = null;
+                    _plannedPath = null;
                     _logger.Debug("{0} is rethinking their path because a friendly unit is in the way", this.Id);
                 }
             }
@@ -314,7 +314,7 @@ namespace BattlePlan.Resolver
                 {
                     // If we could neither move nor attack, and yet our weapon is ready, there must be
                     // a friendly unit in the way.  Replot path next time around.
-                    this.PlannedPath = null;
+                    _plannedPath = null;
                     _logger.Debug("{0} is rethinking their path because a friendly unit is in the way", this.Id);
                 }
             }
@@ -337,16 +337,16 @@ namespace BattlePlan.Resolver
                 actionEvent = ChooseActionMoveTowardEnemy(battleState, time, deltaSeconds);
 
             // Third priority of a berserker, I don't know, march down the road or something.
-            if (actionEvent==null && this.PlannedBerserkPath==null)
+            if (actionEvent==null && _plannedBerserkPath==null)
                 actionEvent = ChooseActionMoveIfPossible(battleState, time, deltaSeconds);
 
-            if (actionEvent==null && this.PlannedBerserkPath==null)
+            if (actionEvent==null && _plannedBerserkPath==null)
             {
                 if (this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime && this.SpeedTilesPerSec>0)
                 {
                     // If we could neither move nor attack, and yet our weapon is ready, there must be
                     // a friendly unit in the way.  Replot path next time around.
-                    this.PlannedPath = null;
+                    _plannedPath = null;
                     _logger.Debug("{0} is rethinking their path because a friendly unit is in the way", this.Id);
                 }
             }
@@ -365,9 +365,9 @@ namespace BattlePlan.Resolver
             {
                 // If we're able to attack, prioritize whatever is directly in our path.  The point here is
                 // to reduce the time attackers might block a bottleneck.
-                if (this.PlannedPath!=null && this.PlannedPath.Count>0)
+                if (_plannedPath!=null && _plannedPath.Count>0)
                 {
-                    var entityInNextPos = battleState.GetEntityAt(this.PlannedPath.Peek());
+                    var entityInNextPos = battleState.GetEntityAt(_plannedPath.Peek());
                     if (entityInNextPos!=null && entityInNextPos.TeamId!=this.TeamId)
                     {
                         actionEvent = TryBeginAttack(battleState, time, deltaSeconds, entityInNextPos);
@@ -404,10 +404,10 @@ namespace BattlePlan.Resolver
             // Defenders can't move, even if their class can when they're on attack.
             if (this.SpeedTilesPerSec>0 && this.IsAttacker)
             {
-                if (this.PlannedPath==null || this.PlannedPath.Count==0)
+                if (_plannedPath==null || _plannedPath.Count==0)
                     ChoosePath(battleState);
 
-                var nextPos = this.PlannedPath.Peek();
+                var nextPos = _plannedPath.Peek();
 
                 // This should be an adjacent tile.
                 Debug.Assert(this.Position.DistanceTo(nextPos)<=1.5);
@@ -417,7 +417,7 @@ namespace BattlePlan.Resolver
                 if (entityInNextPos==null)
                 {
                     // Nothing to stop us moving into the next tile in out planned path.
-                    this.PlannedPath.Dequeue();
+                    _plannedPath.Dequeue();
                     actionEvent = TryBeginMove(battleState, time, deltaSeconds, nextPos);
 
                     if (_logger.IsDebugEnabled && actionEvent!=null)
@@ -437,18 +437,18 @@ namespace BattlePlan.Resolver
             if (this.SpeedTilesPerSec>0 && this.IsAttacker)
             {
                 // If our last target has despawned, clear the path.
-                if (this.PlannedBerserkPath!=null)
+                if (_plannedBerserkPath!=null)
                 {
                     if (battleState.GetEntityById(this.BerserkTargetId)==null)
                     {
-                        this.PlannedBerserkPath = null;
+                        _plannedBerserkPath = null;
                         this.BerserkTargetId = null;
                         _logger.Debug("{0} is rethinking its berserk path because its target is dead", this.Id);
                     }
                 }
 
                 // If there's an enemy that we have a straight path to, remember the path.
-                if (this.PlannedBerserkPath==null)
+                if (_plannedBerserkPath==null)
                 {
                     var target = ListBerserkerTargetsInRange(battleState, berserkerAggroRange)
                         .OrderBy( (ent) => this.Position.DistanceTo(ent.Position) )
@@ -456,22 +456,22 @@ namespace BattlePlan.Resolver
                     if (target != null)
                     {
                         this.BerserkTargetId = target.Id;
-                        this.PlannedBerserkPath = new Queue<Vector2Di>(
+                        _plannedBerserkPath = new Queue<Vector2Di>(
                             battleState.Terrain.StraightWalkablePath(this.Position, target.Position));
-                        this.PlannedPath = null;
+                        _plannedPath = null;
                         _logger.Debug("{0} is planning a berserker charge on {1}", this.Id, target.Id);
                     }
                 }
 
-                if (this.PlannedBerserkPath!=null)
+                if (_plannedBerserkPath!=null)
                 {
-                    var nextPos = this.PlannedBerserkPath.Peek();
+                    var nextPos = _plannedBerserkPath.Peek();
                     var entityInNextPos = battleState.GetEntityAt(nextPos);
 
                     if (entityInNextPos==null)
                     {
                         // Nothing to stop us moving into the next tile in out planned path.
-                        this.PlannedBerserkPath.Dequeue();
+                        _plannedBerserkPath.Dequeue();
                         actionEvent = TryBeginMove(battleState, time, deltaSeconds, nextPos);
 
                         if (_logger.IsDebugEnabled && actionEvent!=null)
@@ -492,7 +492,7 @@ namespace BattlePlan.Resolver
         private void ChoosePath(BattleState battleState)
         {
             var path = battleState.FindPathToGoal(this);
-            this.PlannedPath = new Queue<Vector2Di>(path);
+            _plannedPath = new Queue<Vector2Di>(path);
         }
 
         private IEnumerable<BattleEntity> ListEnemiesInRange(BattleState battleState)

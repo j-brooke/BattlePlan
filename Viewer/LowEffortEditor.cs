@@ -37,11 +37,11 @@ namespace BattlePlan.Viewer
             }
         }
 
-        public void EditScenario(Scenario foo)
+        public void EditScenario(Scenario scenario)
         {
             // TODO: Check terminal height/width and do something if they're too small.
 
-            _scenario = foo;
+            _scenario = scenario;
             if (_scenario == null)
             {
                 _scenario = new Scenario()

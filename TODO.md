@@ -5,8 +5,10 @@
 * Canvas: deal with cursor color problem
 * Canvas: get rid of all default colors, so default console settings aren't a problem.
 * Viewer: speed/pause/rewind, etc.
+* Viewer: check terminal size
 * Editor: play button
 * Editor: support for 4 teams?
+* Editor: check terminal size
 * General: formalized concepts of goals and victory
     * Challenge constraints class?
         * Which teams you can edit
@@ -19,5 +21,4 @@
     * Storm Mage (A) - shoots chain lightning
     * Giant - knockback attack?
     * Paladin - normal attacks plus healing?
-* Map generator: multiple generator algorithms
 * Map generator: generator seed string?
