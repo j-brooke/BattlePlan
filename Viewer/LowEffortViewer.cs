@@ -14,21 +14,25 @@ namespace BattlePlan.Viewer
     /// </summary>
     public class LowEffortViewer
     {
-        public double FrameTimeSeconds { get; set; } = 0.2;
-
+        public double MaxFps { get; set; } = 10;
         public double DamageDisplayTimeSeconds { get; set; } = 0.2;
+
+        /// <summary>
+        /// Amount of game-time to advance for each "step" (spacebar)
+        /// </summary>
+        public double StepTimeSeconds { get; set; } = 0.25;
+
+        /// <summary>
+        /// Amount of game-time to add/subract for "skips" (L/R arrow keys)
+        /// </summary>
+        public double SkipTimeSeconds { get; set; } = 10.0;
 
         /// <summary>
         /// Shows a battle result by animating ASCII symbols on a terminal window.
         /// </summary>
         public void ShowBattleResolution(BattleResolution resolution)
         {
-            // Clear screen
-            _canvas.Init();
-
-            _entities = new Dictionary<string, ViewEntity>();
-            _rencentDamageEvents = new Queue<BattleEvent>();
-            _recentTextEvents = new Queue<BattleEvent>();
+            _resolution = resolution;
 
             _unitTypeMap = new Dictionary<string, UnitCharacteristics>();
             if (resolution.UnitTypes != null)
@@ -38,25 +42,39 @@ namespace BattlePlan.Viewer
             }
 
             var maxTextEvents = resolution.Terrain.Height;
+            var minFrameTimeMS = (int)(1000 / this.MaxFps);
 
-            var eventQueue = new Queue<BattleEvent>(resolution.Events.OrderBy( (evt) => evt.Time ) );
-            double time = 0.0;
-            bool firstPass = true;
-            var frameTimer = new System.Diagnostics.Stopwatch();
+            ResetDisplayTime(0.0);
+
+            _displaySpeed = 1.0;
             _exitRequested = false;
-            while ((eventQueue.Count>0 || firstPass) && !_exitRequested)
+
+            _canvas.Init();
+
+            var frameTimer = new System.Diagnostics.Stopwatch();
+            long lastFrameTimeMS = 0;
+            bool firstPass = true;
+            while ((_eventQueue.Count>0 || firstPass) && !_exitRequested)
             {
                 // Reset the stopwatch so we know how long we're taking processing all this.
                 frameTimer.Restart();
 
+                if (_repaintAll)
+                {
+                    _canvas.ClearScreen();
+                    _repaintAll = false;
+                }
+
+                _displayTime += _displaySpeed * lastFrameTimeMS / 1000;
+
                 // Process all remaining events before our time cutoff.
                 bool moreEventsThisFrame = true;
-                while (moreEventsThisFrame && eventQueue.Count>0)
+                while (moreEventsThisFrame && _eventQueue.Count>0)
                 {
-                    var nextEvt = eventQueue.Peek();
-                    if (nextEvt.Time<= time)
+                    var nextEvt = _eventQueue.Peek();
+                    if (nextEvt.Time<= _displayTime)
                     {
-                        eventQueue.Dequeue();
+                        _eventQueue.Dequeue();
                         ProcessEvent(nextEvt);
                     }
                     else
@@ -65,7 +83,7 @@ namespace BattlePlan.Viewer
                     }
                 }
 
-                RemoveOldDamageEvents(time);
+                RemoveOldDamageEvents(_displayTime);
                 RemoveOldTextEvents(maxTextEvents);
 
                 _canvas.BeginFrame();
@@ -80,27 +98,36 @@ namespace BattlePlan.Viewer
                 _canvas.PaintEntities(_entities.Values, 0, 0);
                 _canvas.PaintDamageIndicators(_rencentDamageEvents, 0, 0);
 
+                WriteKeyHelp();
+
                 _canvas.EndFrame();
 
                 ProcessUserInput();
 
                 firstPass = false;
-                time += this.FrameTimeSeconds;
 
                 var processFrameTimeMS = frameTimer.ElapsedMilliseconds;
-                var sleepTimeMS = Math.Max(0, (int)(this.FrameTimeSeconds*1000 - processFrameTimeMS));
+                var sleepTimeMS = Math.Max(0, (int)(minFrameTimeMS - processFrameTimeMS));
                 System.Threading.Thread.Sleep(sleepTimeMS);
+
+                lastFrameTimeMS = frameTimer.ElapsedMilliseconds;
             }
 
             _canvas.Shutdown();
         }
 
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
+        private BattleResolution _resolution;
+        private Queue<BattleEvent> _eventQueue;
         private Dictionary<string,ViewEntity> _entities;
         private Queue<BattleEvent> _rencentDamageEvents;
         private Queue<BattleEvent> _recentTextEvents;
         private Dictionary<string,UnitCharacteristics> _unitTypeMap;
         private bool _exitRequested = false;
+        private double _displayTime;
+        private double _displaySpeed;
+        private bool _repaintAll;
 
         private void ProcessEvent(BattleEvent evt)
         {
@@ -204,11 +231,75 @@ namespace BattlePlan.Viewer
             var keyInfo = _canvas.ReadKeyWithoutBlocking();
             if (keyInfo.HasValue)
             {
-                if (keyInfo.Value.Key == ConsoleKey.C && (keyInfo.Value.Modifiers & ConsoleModifiers.Control)!=0)
-                    _exitRequested = true;
+                // The ConsoleKeyInfo.Key property mostly has special stuff like ESC, Ctrl, arrows, etc.  It doesn't
+                // have all of the normal stuff like "1".
+                switch (keyInfo.Value.Key)
+                {
+                    // Exit the app
+                    case ConsoleKey.C:
+                        if ((keyInfo.Value.Modifiers & ConsoleModifiers.Control)!=0)
+                            _exitRequested = true;
+                        return;
+                    case ConsoleKey.Escape:
+                        _exitRequested = true;
+                        return;
 
-                // TODO: add speed, rewind, etc.
+                    // Rewind by a few seconds.  We basically have to reset everything and then process to
+                    // the new desired time all at once.
+                    case ConsoleKey.LeftArrow:
+                        ResetDisplayTime(_displayTime - this.SkipTimeSeconds);
+                        return;
+
+                    // Skip forward by a few seconds.  Just set the time - the main loop will handle the rest.
+                    case ConsoleKey.RightArrow:
+                        _displayTime += this.SkipTimeSeconds;
+                        return;
+
+                    // Step forward by a small amount and pause playback.
+                    case ConsoleKey.Spacebar:
+                        _displayTime += this.StepTimeSeconds;
+                        _displaySpeed = 0.0;
+                        return;
+                }
+
+                // We can look in KeyChar for regular symbols.  This gives us the versions modified by shift, ctrl, etc.,
+                // so for instance, if we wanted to use this to look for Ctrl-C, it would give us 0x03, not 'c'.
+                switch (keyInfo.Value.KeyChar)
+                {
+                    // Play speed controls
+                    case '1':
+                        _displaySpeed = 0.0;
+                        return;
+                    case '2':
+                        _displaySpeed = 1.0;
+                        return;
+                    case '3':
+                        _displaySpeed = 2.0;
+                        return;
+                    case '4':
+                        _displaySpeed = 4.0;
+                        return;
+                    case '5':
+                        _displaySpeed = 8.0;
+                        return;
+                }
             }
+        }
+
+        private void ResetDisplayTime(double setToTime)
+        {
+            _eventQueue = new Queue<BattleEvent>(_resolution.Events.OrderBy( (evt) => evt.Time ) );
+            _entities = new Dictionary<string, ViewEntity>();
+            _rencentDamageEvents = new Queue<BattleEvent>();
+            _recentTextEvents = new Queue<BattleEvent>();
+            _displayTime = Math.Max(0, setToTime);
+            _repaintAll = true;
+        }
+
+        private void WriteKeyHelp()
+        {
+            var msg = $"{_displayTime.ToString("F2")}  (1) pause, (2-5) speed, (Space) step, (L/R-arrow) skip, (ESC) exit";
+            _canvas.WriteText(msg, 0, _resolution.Terrain.Height, 0);
         }
     }
 }

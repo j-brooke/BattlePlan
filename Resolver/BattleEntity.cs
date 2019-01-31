@@ -283,7 +283,7 @@ namespace BattlePlan.Resolver
                     // If we could neither move nor attack, and yet our weapon is ready, there must be
                     // a friendly unit in the way.  Replot path next time around.
                     _plannedPath = null;
-                    _logger.Debug("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                    _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
                 }
             }
 
@@ -315,7 +315,7 @@ namespace BattlePlan.Resolver
                     // If we could neither move nor attack, and yet our weapon is ready, there must be
                     // a friendly unit in the way.  Replot path next time around.
                     _plannedPath = null;
-                    _logger.Debug("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                    _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
                 }
             }
 
@@ -347,7 +347,7 @@ namespace BattlePlan.Resolver
                     // If we could neither move nor attack, and yet our weapon is ready, there must be
                     // a friendly unit in the way.  Replot path next time around.
                     _plannedPath = null;
-                    _logger.Debug("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                    _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
                 }
             }
 
@@ -373,7 +373,7 @@ namespace BattlePlan.Resolver
                         actionEvent = TryBeginAttack(battleState, time, deltaSeconds, entityInNextPos);
 
                         if (_logger.IsDebugEnabled && actionEvent!=null)
-                            _logger.Debug("{0} is attacking {1} because it's in their path", this.Id, entityInNextPos.Id);
+                            _logger.Trace("{0} is attacking {1} because it's in their path", this.Id, entityInNextPos.Id);
 
                     }
                 }
@@ -389,7 +389,7 @@ namespace BattlePlan.Resolver
                         actionEvent = TryBeginAttack(battleState, time, deltaSeconds, closestEnemy);
 
                     if (_logger.IsDebugEnabled && actionEvent!=null)
-                        _logger.Debug("{0} is attacking {1} because it's in range", this.Id, closestEnemy.Id);
+                        _logger.Trace("{0} is attacking {1} because it's in range", this.Id, closestEnemy.Id);
                 }
             }
 
@@ -421,7 +421,7 @@ namespace BattlePlan.Resolver
                     actionEvent = TryBeginMove(battleState, time, deltaSeconds, nextPos);
 
                     if (_logger.IsDebugEnabled && actionEvent!=null)
-                        _logger.Debug("{0} is moving toward {1} because it's in their path", this.Id, nextPos);
+                        _logger.Trace("{0} is moving toward {1} because it's in their path", this.Id, nextPos);
                 }
             }
 
@@ -443,7 +443,7 @@ namespace BattlePlan.Resolver
                     {
                         _plannedBerserkPath = null;
                         this.BerserkTargetId = null;
-                        _logger.Debug("{0} is rethinking its berserk path because its target is dead", this.Id);
+                        _logger.Trace("{0} is rethinking its berserk path because its target is dead", this.Id);
                     }
                 }
 
@@ -459,7 +459,7 @@ namespace BattlePlan.Resolver
                         _plannedBerserkPath = new Queue<Vector2Di>(
                             battleState.Terrain.StraightWalkablePath(this.Position, target.Position));
                         _plannedPath = null;
-                        _logger.Debug("{0} is planning a berserker charge on {1}", this.Id, target.Id);
+                        _logger.Trace("{0} is planning a berserker charge on {1}", this.Id, target.Id);
                     }
                 }
 
@@ -475,13 +475,13 @@ namespace BattlePlan.Resolver
                         actionEvent = TryBeginMove(battleState, time, deltaSeconds, nextPos);
 
                         if (_logger.IsDebugEnabled && actionEvent!=null)
-                            _logger.Debug("{0} is berserker charging into {1}", this.Id, nextPos);
+                            _logger.Trace("{0} is berserker charging into {1}", this.Id, nextPos);
                     }
                     else
                     {
                         // If the thing in our way is an enemy, do nothing while we ready our weapon to hit
                         // it again.  If it's a friend, wait for it to go away.
-                        _logger.Debug("{0} is not moving - something is in its berserker path.", this.Id);
+                        _logger.Trace("{0} is not moving - something is in its berserker path.", this.Id);
                     }
                 }
             }

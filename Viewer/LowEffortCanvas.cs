@@ -30,6 +30,17 @@ namespace BattlePlan.Viewer
             var numSpaces = Math.Max(80, Console.BufferWidth);
             _lotsOfSpaces = new char[numSpaces];
             Array.Fill(_lotsOfSpaces, ' ');
+
+            _frameCount = 0;
+            _minFrameTime = long.MaxValue;
+            _maxFrameTime = 0;
+            _totalFrameTime = 0;
+        }
+
+        public void ClearScreen()
+        {
+            Console.ResetColor();
+            Console.Clear();
         }
 
         public void Shutdown()
@@ -37,17 +48,29 @@ namespace BattlePlan.Viewer
             Console.ResetColor();
             Console.CursorVisible = true;
             Console.SetCursorPosition(0, _maxRowDrawn+1);
+
+            _logger.Debug("Frame time (ms) stats: avg={0}; min={1}; max={2}", _totalFrameTime/_frameCount, _minFrameTime, _maxFrameTime);
         }
 
 
         public void BeginFrame()
         {
+            _frameTimer.Restart();
+
             // Hide the cursor while drawing the scene, to avoid flicker.
             Console.CursorVisible = false;
         }
 
         public void EndFrame()
         {
+            var frameTime = _frameTimer.ElapsedMilliseconds;
+
+            _frameCount += 1;
+            _totalFrameTime += frameTime;
+            _minFrameTime = Math.Min(_minFrameTime, frameTime);
+            _maxFrameTime = Math.Max(_maxFrameTime, frameTime);
+
+            _logger.Trace("Single frame time: {0}", frameTime);
         }
 
         public void PaintTerrain(Terrain terrain, int[,] terrainOverride, int canvasOffsetX, int canvasOffsetY)
@@ -242,6 +265,7 @@ namespace BattlePlan.Viewer
             var color = GetTeamColor(teamIdColor);
             WriteText(text, color);
             ClearToEndOfLine();
+            _maxRowDrawn = Math.Max(_maxRowDrawn, y);
         }
 
         public void ClearToRight(int x, int y)
@@ -295,6 +319,13 @@ namespace BattlePlan.Viewer
                     canvasOffsetY);
             }
         }
+
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly System.Diagnostics.Stopwatch _frameTimer = new System.Diagnostics.Stopwatch();
+        private long _frameCount;
+        private long _totalFrameTime;
+        private long _minFrameTime;
+        private long _maxFrameTime;
 
         // Used to track where to put the cursor when we shut down.
         private int _maxRowDrawn = 0;
