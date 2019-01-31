@@ -20,25 +20,31 @@ namespace BattlePlan.Viewer
             _unitTypes = LoadUnitsFile();
         }
 
-        public void EditScenario(string filename)
+        /// <summary>
+        /// Runs the interactive editor on the scenario at the given file.  Returns null if the user wants
+        /// to properly quit, or a scenario to be passed to the resolver if they want to play it.
+        /// </summary>
+        public Scenario EditScenario(string filename)
         {
-            // TODO: clean up various load scenarios
-
             if (!String.IsNullOrWhiteSpace(filename))
             {
                 var fileContentsAsString = File.ReadAllText(filename);
                 var newScenario = JsonConvert.DeserializeObject<Scenario>(fileContentsAsString);
 
                 _lastScenarioFilename = filename;
-                EditScenario(newScenario);
+                return EditScenario(newScenario);
             }
             else
             {
-                EditScenario((Scenario)null);
+                return EditScenario((Scenario)null);
             }
         }
 
-        public void EditScenario(Scenario scenario)
+        /// <summary>
+        /// Runs the interactive editor with the given scenario.  Returns null if the user wants
+        /// to properly quit, or a scenario to be passed to the resolver if they want to play it.
+        /// </summary>
+        public Scenario EditScenario(Scenario scenario)
         {
             _scenario = scenario;
             if (_scenario == null)
@@ -48,11 +54,12 @@ namespace BattlePlan.Viewer
             InitFromScenario();
 
             if (!TestScreenSize(_scenario.Terrain))
-                return;
+                return null;
 
             _canvas.Init();
 
             _exitEditor = false;
+            _playAfterExit = false;
             while (!_exitEditor)
             {
                 // If we're supposed to show defenders' range/line-of-site regions, make sure we've
@@ -80,6 +87,11 @@ namespace BattlePlan.Viewer
             }
 
             _canvas.Shutdown();
+
+            if (_playAfterExit)
+                return _scenario;
+            else
+                return null;
         }
         private const int _minimumTeamId = 1;
         private const int _maximumTeamId = 2;
@@ -103,6 +115,7 @@ namespace BattlePlan.Viewer
         private int _cursorX;
         private int _cursorY;
         private bool _exitEditor;
+        private bool _playAfterExit;
         private EditorMode _mode;
         private bool _paintEnabled;
         private string _statusMsg;
@@ -183,6 +196,10 @@ namespace BattlePlan.Viewer
                     return;
                 case '`':
                     _canvas.UseColor = !_canvas.UseColor;
+                    return;
+                case 'v':
+                    _playAfterExit = true;
+                    _exitEditor = true;
                     return;
             }
 
@@ -331,6 +348,7 @@ namespace BattlePlan.Viewer
             _canvas.WriteText("(`) toggle color", col, row++, 0);
             _canvas.WriteText("(L) load scenario", col, row++, 0);
             _canvas.WriteText("(S) save scenario", col, row++, 0);
+            _canvas.WriteText("(V) view resolution", col, row++, 0);
             _canvas.WriteText("(ESC) exit", col, row++, 0);
 
             _canvas.ClearToRight(col, row, _scenario.Terrain.Height);

@@ -61,8 +61,28 @@ namespace BattlePlan
 
         private static void Edit(string filename)
         {
-            var viewer = new Viewer.LowEffortEditor();
-            viewer.EditScenario(filename);
+            List<UnitCharacteristics> unitsList = null;
+            var editor = new Viewer.LowEffortEditor();
+            Scenario scenarioToPlay = editor.EditScenario(filename);
+
+            while (scenarioToPlay != null)
+            {
+                Console.WriteLine("Please wait - resolving battle");
+
+                if (unitsList==null)
+                {
+                    var unitsFileContents = File.ReadAllText(_unitsFileName);
+                    unitsList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(unitsFileContents);
+                }
+
+                var resolver = new BattleState();
+                var result = resolver.Resolve(scenarioToPlay, unitsList);
+
+                var viewer = new Viewer.LowEffortViewer();
+                viewer.ShowBattleResolution(result);
+
+                scenarioToPlay = editor.EditScenario(scenarioToPlay);
+            }
         }
 
         private static void Help()
