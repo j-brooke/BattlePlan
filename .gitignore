@@ -1,6 +1,6 @@
 bin/
 obj/
+.vscode/
 .options.json
 logs/
 games/
-
