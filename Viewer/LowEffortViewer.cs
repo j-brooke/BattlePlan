@@ -14,6 +14,7 @@ namespace BattlePlan.Viewer
     /// </summary>
     public class LowEffortViewer
     {
+        public bool UseColor { get; set; } = true;
         public double MaxFps { get; set; } = 10;
         public double DamageDisplayTimeSeconds { get; set; } = 0.2;
 
@@ -50,6 +51,7 @@ namespace BattlePlan.Viewer
             _exitRequested = false;
 
             _canvas.Init();
+            _canvas.UseColor = UseColor;
 
             var frameTimer = new System.Diagnostics.Stopwatch();
             long lastFrameTimeMS = 0;

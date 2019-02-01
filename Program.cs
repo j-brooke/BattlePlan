@@ -78,7 +78,7 @@ namespace BattlePlan
                 var resolver = new BattleState();
                 var result = resolver.Resolve(scenarioToPlay, unitsList);
 
-                var viewer = new Viewer.LowEffortViewer();
+                var viewer = new Viewer.LowEffortViewer() { UseColor = editor.UseColor };
                 viewer.ShowBattleResolution(result);
 
                 scenarioToPlay = editor.EditScenario(scenarioToPlay);

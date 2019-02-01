@@ -22,9 +22,16 @@ namespace BattlePlan.Viewer
 
         public void Init()
         {
+            // Allow us to intercept Ctrl-C, so that we can reset the cursor and colors
+            // before exiting.  (Note that we have to turn this off again when reading
+            // for a line of input.  See PromptForInput below.)
             Console.TreatControlCAsInput = true;
-            Console.Clear();
+
+            _originalCursorSize = Console.CursorSize;
+            Console.CursorSize = 100;
             _maxRowDrawn = 0;
+
+            Console.Clear();
 
             // Create an array of spaces.  Used for clearing lines.
             var numSpaces = Math.Max(80, Console.BufferWidth);
@@ -284,20 +291,44 @@ namespace BattlePlan.Viewer
 
         public string PromptForInput(int x, int y, string prompt, bool clearLineAfter)
         {
+            _logger.Trace("Prompting for input: {0}", prompt);
+
+            // On Windows, if this is true, it messes up input from Console.ReadLine.  One effect is that
+            // things like backspace show up as control characters in the returned string, instead of 
+            // removing the last character as you would expect.  It also sometimes requires an extra CR
+            // and then gets out of sync.
+            Console.TreatControlCAsInput = false;
+
             Console.ResetColor();
             Console.CursorVisible = true;
+            Console.CursorSize = _originalCursorSize;
+
+            // Make sure the line we want to prompt on is clean.
             Console.SetCursorPosition(x, y);
             ClearToEndOfLine();
 
             Console.SetCursorPosition(x, y);
             Console.Write(prompt);
+
             var input = Console.ReadLine();
+
+            if (_logger.IsTraceEnabled)
+            {
+                _logger.Trace("Input received: {0}", input);
+                var buff = new System.Text.StringBuilder();
+                foreach (var ch in input)
+                    buff.AppendFormat("{0:x2} ", (int)ch);
+                _logger.Trace("Input received hex: {0}", buff.ToString());
+            }
 
             if (clearLineAfter)
             {
                 Console.SetCursorPosition(x, y);
                 ClearToEndOfLine();
             }
+
+            Console.CursorSize = 100;
+            Console.TreatControlCAsInput = true;
 
             return input;
         }
@@ -332,6 +363,8 @@ namespace BattlePlan.Viewer
 
         // An array of just spaces, used for clearing lines.
         private char[] _lotsOfSpaces;
+
+        private int _originalCursorSize = 100;
 
         private void WriteText(string text, ConsoleColor color)
         {

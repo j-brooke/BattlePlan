@@ -14,6 +14,8 @@ namespace BattlePlan.Viewer
     /// </summary>
     public class LowEffortEditor
     {
+        public bool UseColor { get; set;  } = true;
+
         public LowEffortEditor()
         {
             LoadOrCreateGeneratorOptions();
@@ -57,6 +59,7 @@ namespace BattlePlan.Viewer
                 return null;
 
             _canvas.Init();
+            _canvas.UseColor = this.UseColor;
 
             _exitEditor = false;
             _playAfterExit = false;
@@ -195,7 +198,8 @@ namespace BattlePlan.Viewer
                     PromptAndSaveScenario();
                     return;
                 case '`':
-                    _canvas.UseColor = !_canvas.UseColor;
+                    this.UseColor = !this.UseColor;
+                    _canvas.UseColor = this.UseColor;
                     return;
                 case 'v':
                     _playAfterExit = true;
