@@ -50,7 +50,7 @@ namespace BattlePlan.Viewer
             _displaySpeed = 1.0;
             _exitRequested = false;
 
-            _canvas.Init();
+            _canvas.Init(resolution.Terrain.Height+1);
             _canvas.UseColor = UseColor;
 
             var frameTimer = new System.Diagnostics.Stopwatch();

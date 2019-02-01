@@ -58,9 +58,6 @@ namespace BattlePlan.Viewer
             if (!TestScreenSize(_scenario.Terrain))
                 return null;
 
-            _canvas.Init();
-            _canvas.UseColor = this.UseColor;
-
             _exitEditor = false;
             _playAfterExit = false;
             while (!_exitEditor)
@@ -151,6 +148,9 @@ namespace BattlePlan.Viewer
             _paintEnabled = false;
             _defenderLOSTiles = null;
             _showDefenderLOS = false;
+
+            _canvas.Init(_scenario.Terrain.Height+1);
+            _canvas.UseColor = this.UseColor;
         }
 
         private void ProcessUserInput()
@@ -264,15 +264,20 @@ namespace BattlePlan.Viewer
             return unitsList;
         }
 
-        private Terrain GenerateTerrain()
+        private void GenerateTerrain()
         {
             var mapGenerator = new Generator(_mapGenOptions);
-            var terrain = mapGenerator.Create();
+            _scenario.Terrain = mapGenerator.Create();
+
+            // Invalidate all defense plans.  If the map resized, they might be out of bounds.
+            // And even if not, odds are they're not placed anywhere useful for the new map.
+            _scenario.DefensePlans.Clear();
 
             // Invalidate the LoS map.
             _defenderLOSTiles = null;
 
-            return terrain;
+            // Resize the canvas
+            _canvas.Init(_scenario.Terrain.Height+1);
         }
 
         private void LoadOrCreateGeneratorOptions()
@@ -348,14 +353,12 @@ namespace BattlePlan.Viewer
                     break;
             }
 
-            _canvas.ClearToRight(col, row++);
+            row += 1;
             _canvas.WriteText("(`) toggle color", col, row++, 0);
             _canvas.WriteText("(L) load scenario", col, row++, 0);
             _canvas.WriteText("(S) save scenario", col, row++, 0);
             _canvas.WriteText("(V) view resolution", col, row++, 0);
             _canvas.WriteText("(ESC) exit", col, row++, 0);
-
-            _canvas.ClearToRight(col, row, _scenario.Terrain.Height);
         }
 
         private void WriteModeHelpTerrain(int col, ref int row)
@@ -364,17 +367,17 @@ namespace BattlePlan.Viewer
 
             var paintModeIndicator = _paintEnabled? "on" : "off";
 
-            _canvas.ClearToRight(col, row++);
+            row += 1;
             _canvas.WriteText("(Space) change Tile", col, row++, 0);
 
-            _canvas.ClearToRight(col, row++);
+            row += 1;
             for (int i=0; i<_scenario.Terrain.TileTypes.Count; ++i)
             {
                 var name = _scenario.Terrain.TileTypes[i].Name;
                 _canvas.WriteText($"({i+1}) place {name}", col, row++, 0);
             }
 
-            _canvas.ClearToRight(col, row++);
+            row += 1;
             _canvas.WriteText("(Backspace) clear all", col, row++, 0);
             _canvas.WriteText($"(P) toggle paint mode ({paintModeIndicator})", col, row++, 0);
             _canvas.WriteText("(R) randomly generate", col, row++, 0);
@@ -395,7 +398,7 @@ namespace BattlePlan.Viewer
                     _paintEnabled = !_paintEnabled;
                     return;
                 case ConsoleKey.R:
-                    _scenario.Terrain = GenerateTerrain();
+                    GenerateTerrain();
                     return;
                 case ConsoleKey.O:
                     PromptToEditGeneratorOptions();
@@ -418,7 +421,7 @@ namespace BattlePlan.Viewer
 
             _canvas.WriteText($"(T) Team {_teamId}", col, row++, _teamId);
 
-            _canvas.ClearToRight(col, row++);
+            row += 1;
             _canvas.WriteText("(\\) toggle LoS", col, row++, 0);
             _canvas.WriteText("(Backspace) clear all", col, row++, 0);
             _canvas.WriteText("(1) none", col, row++, 0);
@@ -426,7 +429,7 @@ namespace BattlePlan.Viewer
             for (int i=0; i<_defenderClasses.Count; ++i)
                 _canvas.WriteText($"({i+2}) {_defenderClasses[i].Name}", col, row++, 0);
 
-            _canvas.ClearToRight(col, row++);
+            row += 1;
             _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
         }
 
@@ -465,7 +468,7 @@ namespace BattlePlan.Viewer
 
             _canvas.WriteText($"(T) team {_teamId}", col, row++, _teamId);
 
-            _canvas.ClearToRight(col, row++);
+            row += 1;
             _canvas.WriteText("(Backspace) clear all", col, row++, 0);
             _canvas.WriteText("(1) remove", col, row++, 0);
             _canvas.WriteText("(2) add spawn O", col, row++, 0);
@@ -532,7 +535,7 @@ namespace BattlePlan.Viewer
 
             if (hasSpawnPoint)
             {
-                _canvas.ClearToRight(col, row++);
+                row += 1;
                 _canvas.WriteText("(Backspace) clear all", col, row++, 0);
                 _canvas.WriteText($"(1) clear for this time", col, row++, 0);
 
@@ -552,12 +555,12 @@ namespace BattlePlan.Viewer
                     _canvas.WriteText($"({i+2}) Add {_attackerClasses[i].Name} {count}", col, row++, 0);
                 }
 
-                _canvas.ClearToRight(col, row++);
+                row += 1;
                 _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
             }
             else
             {
-                _canvas.ClearToRight(col, row++);
+                row += 1;
                 _canvas.WriteText($"Please select a spawn point", col, row++, _teamId);
             }
         }
@@ -618,7 +621,7 @@ namespace BattlePlan.Viewer
             var prompt = String.IsNullOrEmpty(_lastScenarioFilename)?
                 "Load file name: "
                 : $"Load file name (enter for {_lastScenarioFilename}): ";
-            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt, true);
+            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
 
             try
             {
@@ -648,7 +651,7 @@ namespace BattlePlan.Viewer
             var prompt = String.IsNullOrEmpty(_lastScenarioFilename)?
                 "Save file name: "
                 : $"Save file name (enter for {_lastScenarioFilename}): ";
-            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt, true);
+            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
 
             try
             {
@@ -782,7 +785,7 @@ namespace BattlePlan.Viewer
         {
             const int maxSaneTime = 1000;
             var prompt = $"Spawn Delay Time (enter for {_spawnTime}): ";
-            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt, true);
+            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
 
             if (!String.IsNullOrWhiteSpace(input))
             {
@@ -895,17 +898,16 @@ namespace BattlePlan.Viewer
         private void EditPoco<T>(T obj)
         {
             int row = 0;
-            _canvas.Init();
-            _canvas.BeginFrame();
+            _canvas.ClearScreen();
 
-            _canvas.WriteText($"Edit values for {obj.GetType().Name} -", 0, row++, 0);
+            _canvas.WriteTextDirect($"Edit values for {obj.GetType().Name} -", 0, row++);
 
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
                 var curVal = Convert.ToString(prop.GetValue(obj));
                 var prompt = $"  {prop.Name} (enter for {curVal}):";
-                var input = _canvas.PromptForInput(0, row++, prompt, false);
+                var input = _canvas.PromptForInput(0, row++, prompt);
 
                 if (!String.IsNullOrWhiteSpace(input))
                 {
@@ -913,9 +915,6 @@ namespace BattlePlan.Viewer
                     prop.SetValue(obj, newVal);
                 }
             }
-
-            _canvas.EndFrame();
-            _canvas.Init();
         }
 
         private void PromptToEditGeneratorOptions()

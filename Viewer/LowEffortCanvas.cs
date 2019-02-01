@@ -13,7 +13,6 @@ namespace BattlePlan.Viewer
     internal class LowEffortCanvas
     {
         public bool UseColor { get; set; } = true;
-        public bool UseDoubleBuffer { get; set; } = true;
 
         public LowEffortCanvas()
         {
@@ -31,10 +30,10 @@ namespace BattlePlan.Viewer
 
         public Vector2Di GetDisplaySize()
         {
-            return new Vector2Di(Console.BufferWidth, Console.BufferHeight);
+            return new Vector2Di(Console.WindowWidth, Console.WindowHeight);
         }
 
-        public void Init()
+        public void Init(int requestedHeight)
         {
             // Allow us to intercept Ctrl-C, so that we can reset the cursor and colors
             // before exiting.  (Note that we have to turn this off again when reading
@@ -44,30 +43,24 @@ namespace BattlePlan.Viewer
             _originalCursorSize = Console.CursorSize;
             if (_canSetCursorSize)
                 Console.CursorSize = 100;
-            _maxRowDrawn = 0;
 
+            Console.ResetColor();
             Console.Clear();
 
-            if (this.UseDoubleBuffer)
+            // Initiallize our internal buffer.  Most of the time we want to draw everything
+            // to the backbuffers, and then slam it all onto the screen at once.
+            _bufferHeight = Math.Min(requestedHeight, Console.WindowHeight);
+            _bufferWidth = Console.WindowWidth;
+            _symbolBackBuffer = new char[_bufferHeight][];
+            _fgBackBuffer = new ConsoleColor[_bufferHeight][];
+            _bgBackBuffer = new ConsoleColor[_bufferHeight][];
+
+            for (int i=0; i<_bufferHeight; ++i)
             {
-                var height = Console.WindowHeight-1;
-                var width = Console.WindowWidth;
-                _symbolBackBuffer = new char[height][];
-                _fgBackBuffer = new ConsoleColor[height][];
-                _bgBackBuffer = new ConsoleColor[height][];
-
-                for (int i=0; i<height; ++i)
-                {
-                    _symbolBackBuffer[i] = new char[width];
-                    _fgBackBuffer[i] = new ConsoleColor[width];
-                    _bgBackBuffer[i] = new ConsoleColor[width];
-                }
+                _symbolBackBuffer[i] = new char[_bufferWidth];
+                _fgBackBuffer[i] = new ConsoleColor[_bufferWidth];
+                _bgBackBuffer[i] = new ConsoleColor[_bufferWidth];
             }
-
-            // Create an array of spaces.  Used for clearing lines.
-            var numSpaces = Math.Max(80, Console.BufferWidth);
-            _lotsOfSpaces = new char[numSpaces];
-            Array.Fill(_lotsOfSpaces, ' ');
 
             _frameCount = 0;
             _minFrameTime = long.MaxValue;
@@ -85,11 +78,12 @@ namespace BattlePlan.Viewer
         {
             Console.ResetColor();
             Console.CursorVisible = true;
-            Console.SetCursorPosition(0, _maxRowDrawn+1);
+            Console.SetCursorPosition(0, _bufferHeight);
+            if (_canSetCursorSize)
+                Console.CursorSize = _originalCursorSize;
 
             _logger.Debug("Frame time (ms) stats: avg={0}; min={1}; max={2}", _totalFrameTime/_frameCount, _minFrameTime, _maxFrameTime);
         }
-
 
         public void BeginFrame()
         {
@@ -98,22 +92,27 @@ namespace BattlePlan.Viewer
             // Hide the cursor while drawing the scene, to avoid flicker.
             Console.CursorVisible = false;
 
-            if (_symbolBackBuffer != null)
+            if (_symbolBackBuffer==null)
+                throw new ApplicationException("Canvas not initialized");
+
+            // Clear our internal screen buffers.
+            for (int i=0; i<_symbolBackBuffer.Length; ++i)
             {
-                // Clear our internal screen buffers.
-                for (int i=0; i<_symbolBackBuffer.Length; ++i)
-                {
-                    Array.Fill(_symbolBackBuffer[i], ' ');
-                    Array.Fill(_fgBackBuffer[i], ConsoleColor.White);
-                    Array.Fill(_bgBackBuffer[i], ConsoleColor.Black);
-                }
+                Array.Fill(_symbolBackBuffer[i], ' ');
+                Array.Fill(_fgBackBuffer[i], ConsoleColor.White);
+                Array.Fill(_bgBackBuffer[i], ConsoleColor.Black);
             }
         }
 
         public void EndFrame()
         {
-            if (_symbolBackBuffer!=null)
-                RenderBackBuffer();
+            RenderBackBuffer();
+
+            // Hack.  Keys pressed by the user during animations that we read with ReadKeyWithoutBlocking
+            // get drawn to the screen before we can intercept them.  Let's put the cursor in a corner of
+            // our render space so that it will get overwritten, instead of hanging around on the row after
+            // our space.
+            Console.SetCursorPosition(_bufferWidth-4, _bufferHeight-1);
 
             var frameTime = _frameTimer.ElapsedMilliseconds;
             _frameCount += 1;
@@ -126,11 +125,11 @@ namespace BattlePlan.Viewer
 
         public void PaintTerrain(Terrain terrain, int[,] terrainOverride, int canvasOffsetX, int canvasOffsetY)
         {
-            for (int row=0; row<terrain.Height; ++row)
+            for (int row=0; row<terrain.Height && row<_bufferHeight; ++row)
             {
                 Console.SetCursorPosition(canvasOffsetX, row+canvasOffsetY);
 
-                for (int col=0; col<terrain.Width; ++col)
+                for (int col=0; col<terrain.Width && col<_bufferWidth; ++col)
                 {
                     var tileChars = terrain.GetTile(col, row);
                     var fgColor = GetTerrainFGColor(tileChars.Appearance);
@@ -147,51 +146,26 @@ namespace BattlePlan.Viewer
                     else
                         bgColor = GetTeamColor(overrideTeam);
 
-
-                    if (_symbolBackBuffer!=null)
-                    {
-                        var x = col+canvasOffsetX;
-                        var y = row+canvasOffsetY;
-                        _symbolBackBuffer[y][x] = tileChars.Appearance[0];
-                        _fgBackBuffer[y][x] = fgColor;
-                        _bgBackBuffer[y][x] = bgColor;
-                    }
-                    else
-                    {
-                        if (this.UseColor)
-                        {
-                            Console.ForegroundColor = fgColor;
-                            Console.BackgroundColor = bgColor;
-                        }
-                        Console.Write(tileChars.Appearance[0]);
-                    }
+                    var x = col+canvasOffsetX;
+                    var y = row+canvasOffsetY;
+                    _symbolBackBuffer[y][x] = tileChars.Appearance[0];
+                    _fgBackBuffer[y][x] = fgColor;
+                    _bgBackBuffer[y][x] = bgColor;
                 }
             }
-
-            _maxRowDrawn = Math.Max(_maxRowDrawn, terrain.Height-1 + canvasOffsetY);
         }
 
         public void PaintTile(int x, int y, char symbol, ConsoleColor fgColor, ConsoleColor bgColor, int canvasOffsetX, int canvasOffsetY)
         {
-            if (_symbolBackBuffer!=null)
-            {
-                var buffX = x + canvasOffsetX;
-                var buffY = y + canvasOffsetY;
-                _symbolBackBuffer[buffY][buffX] = symbol;
-                _fgBackBuffer[buffY][buffX] = fgColor;
-                _bgBackBuffer[buffY][buffX] = bgColor;
+            var buffX = x + canvasOffsetX;
+            var buffY = y + canvasOffsetY;
+
+            if (buffX<0 || buffX>=_bufferWidth || buffY<0 || buffY>=_bufferHeight)
                 return;
-            }
 
-            Console.SetCursorPosition(x+canvasOffsetX, y+canvasOffsetY);
-
-            if (this.UseColor)
-            {
-                Console.ForegroundColor = fgColor;
-                Console.BackgroundColor = bgColor;
-            }
-            Console.Write(symbol);
-            _maxRowDrawn = Math.Max(_maxRowDrawn, y + canvasOffsetY);
+            _symbolBackBuffer[buffY][buffX] = symbol;
+            _fgBackBuffer[buffY][buffX] = fgColor;
+            _bgBackBuffer[buffY][buffX] = bgColor;
         }
 
         public void PaintEntities(IEnumerable<ViewEntity> entities, int canvasOffsetX, int canvasOffsetY)
@@ -280,68 +254,31 @@ namespace BattlePlan.Viewer
 
         public void WriteTextEvents(IEnumerable<BattleEvent> textEvents, int canvasOffsetX, int canvasOffsetY)
         {
-            int row = 0;
-
-            if (_symbolBackBuffer!=null)
-            {
-                row = canvasOffsetY;
-                foreach (var evt in textEvents)
-                {
-                    var col = canvasOffsetX;
-                    switch (evt.Type)
-                    {
-                        case BattleEventType.EndAttack:
-                            col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
-                            col = WriteText(" damages ", col, row, GetTextColor());
-                            col = WriteText(evt.TargetEntity, col, row, GetTeamColor(evt.TargetTeamId));
-                            col = WriteText(" for ", col, row, GetTextColor());
-                            col = WriteText(evt.DamageAmount.ToString(), col, row, GetDamageColor());
-                            break;
-                        case BattleEventType.ReachesGoal:
-                            col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
-                            col = WriteText(" reaches goal!", col, row, GetTextColor());
-                            break;
-                        case BattleEventType.Die:
-                            col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
-                            col = WriteText(" dies!", col, row, GetTextColor());
-                            break;
-                    }
-
-                    row += 1;
-                }
-                return;
-            }
-
-            Console.ResetColor();
+            var row = canvasOffsetY;
             foreach (var evt in textEvents)
             {
-                Console.SetCursorPosition(canvasOffsetX, canvasOffsetY + row);
-
+                var col = canvasOffsetX;
                 switch (evt.Type)
                 {
                     case BattleEventType.EndAttack:
-                        WriteText(evt.SourceEntity, GetTeamColor(evt.SourceTeamId));
-                        WriteText(" damages ", GetTextColor());
-                        WriteText(evt.TargetEntity, GetTeamColor(evt.TargetTeamId));
-                        WriteText(" for ", GetTextColor());
-                        WriteText(evt.DamageAmount.ToString(), GetDamageColor());
-                        ClearToEndOfLine();
+                        col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
+                        col = WriteText(" damages ", col, row, GetTextColor());
+                        col = WriteText(evt.TargetEntity, col, row, GetTeamColor(evt.TargetTeamId));
+                        col = WriteText(" for ", col, row, GetTextColor());
+                        col = WriteText(evt.DamageAmount.ToString(), col, row, GetDamageColor());
                         break;
                     case BattleEventType.ReachesGoal:
-                        WriteText(evt.SourceEntity, GetTeamColor(evt.SourceTeamId));
-                        WriteText(" reaches goal!", GetTextColor());
-                        ClearToEndOfLine();
+                        col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
+                        col = WriteText(" reaches goal!", col, row, GetTextColor());
                         break;
                     case BattleEventType.Die:
-                        WriteText(evt.SourceEntity, GetTeamColor(evt.SourceTeamId));
-                        WriteText(" dies!", GetTextColor());
-                        ClearToEndOfLine();
+                        col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
+                        col = WriteText(" dies!", col, row, GetTextColor());
                         break;
                 }
 
                 row += 1;
             }
-            _maxRowDrawn = Math.Max(_maxRowDrawn, row + canvasOffsetY - 1);
         }
 
         public void ShowCursor(int x, int y)
@@ -369,24 +306,11 @@ namespace BattlePlan.Viewer
             WriteText(text, x, y, color);
         }
 
-        public void ClearToRight(int x, int y)
-        {
-            ClearToRight(x, y, y);
-        }
-
-        public void ClearToRight(int x, int fromY, int toY)
-        {
-            if (_symbolBackBuffer!=null)
-                return;
-
-            for (var y=fromY; y<=toY; ++y)
-            {
-                Console.SetCursorPosition(x, y);
-                ClearToEndOfLine();
-            }
-        }
-
-        public string PromptForInput(int x, int y, string prompt, bool clearLineAfter)
+        /// <summary>
+        /// Writes a prompt to the screen, bypassing the regular framebuffer, and waits for input terminated
+        /// by Return.
+        /// </summary>
+        public string PromptForInput(int x, int y, string prompt)
         {
             _logger.Trace("Prompting for input: {0}", prompt);
 
@@ -396,14 +320,11 @@ namespace BattlePlan.Viewer
             // and then gets out of sync.
             Console.TreatControlCAsInput = false;
 
+            // Put the colors and cursor back to the console's default.
             Console.ResetColor();
             Console.CursorVisible = true;
             if (_canSetCursorSize)
                 Console.CursorSize = _originalCursorSize;
-
-            // Make sure the line we want to prompt on is clean.
-            Console.SetCursorPosition(x, y);
-            ClearToEndOfLine();
 
             Console.SetCursorPosition(x, y);
             Console.Write(prompt);
@@ -419,17 +340,18 @@ namespace BattlePlan.Viewer
                 _logger.Trace("Input received hex: {0}", buff.ToString());
             }
 
-            if (clearLineAfter)
-            {
-                Console.SetCursorPosition(x, y);
-                ClearToEndOfLine();
-            }
-
             if (_canSetCursorSize)
                 Console.CursorSize = 100;
             Console.TreatControlCAsInput = true;
 
             return input;
+        }
+
+        public void WriteTextDirect(string text, int x, int y)
+        {
+            Console.ResetColor();
+            Console.SetCursorPosition(x, y);
+            Console.Write(text);
         }
 
         public void PaintDefensePlan(DefensePlan plan, IList<UnitCharacteristics> unitChars, int canvasOffsetX, int canvasOffsetY)
@@ -457,45 +379,15 @@ namespace BattlePlan.Viewer
         private long _minFrameTime;
         private long _maxFrameTime;
 
-        // Used to track where to put the cursor when we shut down.
-        private int _maxRowDrawn = 0;
-
-        // An array of just spaces, used for clearing lines.
-        private char[] _lotsOfSpaces;
-
         private int _originalCursorSize = 100;
 
+        private int _bufferHeight;
+        private int _bufferWidth;
         private char[][] _symbolBackBuffer;
         private ConsoleColor[][] _fgBackBuffer;
         private ConsoleColor[][] _bgBackBuffer;
         private bool _canSetCursorSize;
 
-        private void WriteText(string text, ConsoleColor color)
-        {
-            if (this.UseColor)
-                Console.ForegroundColor = color;
-            Console.Write(text);
-        }
-
-        private void ClearToEndOfLine()
-        {
-            if (_symbolBackBuffer!=null)
-                return;
-
-            // Windows doesn't recognize ANSI command sequences like the one to clear to the end of the line, so
-            // for it we have to just write a lot of spaces.  Using spaces on Mac causes horrible flickering,
-            // which is otherwise absent for me.  Maybe the use of ANSI commands changes its buffering strategy
-            // or something.  Windows flickers horribly no matter what and will require refactoring to fix.
-            if (Environment.OSVersion.Platform==PlatformID.Win32NT)
-            {
-                var spaceCount = Console.BufferWidth - Console.CursorLeft;
-                Console.Write(_lotsOfSpaces, 0, spaceCount);
-            }
-            else
-            {
-                Console.Write("\u001B[K");
-            }
-        }
 
         // TODO: Color values should probably come from a config file.
         private ConsoleColor GetTerrainFGColor(string tileSymbol)
@@ -582,28 +474,19 @@ namespace BattlePlan.Viewer
 
         private int WriteText(string text, int x, int y, ConsoleColor textColor)
         {
-            if (_symbolBackBuffer!=null)
-            {
-                var symRow = _symbolBackBuffer[y];
-                var fgRow = _fgBackBuffer[y];
-                int i;
-                for (i=0; i<text.Length && x+i<symRow.Length; ++i)
-                {
-                    symRow[x+i] = text[i];
-                    fgRow[x+i] = textColor;
-                }
+            if (x<0 || x>=_bufferWidth || y<0 || y>=_bufferHeight)
+                return 0;
 
-                return x+i;
+            var symRow = _symbolBackBuffer[y];
+            var fgRow = _fgBackBuffer[y];
+            int i;
+            for (i=0; i<text.Length && x+i<symRow.Length; ++i)
+            {
+                symRow[x+i] = text[i];
+                fgRow[x+i] = textColor;
             }
 
-            Console.ResetColor();
-            Console.SetCursorPosition(x, y);
-            WriteText(text, textColor);
-            ClearToEndOfLine();
-            _maxRowDrawn = Math.Max(_maxRowDrawn, y);
-
-            return x+text.Length;
+            return x+i;
         }
-
     }
 }
