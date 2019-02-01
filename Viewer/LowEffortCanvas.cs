@@ -13,7 +13,21 @@ namespace BattlePlan.Viewer
     internal class LowEffortCanvas
     {
         public bool UseColor { get; set; } = true;
+        public bool UseDoubleBuffer { get; set; } = true;
 
+        public LowEffortCanvas()
+        {
+            // Test some of the system rules
+            _canSetCursorSize = true;
+            try
+            {
+                Console.CursorSize = 50;
+            }
+            catch (PlatformNotSupportedException)
+            {
+                _canSetCursorSize = false;
+            }
+        }
 
         public Vector2Di GetDisplaySize()
         {
@@ -28,10 +42,27 @@ namespace BattlePlan.Viewer
             Console.TreatControlCAsInput = true;
 
             _originalCursorSize = Console.CursorSize;
-            Console.CursorSize = 100;
+            if (_canSetCursorSize)
+                Console.CursorSize = 100;
             _maxRowDrawn = 0;
 
             Console.Clear();
+
+            if (this.UseDoubleBuffer)
+            {
+                var height = Console.BufferHeight;
+                var width = Console.BufferWidth;
+                _symbolBackBuffer = new char[height][];
+                _fgBackBuffer = new ConsoleColor[height][];
+                _bgBackBuffer = new ConsoleColor[height][];
+
+                for (int i=0; i<height; ++i)
+                {
+                    _symbolBackBuffer[i] = new char[width];
+                    _fgBackBuffer[i] = new ConsoleColor[width];
+                    _bgBackBuffer[i] = new ConsoleColor[width];
+                }
+            }
 
             // Create an array of spaces.  Used for clearing lines.
             var numSpaces = Math.Max(80, Console.BufferWidth);
@@ -66,12 +97,25 @@ namespace BattlePlan.Viewer
 
             // Hide the cursor while drawing the scene, to avoid flicker.
             Console.CursorVisible = false;
+
+            if (_symbolBackBuffer != null)
+            {
+                // Clear our internal screen buffers.
+                for (int i=0; i<_symbolBackBuffer.Length; ++i)
+                {
+                    Array.Fill(_symbolBackBuffer[i], ' ');
+                    Array.Fill(_fgBackBuffer[i], ConsoleColor.White);
+                    Array.Fill(_bgBackBuffer[i], ConsoleColor.Black);
+                }
+            }
         }
 
         public void EndFrame()
         {
-            var frameTime = _frameTimer.ElapsedMilliseconds;
+            if (_symbolBackBuffer!=null)
+                RenderBackBuffer();
 
+            var frameTime = _frameTimer.ElapsedMilliseconds;
             _frameCount += 1;
             _totalFrameTime += frameTime;
             _minFrameTime = Math.Min(_minFrameTime, frameTime);
@@ -89,24 +133,38 @@ namespace BattlePlan.Viewer
                 for (int col=0; col<terrain.Width; ++col)
                 {
                     var tileChars = terrain.GetTile(col, row);
-                    if (this.UseColor)
+                    var fgColor = GetTerrainFGColor(tileChars.Appearance);
+
+                    var overrideTeam = (terrainOverride!=null)? terrainOverride[col,row] : 0;
+
+                    // Normally the background color should be the terrain BG color.  But if there's an override here,
+                    // it's either a team color (>=1) or -1 to indicate multiple teams.
+                    ConsoleColor bgColor;
+                    if (overrideTeam==0)
+                        bgColor = GetTerrainBGColor(tileChars.Appearance);
+                    else if (overrideTeam==-1)
+                        bgColor = GetDamageColor();
+                    else
+                        bgColor = GetTeamColor(overrideTeam);
+
+
+                    if (_symbolBackBuffer!=null)
                     {
-                        Console.ForegroundColor = GetTerrainFGColor(tileChars.Appearance);
-
-                        var overrideTeam = (terrainOverride!=null)? terrainOverride[col,row] : 0;
-
-                        // Normally the background color should be the terrain BG color.  But if there's an override here,
-                        // it's either a team color (>=1) or -1 to indicate multiple teams.
-                        ConsoleColor bgColor;
-                        if (overrideTeam==0)
-                            bgColor = GetTerrainBGColor(tileChars.Appearance);
-                        else if (overrideTeam==-1)
-                            bgColor = GetDamageColor();
-                        else
-                            bgColor = GetTeamColor(overrideTeam);
-                        Console.BackgroundColor = bgColor;
+                        var x = col+canvasOffsetX;
+                        var y = row+canvasOffsetY;
+                        _symbolBackBuffer[y][x] = tileChars.Appearance[0];
+                        _fgBackBuffer[y][x] = fgColor;
+                        _bgBackBuffer[y][x] = bgColor;
                     }
-                    Console.Write(tileChars.Appearance[0]);
+                    else
+                    {
+                        if (this.UseColor)
+                        {
+                            Console.ForegroundColor = fgColor;
+                            Console.BackgroundColor = bgColor;
+                        }
+                        Console.Write(tileChars.Appearance[0]);
+                    }
                 }
             }
 
@@ -115,6 +173,16 @@ namespace BattlePlan.Viewer
 
         public void PaintTile(int x, int y, char symbol, ConsoleColor fgColor, ConsoleColor bgColor, int canvasOffsetX, int canvasOffsetY)
         {
+            if (_symbolBackBuffer!=null)
+            {
+                var buffX = x + canvasOffsetX;
+                var buffY = y + canvasOffsetY;
+                _symbolBackBuffer[buffY][buffX] = symbol;
+                _fgBackBuffer[buffY][buffX] = fgColor;
+                _bgBackBuffer[buffY][buffX] = bgColor;
+                return;
+            }
+
             Console.SetCursorPosition(x+canvasOffsetX, y+canvasOffsetY);
 
             if (this.UseColor)
@@ -212,6 +280,9 @@ namespace BattlePlan.Viewer
 
         public void WriteTextEvents(IEnumerable<BattleEvent> textEvents, int canvasOffsetX, int canvasOffsetY)
         {
+            if (_symbolBackBuffer!=null)
+                return; // todo
+
             int row = 0;
 
             Console.ResetColor();
@@ -267,9 +338,23 @@ namespace BattlePlan.Viewer
 
         public void WriteText(string text, int x, int y, int teamIdColor)
         {
+            var color = GetTeamColor(teamIdColor);
+
+            if (_symbolBackBuffer!=null)
+            {
+                var symRow = _symbolBackBuffer[y];
+                var fgRow = _fgBackBuffer[y];
+                for (int i=0; i<text.Length && x+i<symRow.Length; ++i)
+                {
+                    symRow[x+i] = text[i];
+                    fgRow[x+i] = color;
+                }
+
+                return;
+            }
+
             Console.ResetColor();
             Console.SetCursorPosition(x, y);
-            var color = GetTeamColor(teamIdColor);
             WriteText(text, color);
             ClearToEndOfLine();
             _maxRowDrawn = Math.Max(_maxRowDrawn, y);
@@ -282,6 +367,9 @@ namespace BattlePlan.Viewer
 
         public void ClearToRight(int x, int fromY, int toY)
         {
+            if (_symbolBackBuffer!=null)
+                return;
+
             for (var y=fromY; y<=toY; ++y)
             {
                 Console.SetCursorPosition(x, y);
@@ -294,14 +382,15 @@ namespace BattlePlan.Viewer
             _logger.Trace("Prompting for input: {0}", prompt);
 
             // On Windows, if this is true, it messes up input from Console.ReadLine.  One effect is that
-            // things like backspace show up as control characters in the returned string, instead of 
+            // things like backspace show up as control characters in the returned string, instead of
             // removing the last character as you would expect.  It also sometimes requires an extra CR
             // and then gets out of sync.
             Console.TreatControlCAsInput = false;
 
             Console.ResetColor();
             Console.CursorVisible = true;
-            Console.CursorSize = _originalCursorSize;
+            if (_canSetCursorSize)
+                Console.CursorSize = _originalCursorSize;
 
             // Make sure the line we want to prompt on is clean.
             Console.SetCursorPosition(x, y);
@@ -327,7 +416,8 @@ namespace BattlePlan.Viewer
                 ClearToEndOfLine();
             }
 
-            Console.CursorSize = 100;
+            if (_canSetCursorSize)
+                Console.CursorSize = 100;
             Console.TreatControlCAsInput = true;
 
             return input;
@@ -366,6 +456,11 @@ namespace BattlePlan.Viewer
 
         private int _originalCursorSize = 100;
 
+        private char[][] _symbolBackBuffer;
+        private ConsoleColor[][] _fgBackBuffer;
+        private ConsoleColor[][] _bgBackBuffer;
+        private bool _canSetCursorSize;
+
         private void WriteText(string text, ConsoleColor color)
         {
             if (this.UseColor)
@@ -375,6 +470,9 @@ namespace BattlePlan.Viewer
 
         private void ClearToEndOfLine()
         {
+            if (_symbolBackBuffer!=null)
+                return;
+
             // Windows doesn't recognize ANSI command sequences like the one to clear to the end of the line, so
             // for it we have to just write a lot of spaces.  Using spaces on Mac causes horrible flickering,
             // which is otherwise absent for me.  Maybe the use of ANSI commands changes its buffering strategy
@@ -432,6 +530,45 @@ namespace BattlePlan.Viewer
         private ConsoleColor GetTextColor()
         {
             return ConsoleColor.White;
+        }
+
+        private void RenderBackBuffer()
+        {
+            Debug.Assert(_symbolBackBuffer!=null && _fgBackBuffer!=null && _bgBackBuffer!=null);
+
+            var height = Math.Min(Console.BufferHeight, _symbolBackBuffer.Length);
+            var width = Math.Min(Console.BufferWidth, _symbolBackBuffer[0].Length);
+            if (height<1 || width<1)
+                return;
+
+            for (int y=0; y<height; ++y)
+            {
+                Console.SetCursorPosition(0, y);
+                var symRow = _symbolBackBuffer[y];
+                var fgRow = _fgBackBuffer[y];
+                var bgRow = _bgBackBuffer[y];
+
+                int x=0;
+                while (x<width)
+                {
+                    // Figure out how many characters in a row share the same colors.
+                    var span = 1;
+                    while (x+span<width)
+                    {
+                        if ( !this.UseColor || (fgRow[x]==fgRow[x+span] && bgRow[x]==bgRow[x+span]) )
+                            span += 1;
+                        else
+                            break;
+                    }
+                    if (this.UseColor)
+                    {
+                        Console.ForegroundColor = fgRow[x];
+                        Console.BackgroundColor = bgRow[x];
+                    }
+                    Console.Write(symRow, x, span);
+                    x += span;
+                }
+            }
         }
     }
 }
