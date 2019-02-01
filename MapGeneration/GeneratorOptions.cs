@@ -12,12 +12,12 @@ namespace BattlePlan.MapGeneration
         /// <summary>
         /// Total map height in tiles.
         /// </summary>
-        public int Height { get; set; } = 50;
+        public int Height { get; set; } = 36;
 
         /// <summary>
         /// Total map width in tiles.
         /// </summary>
-        public int Width { get; set; } = 36;
+        public int Width { get; set; } = 50;
 
         /// <summary>
         /// Maximum width of random rectangles (for walls, water, etc).  If the map's width is larger than its
