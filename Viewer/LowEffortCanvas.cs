@@ -50,8 +50,8 @@ namespace BattlePlan.Viewer
 
             if (this.UseDoubleBuffer)
             {
-                var height = Console.BufferHeight;
-                var width = Console.BufferWidth;
+                var height = Console.WindowHeight-1;
+                var width = Console.WindowWidth;
                 _symbolBackBuffer = new char[height][];
                 _fgBackBuffer = new ConsoleColor[height][];
                 _bgBackBuffer = new ConsoleColor[height][];
@@ -280,10 +280,37 @@ namespace BattlePlan.Viewer
 
         public void WriteTextEvents(IEnumerable<BattleEvent> textEvents, int canvasOffsetX, int canvasOffsetY)
         {
-            if (_symbolBackBuffer!=null)
-                return; // todo
-
             int row = 0;
+
+            if (_symbolBackBuffer!=null)
+            {
+                row = canvasOffsetY;
+                foreach (var evt in textEvents)
+                {
+                    var col = canvasOffsetX;
+                    switch (evt.Type)
+                    {
+                        case BattleEventType.EndAttack:
+                            col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
+                            col = WriteText(" damages ", col, row, GetTextColor());
+                            col = WriteText(evt.TargetEntity, col, row, GetTeamColor(evt.TargetTeamId));
+                            col = WriteText(" for ", col, row, GetTextColor());
+                            col = WriteText(evt.DamageAmount.ToString(), col, row, GetDamageColor());
+                            break;
+                        case BattleEventType.ReachesGoal:
+                            col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
+                            col = WriteText(" reaches goal!", col, row, GetTextColor());
+                            break;
+                        case BattleEventType.Die:
+                            col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
+                            col = WriteText(" dies!", col, row, GetTextColor());
+                            break;
+                    }
+
+                    row += 1;
+                }
+                return;
+            }
 
             Console.ResetColor();
             foreach (var evt in textEvents)
@@ -339,25 +366,7 @@ namespace BattlePlan.Viewer
         public void WriteText(string text, int x, int y, int teamIdColor)
         {
             var color = GetTeamColor(teamIdColor);
-
-            if (_symbolBackBuffer!=null)
-            {
-                var symRow = _symbolBackBuffer[y];
-                var fgRow = _fgBackBuffer[y];
-                for (int i=0; i<text.Length && x+i<symRow.Length; ++i)
-                {
-                    symRow[x+i] = text[i];
-                    fgRow[x+i] = color;
-                }
-
-                return;
-            }
-
-            Console.ResetColor();
-            Console.SetCursorPosition(x, y);
-            WriteText(text, color);
-            ClearToEndOfLine();
-            _maxRowDrawn = Math.Max(_maxRowDrawn, y);
+            WriteText(text, x, y, color);
         }
 
         public void ClearToRight(int x, int y)
@@ -570,5 +579,31 @@ namespace BattlePlan.Viewer
                 }
             }
         }
+
+        private int WriteText(string text, int x, int y, ConsoleColor textColor)
+        {
+            if (_symbolBackBuffer!=null)
+            {
+                var symRow = _symbolBackBuffer[y];
+                var fgRow = _fgBackBuffer[y];
+                int i;
+                for (i=0; i<text.Length && x+i<symRow.Length; ++i)
+                {
+                    symRow[x+i] = text[i];
+                    fgRow[x+i] = textColor;
+                }
+
+                return x+i;
+            }
+
+            Console.ResetColor();
+            Console.SetCursorPosition(x, y);
+            WriteText(text, textColor);
+            ClearToEndOfLine();
+            _maxRowDrawn = Math.Max(_maxRowDrawn, y);
+
+            return x+text.Length;
+        }
+
     }
 }
