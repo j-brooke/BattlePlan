@@ -13,7 +13,7 @@
     "WeaponDamage": 60,
     "CrowdAversionBias": 2.0,
     "HurtAversionBias": 2.0,
-    "ResourceCost": 20
+    "ResourceCost": 50
   },
   {
     "Name": "Scout",
