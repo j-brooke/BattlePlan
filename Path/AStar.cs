@@ -6,6 +6,8 @@ namespace BattlePlan.Path
 {
     public static class AStar
     {
+        public static long TotalPathfindingTime => _globalTimer.ElapsedMilliseconds;
+
         /// <summary>
         /// Quick hack implementation of the A* pathfinding algorithm (which might not even be the right
         /// algorithm for our purposes).  There are many ways this code should be improved, but you've
@@ -17,6 +19,7 @@ namespace BattlePlan.Path
         public static IList<T> FindPath<T>(IPathGraph<T> graph, T startNode, T destNode)
         {
             var timer = System.Diagnostics.Stopwatch.StartNew();
+            _globalTimer.Start();
 
             // TODO: rewrite this with more efficient data structures.  This approach is around n^2*log(n).
             var openSet = new Dictionary<T,PathPiece<T>>();
@@ -88,7 +91,9 @@ namespace BattlePlan.Path
                 path.Reverse();
             }
 
-            _logger.Debug("Path searched from {0} to {1}: closedSetCount={2}; timeMS={3}",
+            _globalTimer.Stop();
+
+            _logger.Trace("Path searched from {0} to {1}: closedSetCount={2}; timeMS={3}",
                 startNode,
                 destNode,
                 closedSet.Count,
@@ -98,6 +103,7 @@ namespace BattlePlan.Path
         }
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly System.Diagnostics.Stopwatch _globalTimer = new System.Diagnostics.Stopwatch();
 
         private class PathPiece<T>
         {

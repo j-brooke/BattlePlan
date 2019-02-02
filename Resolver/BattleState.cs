@@ -15,6 +15,8 @@ namespace BattlePlan.Resolver
         public Terrain Terrain => _terrain;
         public BattleResolution Resolve(Scenario scenario, IList<UnitCharacteristics> unitTypes)
         {
+            _runTimer = System.Diagnostics.Stopwatch.StartNew();
+
             _terrain = scenario.Terrain;
             _attackPlans = new List<AttackPlan>(scenario.AttackPlans);
             _defensePlans = new List<DefensePlan>(scenario.DefensePlans ?? Enumerable.Empty<DefensePlan>());
@@ -129,6 +131,8 @@ namespace BattlePlan.Resolver
                     || noMobileUnitsLeft;
             }
 
+            _logger.Debug("Battle resolution: elapsedMS={0}; pathMS={1}", _runTimer.ElapsedMilliseconds, Path.AStar.TotalPathfindingTime);
+
             return new BattleResolution()
             {
                 Terrain = _terrain,
@@ -178,6 +182,9 @@ namespace BattlePlan.Resolver
             return path;
         }
 
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
+        private System.Diagnostics.Stopwatch _runTimer;
         private Terrain _terrain;
         private List<AttackPlan> _attackPlans;
         private List<DefensePlan> _defensePlans;
