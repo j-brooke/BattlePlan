@@ -130,7 +130,7 @@ namespace BattlePlan.Resolver
         public IEnumerable<Vector2Di> Neighbors(Vector2Di fromNode)
         {
             if (fromNode.Equals(_afterGoalNode))
-                return Enumerable.Empty<Vector2Di>();
+                yield break;
 
             if (fromNode.X<0 || fromNode.X>=_terrain.Width || fromNode.Y<0 || fromNode.Y>=_terrain.Height)
                 throw new ArgumentOutOfRangeException("fromNode");
@@ -142,32 +142,30 @@ namespace BattlePlan.Resolver
 
             var list = new List<Vector2Di>();
             if (openUp)
-                list.Add(new Vector2Di(fromNode.X, fromNode.Y-1));
+                yield return new Vector2Di(fromNode.X, fromNode.Y-1);
             if (openDown)
-                list.Add(new Vector2Di(fromNode.X, fromNode.Y+1));
+                yield return new Vector2Di(fromNode.X, fromNode.Y+1);
             if (openLeft)
-                list.Add(new Vector2Di(fromNode.X-1, fromNode.Y));
+                yield return new Vector2Di(fromNode.X-1, fromNode.Y);
             if (openRight)
-                list.Add(new Vector2Di(fromNode.X+1, fromNode.Y));
+                yield return new Vector2Di(fromNode.X+1, fromNode.Y);
 
             // Only allow diagonal movement if both cardinal directions are clear too.  I.e.,
             // don't allow cutting corners.
             if (openUp & openLeft && !_terrain.GetTile(fromNode.X-1, fromNode.Y-1).BlocksMovement)
-                list.Add(new Vector2Di(fromNode.X-1, fromNode.Y-1));
+                yield return new Vector2Di(fromNode.X-1, fromNode.Y-1);
             if (openUp & openRight && !_terrain.GetTile(fromNode.X+1, fromNode.Y-1).BlocksMovement)
-                list.Add(new Vector2Di(fromNode.X+1, fromNode.Y-1));
+                yield return new Vector2Di(fromNode.X+1, fromNode.Y-1);
             if (openDown & openLeft && !_terrain.GetTile(fromNode.X-1, fromNode.Y+1).BlocksMovement)
-                list.Add(new Vector2Di(fromNode.X-1, fromNode.Y+1));
+                yield return new Vector2Di(fromNode.X-1, fromNode.Y+1);
             if (openDown & openRight && !_terrain.GetTile(fromNode.X+1, fromNode.Y+1).BlocksMovement)
-                list.Add(new Vector2Di(fromNode.X+1, fromNode.Y+1));
+                yield return new Vector2Di(fromNode.X+1, fromNode.Y+1);
 
             // Special non-Euclidean neighbor.  The algorithm can't directly handle multiple goals, so
             // we use _afterGoalNode as the destination as far as A* is concerned, and make it a zero-
             // cost neighbor of all of our real goal nodes.
             if (_goals!=null && _goals.Contains(fromNode))
-                list.Add(_afterGoalNode);
-
-            return list;
+                yield return _afterGoalNode;
         }
 
         public IList<Vector2Di> FindPathToGoal(BattleState battleState, BattleEntity entity)

@@ -6,8 +6,6 @@ namespace BattlePlan.Path
 {
     public static class AStar
     {
-        public static long TotalPathfindingTime => _globalTimer.ElapsedMilliseconds;
-
         /// <summary>
         /// Quick hack implementation of the A* pathfinding algorithm (which might not even be the right
         /// algorithm for our purposes).  There are many ways this code should be improved, but you've
@@ -21,31 +19,32 @@ namespace BattlePlan.Path
             var timer = System.Diagnostics.Stopwatch.StartNew();
             _globalTimer.Start();
 
-            // TODO: rewrite this with more efficient data structures.  This approach is around n^2*log(n).
-            var openSet = new Dictionary<T,PathPiece<T>>();
-            var closedSet = new Dictionary<T,PathPiece<T>>();
+            var openPriorityQueue = new PriorityQueue<double,PathPiece<T>>();
+            var allPieces = new Dictionary<T,PathPiece<T>>();
             PathPiece<T> destPiece = null;
 
             var startPiece = new PathPiece<T>(startNode)
             {
                 EstimatedRemainingCost = graph.EstimatedDistance(startNode, destNode),
+                IsOpen = true
             };
-            openSet.Add(startPiece.Node, startPiece);
+            openPriorityQueue.Enqueue(0, startPiece);
+            allPieces.Add(startPiece.Node, startPiece);
+            _enqueueCount += 1;
 
-            while (openSet.Count>0 && destPiece==null)
+            while (openPriorityQueue.Count>0 && destPiece==null)
             {
-                var currentPiece = openSet.Values
-                    .OrderByDescending( (piece) => (piece.CostFromStart+piece.EstimatedRemainingCost) )
-                    .Last();
-                openSet.Remove(currentPiece.Node);
-                closedSet.Add(currentPiece.Node, currentPiece);
+                _maxQueueSize = Math.Max(_maxQueueSize, openPriorityQueue.Count);
+
+                var currentPiece = openPriorityQueue.Dequeue();
+                currentPiece.IsOpen = false;
+                _dequeueCount += 1;
 
                 var neighbors = graph.Neighbors(currentPiece.Node);
                 foreach (var neighborNode in neighbors)
                 {
                     PathPiece<T> neighborPiece = null;
-                    bool inOpenSet = openSet.TryGetValue(neighborNode, out neighborPiece);
-                    bool inClosedSet = !inOpenSet && closedSet.TryGetValue(neighborNode, out neighborPiece);
+                    allPieces.TryGetValue(neighborNode, out neighborPiece);
 
                     double costToNeighbor = currentPiece.CostFromStart + graph.Cost(currentPiece.Node, neighborNode);
                     if (neighborPiece == null)
@@ -55,20 +54,27 @@ namespace BattlePlan.Path
                             CostFromStart = costToNeighbor,
                             EstimatedRemainingCost = graph.EstimatedDistance(neighborNode, destNode),
                             PreviousPiece = currentPiece,
+                            IsOpen = true,
                         };
-                        openSet.Add(neighborNode, neighborPiece);
+                        openPriorityQueue.Enqueue(neighborPiece.EstimatedRemainingCost + neighborPiece.CostFromStart, neighborPiece);
+                        allPieces.Add(neighborPiece.Node, neighborPiece);
+                        _enqueueCount += 1;
                     }
                     else
                     {
                         if (costToNeighbor < neighborPiece.CostFromStart)
                         {
-                            if (inClosedSet)
+                            if (neighborPiece.IsOpen)
                             {
-                                closedSet.Remove(neighborNode);
-                                openSet.Add(neighborNode, neighborPiece);
+                                openPriorityQueue.Remove(neighborPiece);
+                                _removeCount += 1;
                             }
+
                             neighborPiece.CostFromStart = costToNeighbor;
                             neighborPiece.PreviousPiece = currentPiece;
+                            neighborPiece.IsOpen = true;
+                            openPriorityQueue.Enqueue(neighborPiece.EstimatedRemainingCost + neighborPiece.CostFromStart, neighborPiece);
+                            _enqueueCount += 1;
                         }
                     }
                 }
@@ -93,17 +99,26 @@ namespace BattlePlan.Path
 
             _globalTimer.Stop();
 
-            _logger.Trace("Path searched from {0} to {1}: closedSetCount={2}; timeMS={3}",
+            _logger.Trace("Path searched from {0} to {1}: visitedNodeCount={2}; timeMS={3}",
                 startNode,
                 destNode,
-                closedSet.Count,
+                allPieces.Count,
                 timer.ElapsedMilliseconds);
 
             return path;
         }
 
+        public static string DebugInfo()
+        {
+            return $"timeMS={_globalTimer.ElapsedMilliseconds}; enqueueCount={_enqueueCount}; dequeueCount={_dequeueCount}; removeCount={_removeCount}; maxSize={_maxQueueSize}";
+        }
+
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static readonly System.Diagnostics.Stopwatch _globalTimer = new System.Diagnostics.Stopwatch();
+        private static int _enqueueCount = 0;
+        private static int _dequeueCount = 0;
+        private static int _removeCount = 0;
+        private static int _maxQueueSize = 0;
 
         private class PathPiece<T>
         {
@@ -111,6 +126,7 @@ namespace BattlePlan.Path
             public double CostFromStart { get; set; }
             public double EstimatedRemainingCost { get; set; }
             public PathPiece<T> PreviousPiece { get; set; }
+            public bool IsOpen { get; set; }
 
             public PathPiece(T node)
             {

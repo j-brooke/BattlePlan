@@ -28,6 +28,8 @@ namespace BattlePlan
                 Play(filename);
             else if (verb.Equals("edit", StringComparison.CurrentCultureIgnoreCase))
                 Edit(filename);
+            else if (verb.Equals("test", StringComparison.CurrentCultureIgnoreCase))
+                Test();
             else
                 Help();
 
@@ -90,6 +92,27 @@ namespace BattlePlan
             Console.WriteLine("Usage: one of");
             Console.WriteLine("  dotnet run play filename");
             Console.WriteLine("  dotnet run edit [filename]");
+        }
+
+
+        private static void Test()
+        {
+            var fileText = File.ReadAllText("LICENSE");
+            var wordsFromFile = fileText.Split();
+
+            var pQueue = new Path.PriorityQueue<string,string>();
+            foreach (var word in wordsFromFile)
+                pQueue.Enqueue(word,word);
+
+            foreach (var word in wordsFromFile)
+            {
+                if (word != word.ToLower())
+                    pQueue.Remove(word);
+            }
+
+
+            while (pQueue.Count>0)
+                Console.WriteLine(pQueue.Dequeue());
         }
 
         private static JsonSerializerSettings _serialOpts = new JsonSerializerSettings()

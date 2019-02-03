@@ -131,7 +131,7 @@ namespace BattlePlan.Resolver
                     || noMobileUnitsLeft;
             }
 
-            _logger.Debug("Battle resolution: elapsedMS={0}; pathMS={1}", _runTimer.ElapsedMilliseconds, Path.AStar.TotalPathfindingTime);
+            _logger.Debug("Battle resolution: " + Path.AStar.DebugInfo() );
 
             return new BattleResolution()
             {
