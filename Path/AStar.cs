@@ -64,17 +64,19 @@ namespace BattlePlan.Path
                     {
                         if (costToNeighbor < neighborPiece.CostFromStart)
                         {
-                            if (neighborPiece.IsOpen)
-                            {
-                                openPriorityQueue.Remove(neighborPiece);
-                                _removeCount += 1;
-                            }
-
                             neighborPiece.CostFromStart = costToNeighbor;
                             neighborPiece.PreviousPiece = currentPiece;
-                            neighborPiece.IsOpen = true;
-                            openPriorityQueue.Enqueue(neighborPiece);
-                            _enqueueCount += 1;
+                            if (neighborPiece.IsOpen)
+                            {
+                                openPriorityQueue.AdjustPriority(neighborPiece);
+                                _removeCount += 1;
+                            }
+                            else
+                            {
+                                neighborPiece.IsOpen = true;
+                                openPriorityQueue.Enqueue(neighborPiece);
+                                _enqueueCount += 1;
+                            }
                         }
                     }
                 }
