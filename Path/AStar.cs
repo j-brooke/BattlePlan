@@ -19,7 +19,7 @@ namespace BattlePlan.Path
             var timer = System.Diagnostics.Stopwatch.StartNew();
             _globalTimer.Start();
 
-            var openPriorityQueue = new PriorityQueue<double,PathPiece<T>>();
+            var openPriorityQueue = new IntrinsicPriorityQueue<PathPiece<T>>(512, LeastTotalEstimatedDistance);
             var allPieces = new Dictionary<T,PathPiece<T>>();
             PathPiece<T> destPiece = null;
 
@@ -28,7 +28,7 @@ namespace BattlePlan.Path
                 EstimatedRemainingCost = graph.EstimatedDistance(startNode, destNode),
                 IsOpen = true
             };
-            openPriorityQueue.Enqueue(0, startPiece);
+            openPriorityQueue.Enqueue(startPiece);
             allPieces.Add(startPiece.Node, startPiece);
             _enqueueCount += 1;
 
@@ -56,7 +56,7 @@ namespace BattlePlan.Path
                             PreviousPiece = currentPiece,
                             IsOpen = true,
                         };
-                        openPriorityQueue.Enqueue(neighborPiece.EstimatedRemainingCost + neighborPiece.CostFromStart, neighborPiece);
+                        openPriorityQueue.Enqueue(neighborPiece);
                         allPieces.Add(neighborPiece.Node, neighborPiece);
                         _enqueueCount += 1;
                     }
@@ -73,7 +73,7 @@ namespace BattlePlan.Path
                             neighborPiece.CostFromStart = costToNeighbor;
                             neighborPiece.PreviousPiece = currentPiece;
                             neighborPiece.IsOpen = true;
-                            openPriorityQueue.Enqueue(neighborPiece.EstimatedRemainingCost + neighborPiece.CostFromStart, neighborPiece);
+                            openPriorityQueue.Enqueue(neighborPiece);
                             _enqueueCount += 1;
                         }
                     }
@@ -119,6 +119,11 @@ namespace BattlePlan.Path
         private static int _dequeueCount = 0;
         private static int _removeCount = 0;
         private static int _maxQueueSize = 0;
+
+        private static bool LeastTotalEstimatedDistance<T>(PathPiece<T> a, PathPiece<T> b)
+        {
+            return (a.CostFromStart + a.EstimatedRemainingCost) < (b.CostFromStart + b.EstimatedRemainingCost);
+        }
 
         private class PathPiece<T>
         {

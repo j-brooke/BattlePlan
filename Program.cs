@@ -100,16 +100,15 @@ namespace BattlePlan
             var fileText = File.ReadAllText("LICENSE");
             var wordsFromFile = fileText.Split();
 
-            var pQueue = new Path.PriorityQueue<string,string>();
+            var pQueue = new Path.IntrinsicPriorityQueue<string>(Path.IntrinsicPriorityQueue<string>.LessThan);
             foreach (var word in wordsFromFile)
-                pQueue.Enqueue(word,word);
+                pQueue.Enqueue(word);
 
             foreach (var word in wordsFromFile)
             {
                 if (word != word.ToLower())
                     pQueue.Remove(word);
             }
-
 
             while (pQueue.Count>0)
                 Console.WriteLine(pQueue.Dequeue());
