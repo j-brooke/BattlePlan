@@ -34,7 +34,7 @@ namespace BattlePlan.Resolver
 
             _events = new List<BattleEvent>();
             _entities = new List<BattleEntity>();
-            _entityPositions = new Dictionary<Vector2Di, BattleEntity>();
+            _blockedPositions = new BattleEntity[_terrain.Width,_terrain.Height];
             _pathGraph = new BattlePathGraph(this);
             _hurtMap = new HurtMap(_terrain);
 
@@ -146,9 +146,7 @@ namespace BattlePlan.Resolver
 
         internal BattleEntity GetEntityAt(Vector2Di position)
         {
-            BattleEntity entity = null;
-            _entityPositions.TryGetValue(position, out entity);
-            return entity;
+            return _blockedPositions[position.X, position.Y];
         }
 
         internal BattleEntity GetEntityById(string id)
@@ -163,12 +161,12 @@ namespace BattlePlan.Resolver
 
         internal void SetEntityAt(Vector2Di position, BattleEntity entity)
         {
-            _entityPositions.Add(position, entity);
+            _blockedPositions[position.X, position.Y] = entity;
         }
 
         internal void ClearEntityAt(Vector2Di position)
         {
-            _entityPositions.Remove(position);
+            _blockedPositions[position.X, position.Y] = null;
         }
 
         internal IList<Vector2Di> GetGoalTiles(int teamId)
@@ -192,7 +190,7 @@ namespace BattlePlan.Resolver
         private List<BattleEvent> _events;
         private List<BattleEntity> _entities;
 
-        private Dictionary<Vector2Di, BattleEntity> _entityPositions;
+        private BattleEntity[,] _blockedPositions;
 
         private BattlePathGraph _pathGraph;
 
