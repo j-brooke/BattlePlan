@@ -18,6 +18,13 @@ namespace BattlePlan.Resolver
         {
             _battleState = battleState;
             _terrain = battleState.Terrain;
+
+            // Set up a reusable PathSolver.
+            var spawns = _terrain.SpawnPointsMap.SelectMany( (kvp) => kvp.Value );
+            var goals = _terrain.SpawnPointsMap.SelectMany( (kvp) => kvp.Value );
+            var spawnsAndGoals = spawns.Concat(goals);
+            _pathSolver = new PathSolver<Vector2Di>(this);
+            _pathSolver.BuildAdjacencyGraph(spawnsAndGoals);
         }
 
         public BattlePathGraph(Terrain terrain)
@@ -179,13 +186,9 @@ namespace BattlePlan.Resolver
             _unitSpeedTilesPerSecond = entity.SpeedTilesPerSec;
             _goals = _terrain.GoalPointsMap[entity.TeamId];
             _searchForEntity = entity;
-            var path = BattlePlan.Path.AStar.FindPath(this, entity.Position, _afterGoalNode);
+            var result = _pathSolver.FindPath(entity.Position, _goals);
 
-            // Remove _afterGoalNode since it's special and doesn't exist in our map space.
-            if (path != null)
-                path.RemoveAt(path.Count-1);
-
-            return path;
+            return result.Path;
         }
 
         /// <summary>
@@ -212,6 +215,11 @@ namespace BattlePlan.Resolver
             return visited;
         }
 
+        public string DebugInfo()
+        {
+            return _pathSolver.DebugInfo();
+        }
+
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static double _sqrt2 = Math.Sqrt(2.0);
 
@@ -225,6 +233,7 @@ namespace BattlePlan.Resolver
 
         private readonly BattleState _battleState;
         private readonly Terrain _terrain;
+        private readonly PathSolver<Vector2Di> _pathSolver;
 
         private static double DiagonalDistance(Vector2Di fromNode, Vector2Di toNode)
         {

@@ -131,7 +131,7 @@ namespace BattlePlan.Resolver
                     || noMobileUnitsLeft;
             }
 
-            _logger.Debug("Battle resolution: " + Path.AStar.DebugInfo() );
+            _logger.Debug("Battle resolution: " + _pathGraph.DebugInfo() );
 
             return new BattleResolution()
             {
