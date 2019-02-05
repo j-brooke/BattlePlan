@@ -109,7 +109,7 @@ namespace BattlePlan.Resolver
         /// Returns an estimate of the cost of the path between two (potentially distant) points.
         /// This is what the A* algorithm often calls the "heuristic".
         /// </summary>
-        public double EstimatedDistance(Vector2Di fromNode, Vector2Di toNode)
+        public double EstimatedCost(Vector2Di fromNode, Vector2Di toNode)
         {
             var dist = DiagonalDistance(fromNode, toNode);
             var time = dist/_unitSpeedTilesPerSecond;

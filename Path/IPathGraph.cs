@@ -7,10 +7,11 @@ namespace BattlePlan.Path
     /// Interface for answering questions about some concrete space in terms the pathfinding algorithm
     /// understands.  Use this to convert a tile map into a weighted directed graph, for instance.
     /// </summary>
+    /// <typeparam name="T">Type that identifies distinct nodes or locations.  (For example, Vector2D, string, etc.)</typeparam>
     public interface IPathGraph<T>
     {
         /// <summary>
-        /// Returns a collection of nodes that are directly connected to the given one.
+        /// Returns an enumeration of nodes that are reachable in one step from the given one.
         /// </summary>
         IEnumerable<T> Neighbors(T fromNode);
 
@@ -24,6 +25,6 @@ namespace BattlePlan.Path
         /// Estimated cost for the entire path from one node to any other one (not necessarily a neighbor).
         /// This is what the A* algorithm often calls the "heuristic".
         /// </summary>
-        double EstimatedDistance(T fromNode, T toNode);
+        double EstimatedCost(T fromNode, T toNode);
     }
 }
