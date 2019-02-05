@@ -4,6 +4,10 @@ using System.Linq;
 
 namespace BattlePlan.Path
 {
+    /// <summary>
+    /// Class for finding the shortest path between arbitrary nodes in a directed graph
+    /// using the A* algorithm.
+    /// </summary>
     public class PathSolver<T>
     {
         public PathSolver(IPathGraph<T> worldGraph)
@@ -63,7 +67,7 @@ namespace BattlePlan.Path
 
             // Choose a new sequence number.  We'll rely on this for lazy initialization.
             _seqNum += 1;
-            var openListQueue = new IntrinsicPriorityQueue<NodeInfo>(PriorityFunction);
+            var openListQueue = new IndexedIntrinsicPriorityQueue<NodeInfo>(PriorityFunction);
 
             if (!endNodeIdList.Any())
                 throw new PathfindingException("endNodeIdList is empty");
@@ -192,7 +196,7 @@ namespace BattlePlan.Path
             return (a.CostFromStart + a.EstimatedRemainingCost) < (b.CostFromStart + b.EstimatedRemainingCost);
         }
 
-        private class NodeInfo
+        private class NodeInfo : IndexedQueueItem
         {
             public T NodeId { get; }
             public List<NodeInfo> Neighbors { get; set; }

@@ -6,20 +6,22 @@ using System.Diagnostics;
 namespace BattlePlan.Path
 {
     /// <summary>
-    /// Priority queue implemented as a min/max heap.  By "intrinsic", I mean that the priority value
-    /// is the item type (T) itself, or can be derived from it or its properties, by the given comparison
-    /// function.  (An alternative would be to store the priority value separately.)
+    /// Special case version of IntrinsicPriorityQueue for use in A* pathfinding.
+    /// The item type (generic parameter T) for this class must descend from IndexedQueueItem.
+    /// This exposes a field, QueueIndex, that the queue uses to track the item's location in
+    /// its heap, to speed up the AdjustPriority operation.
+    ///
+    /// In the interest of speed, very few checks are performed on the legality of operations
+    /// for this class.
     /// </summary>
     /// <remarks>
-    /// A few cautions:
-    /// * If the properties that go into an item's priority value change, you must call Remove or
-    ///   AdjustPriority with it before performing any other queue operations, and before changing other
-    ///   items' priority properties.
-    /// * Duplicate items are allowed, but Remove and AdjustPriority make no guarantees about which instance
-    ///   they operate on when duplicates exist.  This shouldn't be a problem for simple immutable types
-    ///   like string or double, but it could be a problem for complex types.
+    /// Some warnings:
+    /// * An item may only belong to one IndexedIntrinsicPriorityQueue at a given time.
+    /// * If the item's priority value changes, you must call AdjustPriority with it before
+    ///   performing any other queue operations, and before changing other items' priority properties.
     /// </remarks>
-    public class IntrinsicPriorityQueue<T>
+    internal class IndexedIntrinsicPriorityQueue<T>
+        where T : IndexedQueueItem
     {
         public int Count => _count;
 
@@ -27,7 +29,7 @@ namespace BattlePlan.Path
         /// Creates a new queue using the given function for prioritization.  compareFunc(a,b)
         /// should return true if a is higher priority than b.
         /// </summary>
-        public IntrinsicPriorityQueue(int initialCapacity, Func<T,T,bool> compareFunc)
+        public IndexedIntrinsicPriorityQueue(int initialCapacity, Func<T,T,bool> compareFunc)
         {
             _heap = new T[initialCapacity];
             _count = 0;
@@ -38,48 +40,16 @@ namespace BattlePlan.Path
         /// Creates a new queue using the given function for prioritization.  compareFunc(a,b)
         /// should return true if a is higher priority than b.
         /// </summary>
-        public IntrinsicPriorityQueue(Func<T,T,bool> compareFunc)
+        public IndexedIntrinsicPriorityQueue(Func<T,T,bool> compareFunc)
             : this(_defaultInitialCapacity, compareFunc)
         { }
 
         /// <summary>
-        /// Creates a new queu using the given Comparison<T> for prioritization.  For instance,
-        /// you could give it StringComparer.InvariantCultureIgnoreCase.Compare and false for
-        /// highestValuesFirst to give you strings from a-z.
-        /// </summary>
-        public IntrinsicPriorityQueue(int initialCapacity, Comparison<T> compareFunc, bool highValuesFirst)
-        {
-            _heap = new T[initialCapacity];
-            _count = 0;
-
-            if (highValuesFirst)
-            {
-                _compareFunc = (T a, T b) => compareFunc(a, b) > 0;
-            }
-            else
-            {
-                _compareFunc = (T a, T b) => compareFunc(a, b) < 0;
-            }
-        }
-
-        /// <summary>
-        /// Creates a new queu using the given Comparison<T> for prioritization.  For instance,
-        /// you could give it StringComparer.InvariantCultureIgnoreCase.Compare and false for
-        /// highestValuesFirst to give you strings from a-z.
-        /// </summary>
-        public IntrinsicPriorityQueue(Comparison<T> compareFunc, bool highValuesFirst)
-            : this(_defaultInitialCapacity, compareFunc, highValuesFirst)
-        { }
-
-        public void Clear()
-        {
-            Array.Clear(_heap, 0, _heap.Length);
-            _count = 0;
-        }
-
-        /// <summary>
         /// Adds an item to the priority queue.  O(log(n))
         /// </summary>
+        /// <remarks>
+        /// WARNING: an item may only belong to a single IndexedIntrinsicPriorityQueue at a time.
+        /// </remarks>
         public void Enqueue(T item)
         {
             if (_count==_heap.Length)
@@ -87,19 +57,10 @@ namespace BattlePlan.Path
 
             var newIdx = _count;
             _heap[newIdx] = item;
+            item.QueueIndex = newIdx;
             _count += 1;
 
             ShiftUp(newIdx);
-        }
-
-        /// <summary>
-        /// Looks at the next (highest priorty) item in the queue without removing it.  O(1)
-        /// </summary>
-        public T Peek()
-        {
-            if (_count==0)
-                throw new InvalidOperationException();
-            return _heap[0];
         }
 
         /// <summary>
@@ -111,10 +72,12 @@ namespace BattlePlan.Path
                 throw new InvalidOperationException();
 
             var itemToReturn = _heap[0];
+            itemToReturn.QueueIndex = -1;
 
             // Promote the last item in the array to fill the void of the item we're taking
             // away.
             _heap[0] = _heap[_count-1];
+            _heap[0].QueueIndex = 0;
             _heap[_count-1] = default(T);
             _count -= 1;
 
@@ -125,46 +88,8 @@ namespace BattlePlan.Path
         }
 
         /// <summary>
-        /// Tests whether the queue has any instances equal to testItem.  O(n)
-        /// </summary>
-        public bool Contains(T testItem)
-        {
-            // Loop through all entries.  This is O(n) of course.  We could make this more efficient
-            // by keeping a Dictionary<T,int> that tracks a count of each value.  That would add
-            // some overhead to Enqueue and Dequeue but wouldn't hurt their algorithmic efficiency.
-            foreach (var item in _heap)
-            {
-                if (item.Equals(testItem))
-                    return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Removes an arbitrary instance of item from the queue, if one exists.  O(n)
-        /// </summary>
-        public void Remove(T item)
-        {
-            for (int i=_count-1; i>=0; --i)
-            {
-                if (_heap[i].Equals(item))
-                {
-                    // Promote the last item in the array to fill the void of the item we're taking
-                    // away.
-                    _heap[i] = _heap[_count-1];
-                    _heap[_count-1] = default(T);
-                    _count -= 1;
-
-                    // Make sure the newly-promoted item settles down to its proper place in the tree.
-                    ShiftDown(i);
-                    return;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Adjusts the position of an arbitrary entry equal to item in the queue after its priority
-        /// properties have changed. O(n)
+        /// Adjusts the position of this item in the queue after its priority properties have changed.
+        //  O(log(n))
         /// </summary>
         /// <remarks>
         /// WARNING: If the properties that go into your priority calculation change for an item in the queue,
@@ -173,34 +98,15 @@ namespace BattlePlan.Path
         /// </remarks>
         public void AdjustPriority(T item)
         {
-            for (int i=_count-1; i>=0; --i)
-            {
-                if (_heap[i].Equals(item))
-                {
-                    var parIdx = IndexOfParent(i);
-                    if (i>0 && IsHeapier(i, parIdx))
-                        ShiftUp(i);
-                    else
-                        ShiftDown(i);
-                    return;
-                }
-            }
-        }
+            var idx = item.QueueIndex;
 
-        /// <summary>
-        /// Comparison function that prioritizes smaller values based on the type's CompareTo method.
-        /// </summary>
-        public static bool LessThan<U>(U a, U b) where U : T, IComparable<T>
-        {
-            return a.CompareTo(b) < 0;
-        }
+            Debug.Assert(idx>=0 && idx<_count);
+            Debug.Assert(item.Equals(_heap[idx]));
 
-        /// <summary>
-        /// Comparison function that prioritizes larger values based on the type's CompareTo method.
-        /// </summary>
-        public static bool GreaterThan<U>(U a, U b) where U : T, IComparable<T>
-        {
-            return a.CompareTo(b) > 0;
+            if (idx>0 && IsHeapier(idx, IndexOfParent(idx)))
+                ShiftUp(idx);
+            else
+                ShiftDown(idx);
         }
 
         private const int _defaultInitialCapacity = 256;
@@ -209,12 +115,14 @@ namespace BattlePlan.Path
 
         private readonly Func<T,T,bool> _compareFunc;
 
-
         private void SwapAt(int indexA, int indexB)
         {
             var temp = _heap[indexA];
             _heap[indexA] = _heap[indexB];
             _heap[indexB] = temp;
+
+            _heap[indexA].QueueIndex = indexA;
+            _heap[indexB].QueueIndex = indexB;
         }
 
         /// <summary>
