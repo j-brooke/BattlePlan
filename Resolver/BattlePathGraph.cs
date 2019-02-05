@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 using BattlePlan.Common;
 using BattlePlan.Path;
 
@@ -43,16 +44,12 @@ namespace BattlePlan.Resolver
             // whoever it is will have moved or died before we get there.
             const double crowdAversionRange = 8.0;
 
-            if (toNode.Equals(_afterGoalNode))
-            {
-                if (_goals.Contains(fromNode))
-                    return 0;
-                else
-                    return double.PositiveInfinity;
-            }
+            var deltaAxisDist = Math.Abs(toNode.X-fromNode.X) + Math.Abs(toNode.Y-fromNode.Y);
 
-            var delta = toNode - fromNode;
-            double distance = Math.Sqrt(delta.X*delta.X + delta.Y*delta.Y);
+            // In our game space, a path can only ever be from one tile to an adjacent one - no teleports.
+            Debug.Assert(deltaAxisDist<=2);
+
+            double distance = (deltaAxisDist==2)? _sqrt2 : deltaAxisDist;
             double timeToMove = distance/_unitSpeedTilesPerSecond;
 
             double penalty = 0.0;
@@ -114,31 +111,13 @@ namespace BattlePlan.Resolver
         /// </summary>
         public double EstimatedDistance(Vector2Di fromNode, Vector2Di toNode)
         {
-            // _afterGoalNode is a special consolidating-node that only our official goal nodes
-            // are connected to.  It doesn't represent an actual point in grid-space.  If
-            // we're estimating a distance to it, what we really want is the shortest estimate
-            // to our goal nodes.
-            double dist;
-            if (toNode.Equals(_afterGoalNode))
-            {
-                dist = _goals
-                    .Select( (goalNode) => DiagonalDistance(fromNode, goalNode) )
-                    .Min();
-            }
-            else
-            {
-                dist = DiagonalDistance(fromNode, toNode);
-            }
-
+            var dist = DiagonalDistance(fromNode, toNode);
             var time = dist/_unitSpeedTilesPerSecond;
             return time;
         }
 
         public IEnumerable<Vector2Di> Neighbors(Vector2Di fromNode)
         {
-            if (fromNode.Equals(_afterGoalNode))
-                yield break;
-
             if (fromNode.X<0 || fromNode.X>=_terrain.Width || fromNode.Y<0 || fromNode.Y>=_terrain.Height)
                 throw new ArgumentOutOfRangeException("fromNode");
 
@@ -167,12 +146,6 @@ namespace BattlePlan.Resolver
                 yield return new Vector2Di(fromNode.X-1, fromNode.Y+1);
             if (openDown & openRight && !_terrain.GetTile(fromNode.X+1, fromNode.Y+1).BlocksMovement)
                 yield return new Vector2Di(fromNode.X+1, fromNode.Y+1);
-
-            // Special non-Euclidean neighbor.  The algorithm can't directly handle multiple goals, so
-            // we use _afterGoalNode as the destination as far as A* is concerned, and make it a zero-
-            // cost neighbor of all of our real goal nodes.
-            if (_goals!=null && _goals.Contains(fromNode))
-                yield return _afterGoalNode;
         }
 
         public IList<Vector2Di> FindPathToGoal(BattleState battleState, BattleEntity entity)
@@ -223,9 +196,6 @@ namespace BattlePlan.Resolver
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static double _sqrt2 = Math.Sqrt(2.0);
 
-        // Special non-Euclidean point used as a single destination to which all "real" destinations are connected.
-        private static Vector2Di _afterGoalNode = new Vector2Di(-1, -1);
-
         private IList<Vector2Di> _goals = null;
         private BattleEntity _searchForEntity = null;
 
@@ -235,6 +205,9 @@ namespace BattlePlan.Resolver
         private readonly Terrain _terrain;
         private readonly PathSolver<Vector2Di> _pathSolver;
 
+        /// <summary>
+        /// Distance between two points assuming you can move in 8 directions (axis-aligned and 45 degree angles).
+        /// </summary>
         private static double DiagonalDistance(Vector2Di fromNode, Vector2Di toNode)
         {
             var deltaX = Math.Abs(fromNode.X - toNode.X);
@@ -242,6 +215,5 @@ namespace BattlePlan.Resolver
 
             return (deltaX + deltaY) - (2-_sqrt2) * Math.Min(deltaX, deltaY);
         }
-
     }
 }
