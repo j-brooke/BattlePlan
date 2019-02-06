@@ -22,12 +22,19 @@ namespace BattlePlan.Path
     /// </remarks>
     public class PathSolver<T>
     {
+        public int PathSolvedCount => _seqNum;
+        public int LifetimeSolutionTimeMS => (int)_lifetimeTimer.ElapsedMilliseconds;
+        public int LifetimeNodesTouchedCount => _lifetimeNodesTouchedCount;
+        public int LifetimeNodesReprocessedCount => _lifetimeReprocessedCount;
+        public int LifetimeMaxQueueSize => _lifetimeMaxQueueSize;
+        public int GraphSize => _infoGraph.Count;
+
         public PathSolver(IPathGraph<T> worldGraph)
         {
             _worldGraph = worldGraph;
             _infoGraph = new Dictionary<T, NodeInfo>();
             _seqNum = 0;
-            _timer = new System.Diagnostics.Stopwatch();
+            _lifetimeTimer = new System.Diagnostics.Stopwatch();
         }
 
         /// <summary>
@@ -36,7 +43,7 @@ namespace BattlePlan.Path
         /// </summary>
         public void BuildAdjacencyGraph(IEnumerable<T> seedNodeIds)
         {
-            _timer.Restart();
+            _lifetimeTimer.Start();
             _infoGraph.Clear();
 
             // Create a NodeInfo for every reachable NodeId from the given start ones.
@@ -63,7 +70,7 @@ namespace BattlePlan.Path
                     .ToArray();
             }
 
-            _totalSolutionTimeMS += _timer.ElapsedMilliseconds;
+            _lifetimeTimer.Stop();
         }
 
         /// <summary>
@@ -87,7 +94,12 @@ namespace BattlePlan.Path
         /// </summary>
         public PathResult<T> FindPath(T startNodeId, IEnumerable<T> endNodeIdList)
         {
-            _timer.Restart();
+            // Initialize some performance data.
+            var timerStartValue = _lifetimeTimer.ElapsedMilliseconds;
+            _lifetimeTimer.Start();
+            int maxQueueSize = 0;
+            int nodesTouchedCount = 0;
+            int nodesReprocessedCount = 0;
 
             // Choose a new sequence number.  We'll rely on this to know which NodeInfos
             // have been touched aleady in this pass, and which contain stale data from
@@ -120,16 +132,15 @@ namespace BattlePlan.Path
             startInfo.EstimatedRemainingCost = EstimateRemainingCostToAny(startNodeId, endNodeIdList);
             startInfo.IsOpen = true;
             openQueue.Enqueue(startInfo);
-            _enqueueCount += 1;
+            nodesTouchedCount += 1;
 
             NodeInfo arrivalInfo = null;
             while (openQueue.Count>0)
             {
                 // Pull the current item from the queue.
-                _maxQueueSize = Math.Max(_maxQueueSize, openQueue.Count);
+                maxQueueSize = Math.Max(maxQueueSize, openQueue.Count);
                 var currentInfo = openQueue.Dequeue();
                 currentInfo.IsOpen = false;
-                _dequeueCount += 1;
 
                 // If this node is our goal, stop the loop.
                 if (currentInfo.IsDestinationForSeqNum==_seqNum)
@@ -153,7 +164,7 @@ namespace BattlePlan.Path
                         neighborInfo.IsOpen = true;
 
                         openQueue.Enqueue(neighborInfo);
-                        _enqueueCount += 1;
+                        nodesTouchedCount += 1;
                     }
                     else
                     {
@@ -166,13 +177,12 @@ namespace BattlePlan.Path
                             if (neighborInfo.IsOpen)
                             {
                                 openQueue.AdjustPriority(neighborInfo);
-                                _adjustCount += 1;
                             }
                             else
                             {
                                 neighborInfo.IsOpen = true;
                                 openQueue.Enqueue(neighborInfo);
-                                _enqueueCount += 1;
+                                nodesReprocessedCount += 1;
                             }
                         }
                     }
@@ -194,24 +204,28 @@ namespace BattlePlan.Path
                 path.Reverse();
             }
 
-            long elapsedTimeMS = _timer.ElapsedMilliseconds;
-            _totalSolutionTimeMS += elapsedTimeMS;
+            // Update performance data
+            _lifetimeTimer.Stop();
+            int elapsedTimeMS = (int)(_lifetimeTimer.ElapsedMilliseconds - timerStartValue);
+
+            _lifetimeNodesTouchedCount += nodesTouchedCount;
+            _lifetimeReprocessedCount += nodesReprocessedCount;
+            _lifetimeMaxQueueSize = Math.Max(_lifetimeMaxQueueSize, maxQueueSize);
 
             return new PathResult<T>()
             {
                 Path = path,
+                StartingNode = startNodeId,
                 PathCost = arrivalInfo?.BestCostFromStart ?? 0,
                 SolutionTimeMS = elapsedTimeMS,
+                NodesTouchedCount = nodesTouchedCount,
+                NodesReprocessedCount = nodesReprocessedCount,
+                NodesInGraphCount = _infoGraph.Count,
+                MaxQueueSize = maxQueueSize,
             };
         }
 
-        public string DebugInfo()
-        {
-            return $"timeMS={_totalSolutionTimeMS}; enqueueCount={_enqueueCount}; dequeueCount={_dequeueCount}; adjustCount={_adjustCount}; maxSize={_maxQueueSize}";
-        }
-
-        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly System.Diagnostics.Stopwatch _timer;
+        private readonly System.Diagnostics.Stopwatch _lifetimeTimer;
 
         private readonly IPathGraph<T> _worldGraph;
         private readonly Dictionary<T,NodeInfo> _infoGraph;
@@ -219,11 +233,9 @@ namespace BattlePlan.Path
         // Each time we run FindPath we use a new _seqNum.  This helps us keep track of which NodeInfo
         // instances we've touched this call, and which ones have stale data from previous calls.
         private int _seqNum;
-        private int _enqueueCount;
-        private int _dequeueCount;
-        private int _adjustCount;
-        private int _maxQueueSize;
-        private long _totalSolutionTimeMS;
+        private int _lifetimeNodesTouchedCount;
+        private int _lifetimeReprocessedCount;
+        private int _lifetimeMaxQueueSize;
 
         /// <summary>
         /// Returns the smallest of the estimated costs to the given end points.

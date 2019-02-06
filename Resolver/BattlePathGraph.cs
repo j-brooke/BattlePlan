@@ -161,6 +161,9 @@ namespace BattlePlan.Resolver
             _searchForEntity = entity;
             var result = _pathSolver.FindPath(entity.Position, _goals);
 
+            if (_logger.IsTraceEnabled)
+                _logger.Trace(entity.Id + " - " + result.PerformanceSummary());
+
             return result.Path;
         }
 
@@ -190,7 +193,16 @@ namespace BattlePlan.Resolver
 
         public string DebugInfo()
         {
-            return _pathSolver.DebugInfo();
+            double pctGraphUsed = 100.0 * _pathSolver.LifetimeNodesTouchedCount / (_pathSolver.GraphSize * _pathSolver.PathSolvedCount);
+            double pctReprocessed = 100.0 * _pathSolver.LifetimeNodesReprocessedCount / (_pathSolver.GraphSize * _pathSolver.PathSolvedCount);
+
+            var msg = string.Format("pathCount={0}; timeMS={1}; %nodesTouched={2:F2}; %nodesReprocessed={3:F2}; maxQueueSize={4}",
+                _pathSolver.PathSolvedCount,
+                _pathSolver.LifetimeSolutionTimeMS,
+                pctGraphUsed,
+                pctReprocessed,
+                _pathSolver.LifetimeMaxQueueSize);
+            return msg;
         }
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
