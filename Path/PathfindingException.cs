@@ -1,5 +1,8 @@
 using System;
 
+/// <summary>
+/// Indicates a problem with the PathSolver operation.
+/// </summary>
 [System.Serializable]
 public class PathfindingException : System.Exception
 {

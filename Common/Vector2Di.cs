@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace BattlePlan.Common
 {
-    public struct Vector2Di
+    public struct Vector2Di : IEquatable<Vector2Di>
     {
         public short X { get; }
         public short Y { get; }
@@ -31,6 +31,11 @@ namespace BattlePlan.Common
         public double DistanceTo(Vector2Di other)
         {
             return (this-other).Magnitude();
+        }
+
+        public bool Equals(Vector2Di other)
+        {
+           return this==other;
         }
 
         public override bool Equals(object other)
@@ -65,7 +70,7 @@ namespace BattlePlan.Common
 
         public static bool operator==(Vector2Di a, Vector2Di b)
         {
-            return a.X==b.X && a.Y==b.Y;
+            return a.X==b.X & a.Y==b.Y;
         }
         public static bool operator!=(Vector2Di a, Vector2Di b)
         {
