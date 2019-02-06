@@ -111,8 +111,14 @@ namespace BattlePlan.Resolver
         /// </summary>
         public double EstimatedCost(Vector2Di fromNode, Vector2Di toNode)
         {
+            // Slight optimization.  A* sometimes needs to re-process nodes that it thought it was done with
+            // if the heuristic can exceed the true cost.  Due to the quirks of floating point numbers,
+            // the un-fudged calculation below was overshooting by 0.0000000000001 or so, requiring unnecessary
+            // calculations and producing slightly suboptimal paths.
+            const double fudgeFactor = 0.999;
+
             var dist = DiagonalDistance(fromNode, toNode);
-            var time = dist/_unitSpeedTilesPerSecond;
+            var time = fudgeFactor * dist/_unitSpeedTilesPerSecond;
             return time;
         }
 
