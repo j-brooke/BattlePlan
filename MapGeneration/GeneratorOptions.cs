@@ -12,7 +12,7 @@ namespace BattlePlan.MapGeneration
         /// <summary>
         /// Total map height in tiles.
         /// </summary>
-        public int Height { get; set; } = 36;
+        public int Height { get; set; } = 22;
 
         /// <summary>
         /// Total map width in tiles.

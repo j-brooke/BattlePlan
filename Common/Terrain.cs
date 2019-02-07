@@ -28,7 +28,7 @@ namespace BattlePlan.Common
             return new Terrain()
                 {
                     Width = 50,
-                    Height = 36,
+                    Height = 22,
                     TileTypes = new List<TileCharacteristics>()
                 {
                     new TileCharacteristics() { BlocksMovement=false, BlocksVision=false, Appearance=" ", Name="Open" },
