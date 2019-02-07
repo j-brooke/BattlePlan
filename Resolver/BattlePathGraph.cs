@@ -124,34 +124,7 @@ namespace BattlePlan.Resolver
 
         public IEnumerable<Vector2Di> Neighbors(Vector2Di fromNode)
         {
-            if (fromNode.X<0 || fromNode.X>=_terrain.Width || fromNode.Y<0 || fromNode.Y>=_terrain.Height)
-                throw new ArgumentOutOfRangeException("fromNode");
-
-            bool openUp = fromNode.Y>0 && !_terrain.GetTile(fromNode.X, fromNode.Y-1).BlocksMovement;
-            bool openDown = fromNode.Y<_terrain.Height-1 && !_terrain.GetTile(fromNode.X, fromNode.Y+1).BlocksMovement;
-            bool openLeft = fromNode.X>0 && !_terrain.GetTile(fromNode.X-1, fromNode.Y).BlocksMovement;
-            bool openRight = fromNode.X<_terrain.Width-1 && !_terrain.GetTile(fromNode.X+1, fromNode.Y).BlocksMovement;
-
-            var list = new List<Vector2Di>();
-            if (openUp)
-                yield return new Vector2Di(fromNode.X, fromNode.Y-1);
-            if (openDown)
-                yield return new Vector2Di(fromNode.X, fromNode.Y+1);
-            if (openLeft)
-                yield return new Vector2Di(fromNode.X-1, fromNode.Y);
-            if (openRight)
-                yield return new Vector2Di(fromNode.X+1, fromNode.Y);
-
-            // Only allow diagonal movement if both cardinal directions are clear too.  I.e.,
-            // don't allow cutting corners.
-            if (openUp & openLeft && !_terrain.GetTile(fromNode.X-1, fromNode.Y-1).BlocksMovement)
-                yield return new Vector2Di(fromNode.X-1, fromNode.Y-1);
-            if (openUp & openRight && !_terrain.GetTile(fromNode.X+1, fromNode.Y-1).BlocksMovement)
-                yield return new Vector2Di(fromNode.X+1, fromNode.Y-1);
-            if (openDown & openLeft && !_terrain.GetTile(fromNode.X-1, fromNode.Y+1).BlocksMovement)
-                yield return new Vector2Di(fromNode.X-1, fromNode.Y+1);
-            if (openDown & openRight && !_terrain.GetTile(fromNode.X+1, fromNode.Y+1).BlocksMovement)
-                yield return new Vector2Di(fromNode.X+1, fromNode.Y+1);
+            return MovementModel.ValidMovesFrom(_terrain, fromNode);
         }
 
         public IList<Vector2Di> FindPathToGoal(BattleState battleState, BattleEntity entity)
@@ -171,30 +144,6 @@ namespace BattlePlan.Resolver
                 _logger.Trace(entity.Id + " - " + result.PerformanceSummary());
 
             return result.Path;
-        }
-
-        /// <summary>
-        /// Returns a collection of all locations reachable from startPos
-        /// </summary>
-        public ISet<Vector2Di> FindReachableSet(Vector2Di startPos)
-        {
-            var visited = new HashSet<Vector2Di>();
-            var toCheck = new Queue<Vector2Di>();
-            toCheck.Enqueue(startPos);
-
-            while (toCheck.Count>0)
-            {
-                var pos = toCheck.Dequeue();
-                if (!visited.Contains(pos))
-                {
-                    visited.Add(pos);
-                    var neighbors = Neighbors(pos);
-                    foreach (var node in neighbors)
-                        toCheck.Enqueue(node);
-                }
-            }
-
-            return visited;
         }
 
         public string DebugInfo()

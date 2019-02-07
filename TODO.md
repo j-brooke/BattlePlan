@@ -1,9 +1,4 @@
-* Pathing: write/import better priority queue
-* Pathing: rewrite to allow reusing adjacency graph
 * General: exceptions and data validation
-* Canvas: Fix flickering (mostly on Windows)
-* Canvas: deal with cursor color problem
-* Canvas: get rid of all default colors, so default console settings aren't a problem.
 * Viewer: check terminal size
 * Editor: play button
 * Editor: support for 4 teams?
@@ -19,5 +14,8 @@
     * Storm Mage (A) - shoots chain lightning
     * Giant - knockback attack?
     * Paladin - normal attacks plus healing?
+* Units: new mechanics?
+    * facing?
+    * damage reduction from some directions?
 * Map generator: generator seed string?
 * Viewer/Editor: map legend (what does @ mean??)

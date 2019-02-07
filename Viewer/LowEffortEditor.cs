@@ -188,6 +188,8 @@ namespace BattlePlan.Viewer
                     // Intercept Ctrl-C nicely.
                     if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
                         _exitEditor = true;
+                    else
+                        CheckForErrors();
                     return;
             }
 
@@ -362,6 +364,7 @@ namespace BattlePlan.Viewer
             _canvas.WriteText("(`) toggle color", col, row++, 0);
             _canvas.WriteText("(L) load scenario", col, row++, 0);
             _canvas.WriteText("(S) save scenario", col, row++, 0);
+            _canvas.WriteText("(C) check for errors", col, row++, 0);
             _canvas.WriteText("(V) view resolution", col, row++, 0);
             _canvas.WriteText("(ESC) exit", col, row++, 0);
         }
@@ -983,6 +986,65 @@ namespace BattlePlan.Viewer
             }
 
             return true;
+        }
+
+        private void CheckForErrors()
+        {
+            var terrainErrors = Resolver.Validator.FindTerrainErrors(_scenario.Terrain);
+            var doTerrainErrorsExist = terrainErrors.Any();
+
+            var attackerErrors = Enumerable.Empty<string>();
+            var defenderErrors = Enumerable.Empty<string>();
+
+            if (!doTerrainErrorsExist)
+            {
+                attackerErrors = Resolver.Validator.FindAttackPlanErrors(_scenario.Terrain, _unitTypes, _scenario.AttackPlans);
+                defenderErrors = Resolver.Validator.FindDefensePlanErrors(_scenario.Terrain, _unitTypes, _scenario.DefensePlans);
+            }
+
+            var doAttackerErrorsExist = attackerErrors.Any();
+            var doDefenderErrorsExist = defenderErrors.Any();
+
+            if (!(doTerrainErrorsExist | doAttackerErrorsExist | doDefenderErrorsExist))
+            {
+                // If nothing's wrong, just say so on the status bar.
+                _statusMsg = "No errors";
+                return;
+            }
+
+            // Clear the screen and print a list of errors.
+            int row = 0;
+            _canvas.ClearScreen();
+
+            if (doTerrainErrorsExist)
+            {
+                _canvas.WriteTextDirect("Terrain Errors:", 0, row++);
+                foreach (var errMsg in terrainErrors)
+                    _canvas.WriteTextDirect("  * " + errMsg, 0, row++);
+            }
+
+            if (doAttackerErrorsExist)
+            {
+                _canvas.WriteTextDirect("Attacker Errors:", 0, row++);
+                foreach (var errMsg in attackerErrors)
+                    _canvas.WriteTextDirect("  * " + errMsg, 0, row++);
+            }
+
+            if (doDefenderErrorsExist)
+            {
+                _canvas.WriteTextDirect("Defender Errors:", 0, row++);
+                foreach (var errMsg in defenderErrors)
+                    _canvas.WriteTextDirect("  * " + errMsg, 0, row++);
+            }
+
+            // Wait for the user to press a key.  We don't care what key it is, unless it's
+            // control-c, in which case we should honor their desire to quit.
+            row++;
+            _canvas.WriteTextDirect("Press a key to continue", 0, row++);
+
+            var keyInfo = _canvas.ReadKey();
+            if (keyInfo.Key==ConsoleKey.C && (keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
+                _exitEditor = true;
         }
     }
 }
