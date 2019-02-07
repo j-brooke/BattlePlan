@@ -158,20 +158,25 @@ namespace BattlePlan.Viewer
             // Wait for a key press.
             var keyInfo = _canvas.ReadKey();
 
+            // If the shift key is held and an arrow is pressed, we want to move a large distance.
+            // Sadly, this is of limited use on MacOS - it doesn't give us modifiers for up and down arrows,
+            // for some reason.
+            int moveDist = ((keyInfo.Modifiers & ConsoleModifiers.Shift) != 0)? 10 : 1;
+
             // First see if we can match on the key-code, for special keys like arrows.
             switch (keyInfo.Key)
             {
                 case ConsoleKey.UpArrow:
-                    MoveCursor(0, -1);
+                    MoveCursor(0, -moveDist);
                     return;
                 case ConsoleKey.DownArrow:
-                    MoveCursor(0, +1);
+                    MoveCursor(0, +moveDist);
                     return;
                 case ConsoleKey.LeftArrow:
-                    MoveCursor(-1, 0);
+                    MoveCursor(-moveDist, 0);
                     return;
                 case ConsoleKey.RightArrow:
-                    MoveCursor(+1, 0);
+                    MoveCursor(+moveDist, 0);
                     return;
                 case ConsoleKey.Escape:
                     _exitEditor = true;
