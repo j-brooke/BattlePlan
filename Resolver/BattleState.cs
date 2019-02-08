@@ -45,6 +45,10 @@ namespace BattlePlan.Resolver
             foreach (var teamId in _remainingAttackerSpawns.AttackerTeamIds)
                 attackerBreachCounts[teamId] = 0;
 
+            var defenderCasualtyCounts = new Dictionary<int,int>();
+            foreach (var plan in _defensePlans)
+                defenderCasualtyCounts[plan.TeamId] = 0;
+
             // Spawn all defenders
             foreach (var plan in _defensePlans)
             {
@@ -110,6 +114,9 @@ namespace BattlePlan.Resolver
                     _events.Add(CreateEvent(time, BattleEventType.Despawn, deadEnt, null));
                     deadEnt.PrepareToDespawn(this);
                     _hurtMap.InvalidateTeam(deadEnt.TeamId);
+
+                    if (!deadEnt.IsAttacker)
+                        defenderCasualtyCounts[deadEnt.TeamId] += 1;
                 }
 
                 // Spawn new entities
@@ -139,6 +146,7 @@ namespace BattlePlan.Resolver
                 UnitTypes = _unitTypeMap.Values.ToList(),
                 Events = _events,
                 AttackerBreachCounts = attackerBreachCounts,
+                DefenderCasualtyCounts = defenderCasualtyCounts,
             };
         }
 

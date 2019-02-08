@@ -14,5 +14,13 @@ namespace BattlePlan.Common
         /// is the number of attackers who reached their goal.
         /// </summary>
         public IDictionary<int,int> AttackerBreachCounts { get; set; }
+
+        /// <summary>
+        /// Key value pairs where the key is the TeamID of a defending team and the value
+        /// is the number of defenders who died.
+        /// </summary>
+        public IDictionary<int,int> DefenderCasualtyCounts { get; set; }
+
+        public IList<DefenderChallenge> ChallengesAchieved { get; set; }
     }
 }
