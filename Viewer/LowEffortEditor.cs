@@ -1005,7 +1005,15 @@ namespace BattlePlan.Viewer
             var doAttackerErrorsExist = attackerErrors.Any();
             var doDefenderErrorsExist = defenderErrors.Any();
 
-            if (!(doTerrainErrorsExist | doAttackerErrorsExist | doDefenderErrorsExist))
+            var challengeErrors = new List<IEnumerable<string>>();
+            if (!doTerrainErrorsExist && !doAttackerErrorsExist && !doDefenderErrorsExist && _scenario.Challenges != null)
+                challengeErrors = _scenario.Challenges
+                    .Select( (ch) => Resolver.Validator.GetChallengeDisqualifiers(_scenario, null, _unitTypes, ch) )
+                    .ToList();
+
+            var doChallengeErrorsExist = challengeErrors.SelectMany( (chList) => chList ).Any();
+
+            if (!(doTerrainErrorsExist | doAttackerErrorsExist | doDefenderErrorsExist | doChallengeErrorsExist))
             {
                 // If nothing's wrong, just say so on the status bar.
                 _statusMsg = "No errors";
@@ -1021,6 +1029,7 @@ namespace BattlePlan.Viewer
                 _canvas.WriteTextDirect("Terrain Errors:", 0, row++);
                 foreach (var errMsg in terrainErrors)
                     _canvas.WriteTextDirect("  * " + errMsg, 0, row++);
+                row += 1;
             }
 
             if (doAttackerErrorsExist)
@@ -1028,6 +1037,7 @@ namespace BattlePlan.Viewer
                 _canvas.WriteTextDirect("Attacker Errors:", 0, row++);
                 foreach (var errMsg in attackerErrors)
                     _canvas.WriteTextDirect("  * " + errMsg, 0, row++);
+                row += 1;
             }
 
             if (doDefenderErrorsExist)
@@ -1035,6 +1045,18 @@ namespace BattlePlan.Viewer
                 _canvas.WriteTextDirect("Defender Errors:", 0, row++);
                 foreach (var errMsg in defenderErrors)
                     _canvas.WriteTextDirect("  * " + errMsg, 0, row++);
+                row += 1;
+            }
+
+            for (var i=0; i<_scenario.Challenges.Count; ++i)
+            {
+                if (challengeErrors[i].Any())
+                {
+                    _canvas.WriteTextDirect($"Challenge {_scenario.Challenges[i].Name} Disqualifiers:", 0, row++);
+                    foreach (var errMsg in challengeErrors[i])
+                        _canvas.WriteTextDirect("  * " + errMsg, 0, row++);
+                    row += 1;
+                }
             }
 
             // Wait for the user to press a key.  We don't care what key it is, unless it's

@@ -135,9 +135,12 @@ namespace BattlePlan.Resolver
                 yield return "Some defenders are placed on impassable terrain";
         }
 
-        public static bool IsChallengeSatisfied(Scenario scenario, BattleResolution resolution, DefenderChallenge challenge)
+        public static IEnumerable<string> GetChallengeDisqualifiers(Scenario scenario,
+            BattleResolution resolution,
+            IEnumerable<UnitCharacteristics> unitTypes,
+            DefenderChallenge challenge)
         {
-            var unitTypeMap = MakeUnitTypeMap(resolution.UnitTypes);
+            var unitTypeMap = MakeUnitTypeMap(unitTypes);
 
             var totalResourceCost = 0;
             var totalUnitCount = 0;
@@ -152,6 +155,8 @@ namespace BattlePlan.Resolver
                 .SelectMany( (kvp) => kvp.Value )
                 .ToList();
 
+            bool tooCloseToSpawns = false;
+            bool tooCloseToGoals = false;
             foreach (var plan in scenario.DefensePlans)
             {
                 if (plan.TeamId != challenge.PlayerTeamId || plan.Placements==null)
@@ -167,29 +172,23 @@ namespace BattlePlan.Resolver
                     unitTypeCounts[placement.UnitType] = unitCount + 1;
 
                     if (allEnemySpawns.Any( (pt) => pt.DistanceTo(placement.Position) < challenge.MinimumDistFromSpawnPts ))
-                    {
-                        _logger.Debug($"Challenge {challenge.Name} disqualified - defender too close to spawn");
-                        return false;
-                    }
+                        tooCloseToSpawns = true;
+
                     if (allEnemyGoals.Any( (pt) => pt.DistanceTo(placement.Position) < challenge.MinimumDistFromGoalPts ))
-                    {
-                        _logger.Debug($"Challenge {challenge.Name} disqualified - defender too close to goal");
-                        return false;
-                    }
+                        tooCloseToGoals = true;
                 }
             }
 
-            if (challenge.MaximumTotalUnitCount>0 && totalUnitCount>challenge.MaximumTotalUnitCount)
-            {
-                _logger.Debug($"Challenge {challenge.Name} disqualified - too many total units placed");
-                return false;
-            }
+            if (tooCloseToSpawns)
+                yield return $"Some defenders are closer than {challenge.MinimumDistFromSpawnPts} tiles from enemy spawn points.";
+            if (tooCloseToGoals)
+                yield return $"Some defenders are closer than {challenge.MinimumDistFromGoalPts} tiles from enemy goals.";
 
-            if (challenge.MaximumResourceCost>0 && totalResourceCost>challenge.MaximumTotalUnitCount)
-            {
-                _logger.Debug($"Challenge {challenge.Name} disqualified - total resource cost exceeded");
-                return false;
-            }
+            if (challenge.MaximumTotalUnitCount>0 && totalUnitCount>challenge.MaximumTotalUnitCount)
+                yield return $"More than {challenge.MaximumResourceCost} defenders placed.";
+
+            if (challenge.MaximumResourceCost>0 && totalResourceCost>challenge.MaximumResourceCost)
+                yield return $"More than {challenge.MaximumResourceCost} resource points spent.";
 
             var maxUnitTypeCountList = challenge.MaximumUnitTypeCount ?? Enumerable.Empty<KeyValuePair<string,int>>();
             foreach (var kvp in maxUnitTypeCountList)
@@ -197,34 +196,26 @@ namespace BattlePlan.Resolver
                 int actualCount = 0;
                 unitTypeCounts.TryGetValue(kvp.Key, out actualCount);
                 if (actualCount > kvp.Value)
-                {
-                    _logger.Debug($"Challenge {challenge.Name} disqualified - max {kvp.Key} count exceeded");
-                    return false;
-                }
+                    yield return $"More than {kvp.Value} defenders of type {kvp.Key} placed.";
             }
 
-            if (challenge.AttackersMustNotReachGoal && (resolution?.AttackerBreachCounts == null))
+            if (challenge.AttackersMustNotReachGoal && (resolution?.AttackerBreachCounts != null))
             {
+                int totalBreachCount = 0;
                 foreach (var kvp in resolution.AttackerBreachCounts)
                 {
                     if (kvp.Key != challenge.PlayerTeamId && kvp.Value>0)
-                    {
-                        _logger.Debug($"Challenge {challenge.Name} disqualified - attackers reached goal");
-                        return false;
-                    }
+                        totalBreachCount += kvp.Value;
                 }
+                if (totalBreachCount > 0)
+                    yield return $"{totalBreachCount} attackers reached their goals";
             }
 
             int defenderCasualties = 0;
             if (resolution?.DefenderCasualtyCounts.ContainsKey(challenge.PlayerTeamId) ?? false)
                 defenderCasualties = resolution.DefenderCasualtyCounts[challenge.PlayerTeamId];
             if (defenderCasualties > challenge.MaximumDefendersLostCount)
-            {
-                _logger.Debug($"Challenge {challenge.Name} disqualified - max defender casualties exceeded");
-                return false;
-            }
-
-            return true;
+                yield return $"More than {challenge.MaximumDefendersLostCount} defenders died.";
         }
 
         private const int _maxSaneWidth = 1000;
