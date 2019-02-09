@@ -19,3 +19,4 @@
     * damage reduction from some directions?
 * Map generator: generator seed string?
 * Viewer/Editor: map legend (what does @ mean??)
+* Refactor to simplify teamId limits.

@@ -55,7 +55,7 @@ namespace BattlePlan.Resolver
                     var newEntity = new BattleEntity(id, classChar, plan.TeamId, false);
                     newEntity.Spawn(this, placement.Position);
                     _entities.Add(newEntity);
-                    _events.Add(CreateEvent(0.0, BattleEventType.Spawn, newEntity, null));
+                    AddEvent(CreateEvent(0.0, BattleEventType.Spawn, newEntity, null));
                 }
             }
 
@@ -78,7 +78,7 @@ namespace BattlePlan.Resolver
                     var newEvent = entity.Update(this, time, _timeSlice);
                     if (newEvent != null)
                     {
-                        _events.Add(newEvent);
+                        AddEvent(newEvent);
 
                         // If the entity moved, check to see if it reached its goal and take note.
                         if (newEvent.Type==BattleEventType.EndMovement)
@@ -93,8 +93,8 @@ namespace BattlePlan.Resolver
                 // Note: should this be before or after checking for death?
                 foreach (var winEnt in entitiesReachingGoal)
                 {
-                    _events.Add(CreateEvent(time, BattleEventType.ReachesGoal, winEnt, null));
-                    _events.Add(CreateEvent(time, BattleEventType.Despawn, winEnt, null));
+                    AddEvent(CreateEvent(time, BattleEventType.ReachesGoal, winEnt, null));
+                    AddEvent(CreateEvent(time, BattleEventType.Despawn, winEnt, null));
                     winEnt.PrepareToDespawn(this);
                     _entities.Remove(winEnt);
 
@@ -106,8 +106,8 @@ namespace BattlePlan.Resolver
                 _entities = _entities.Except(deadEntities).ToList();
                 foreach (var deadEnt in deadEntities)
                 {
-                    _events.Add(CreateEvent(time, BattleEventType.Die, deadEnt, null));
-                    _events.Add(CreateEvent(time, BattleEventType.Despawn, deadEnt, null));
+                    AddEvent(CreateEvent(time, BattleEventType.Die, deadEnt, null));
+                    AddEvent(CreateEvent(time, BattleEventType.Despawn, deadEnt, null));
                     deadEnt.PrepareToDespawn(this);
                     _hurtMap.InvalidateTeam(deadEnt.TeamId);
                 }
@@ -131,7 +131,7 @@ namespace BattlePlan.Resolver
                     || noMobileUnitsLeft;
             }
 
-            _logger.Debug("Resolution pathfinding stats: " + _pathGraph.DebugInfo() );
+            _logger.Info("Resolution pathfinding stats: " + _pathGraph.DebugInfo() );
 
             return new BattleResolution()
             {
@@ -220,6 +220,14 @@ namespace BattlePlan.Resolver
             return evt;
         }
 
+        private void AddEvent(BattleEvent evt)
+        {
+            _events.Add(evt);
+
+            if (_logger.IsDebugEnabled)
+                _logger.Debug(evt.ToString());
+        }
+
         private BattleEntity TrySpawnNextAttacker(double time, AttackPlan plan)
         {
             var nextSpawnCommand = (plan.Spawns.Count>0)? plan.Spawns[0] : null;
@@ -269,7 +277,7 @@ namespace BattlePlan.Resolver
                         newEntity.Spawn(this, pos);
 
                         _entities.Add(newEntity);
-                        _events.Add(CreateEvent(time, BattleEventType.Spawn, newEntity, null));
+                        AddEvent(CreateEvent(time, BattleEventType.Spawn, newEntity, null));
                     }
                 }
             }
