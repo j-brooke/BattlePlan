@@ -14,24 +14,31 @@ namespace BattlePlan
         {
             NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration("resources/NLog.config");
 
-            string verb = "play";
-            if (args.Length>0)
-                verb = args[0];
+            try
+            {
+                string verb = "play";
+                if (args.Length>0)
+                    verb = args[0];
 
-            string filename = null;
-            if (args.Length>1)
-                filename = args[1];
+                string filename = null;
+                if (args.Length>1)
+                    filename = args[1];
 
-            _logger.Info("===Beginning {0} {1}", verb, filename);
+                _logger.Info("===Beginning {0} {1}", verb, filename);
 
-            if (verb.Equals("play", StringComparison.CurrentCultureIgnoreCase))
-                Play(filename);
-            else if (verb.Equals("edit", StringComparison.CurrentCultureIgnoreCase))
-                Edit(filename);
-            else if (verb.Equals("test", StringComparison.CurrentCultureIgnoreCase))
-                Test();
-            else
-                Help();
+                if (verb.Equals("play", StringComparison.CurrentCultureIgnoreCase))
+                    Play(filename);
+                else if (verb.Equals("edit", StringComparison.CurrentCultureIgnoreCase))
+                    Edit(filename);
+                else if (verb.Equals("test", StringComparison.CurrentCultureIgnoreCase))
+                    Test();
+                else
+                    Help();
+            }
+            catch (Exception ex)
+            {
+                _logger.Fatal(ex);
+            }
 
             NLog.LogManager.Shutdown();
         }

@@ -48,6 +48,7 @@ namespace BattlePlan.Resolver
         public void InvalidateTeam(int teamId)
         {
             _layerIsValid[teamId] = false;
+            _logger.Debug("Invalidating HurtMap for team {0}", teamId);
         }
 
         /// <summary>
@@ -55,9 +56,7 @@ namespace BattlePlan.Resolver
         /// </summary>
         public void Update(IEnumerable<BattleEntity> entities)
         {
-            var teamIdsList = entities.Select( (ent) => ent.TeamId )
-                .Distinct();
-            foreach (var teamId in teamIdsList)
+            for (var teamId=0; teamId<=Scenario.MaxTeamId; ++teamId)
             {
                 bool isValid = false;
                 _layerIsValid.TryGetValue(teamId, out isValid);
@@ -65,6 +64,8 @@ namespace BattlePlan.Resolver
                     UpdateForTeam(entities, teamId);
             }
         }
+
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private Terrain _terrain;
         private Dictionary<int, bool> _layerIsValid = new Dictionary<int, bool>();
@@ -75,6 +76,8 @@ namespace BattlePlan.Resolver
             var teamDefenders = entities
                 .Where( (ent) => ent.TeamId==teamId && !ent.IsAttacker && ent.Class.WeaponDamage>0 && ent.Class.WeaponRangeTiles>0);
             var layer = new double[_terrain.Width, _terrain.Height];
+
+            _logger.Debug("Rebuilding HurtMap for team {0} from {1} units", teamId, teamDefenders.Count());
 
             foreach (var unit in teamDefenders)
             {
