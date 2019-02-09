@@ -185,7 +185,7 @@ namespace BattlePlan.Resolver
                 yield return $"Some defenders are closer than {challenge.MinimumDistFromGoalPts} tiles from enemy goals.";
 
             if (challenge.MaximumTotalUnitCount>0 && totalUnitCount>challenge.MaximumTotalUnitCount)
-                yield return $"More than {challenge.MaximumResourceCost} defenders placed.";
+                yield return $"More than {challenge.MaximumTotalUnitCount} defenders placed.";
 
             if (challenge.MaximumResourceCost>0 && totalResourceCost>challenge.MaximumResourceCost)
                 yield return $"More than {challenge.MaximumResourceCost} resource points spent.";

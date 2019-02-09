@@ -19,5 +19,14 @@ namespace BattlePlan.Common
         public bool AttackersMustNotReachGoal { get; set; }
 
         public IDictionary<string,int> MaximumUnitTypeCount { get; set; } = new Dictionary<string,int>();
+
+        public DefenderChallenge Clone()
+        {
+            var copy = (DefenderChallenge)this.MemberwiseClone();
+            copy.MaximumUnitTypeCount = (this.MaximumUnitTypeCount!=null)?
+                new Dictionary<string,int>(this.MaximumUnitTypeCount)
+                : new Dictionary<string,int>();
+            return copy;
+        }
     }
 }

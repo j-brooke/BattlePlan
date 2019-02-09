@@ -6,6 +6,7 @@ namespace BattlePlan.Viewer
     {
         Terrain,
         SpawnsAndGoals,
+        Challenges,
         Attackers,
         Defenders,
     }

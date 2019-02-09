@@ -226,6 +226,9 @@ namespace BattlePlan.Viewer
                 case EditorMode.SpawnsAndGoals:
                     ProcessKeySpawnsAndGoalsMode(keyInfo);
                     return;
+                case EditorMode.Challenges:
+                    ProcessKeyChallengesMode(keyInfo);
+                    return;
                 case EditorMode.Attackers:
                     ProcessKeyAttackersMode(keyInfo);
                     return;
@@ -351,6 +354,9 @@ namespace BattlePlan.Viewer
                     break;
                 case EditorMode.SpawnsAndGoals:
                     WriteModeHelpSpawnsAndGoals(col, ref row);
+                    break;
+                case EditorMode.Challenges:
+                    WriteModeHelpChallenges(col, ref row);
                     break;
                 case EditorMode.Attackers:
                     WriteModeHelpAttackers(col, ref row);
@@ -903,7 +909,7 @@ namespace BattlePlan.Viewer
             }
         }
 
-        private void EditPoco<T>(T obj)
+        private int EditPoco<T>(T obj)
         {
             int row = 0;
             _canvas.ClearScreen();
@@ -913,6 +919,9 @@ namespace BattlePlan.Viewer
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
+                if (!typeof(IConvertible).IsAssignableFrom(prop.PropertyType))
+                    continue;
+
                 var curVal = Convert.ToString(prop.GetValue(obj));
                 var prompt = $"  {prop.Name} (enter for {curVal}):";
                 var input = _canvas.PromptForInput(0, row++, prompt);
@@ -923,6 +932,8 @@ namespace BattlePlan.Viewer
                     prop.SetValue(obj, newVal);
                 }
             }
+
+            return row;
         }
 
         private void PromptToEditGeneratorOptions()
@@ -1048,7 +1059,7 @@ namespace BattlePlan.Viewer
                 row += 1;
             }
 
-            for (var i=0; i<_scenario.Challenges.Count; ++i)
+            for (var i=0; i<challengeErrors.Count; ++i)
             {
                 if (challengeErrors[i].Any())
                 {
@@ -1067,6 +1078,120 @@ namespace BattlePlan.Viewer
             var keyInfo = _canvas.ReadKey();
             if (keyInfo.Key==ConsoleKey.C && (keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
                 _exitEditor = true;
+        }
+
+
+        private void WriteModeHelpChallenges(int col, ref int row)
+        {
+            Debug.Assert(_mode==EditorMode.Challenges);
+
+            row += 1;
+            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
+            _canvas.WriteText("(+) add challenge", col, row++, 0);
+            _canvas.WriteText("(-) remove challenge", col, row++, 0);
+
+            for (int i=0; i<_scenario.Challenges.Count; ++i)
+                _canvas.WriteText($"({i+1}) edit \"{_scenario.Challenges[i].Name}\"", col, row++, 0);
+
+            row += 1;
+        }
+
+        private void ProcessKeyChallengesMode(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.Backspace:
+                    ClearAllChallenges();
+                    return;
+            }
+
+            switch (keyInfo.KeyChar)
+            {
+                case '+':
+                    AddChallenge();
+                    return;
+                case '-':
+                    RemoveChallenge();
+                    return;
+
+            }
+
+            // TODO: add set-minimum-distance-from-spawn button
+
+            int keyNumberValue = keyInfo.KeyChar - '0';
+            if (keyNumberValue>=1 && keyNumberValue<=_scenario.Challenges.Count)
+            {
+                EditChallenge(keyNumberValue-1);
+            }
+        }
+
+        private void ClearAllChallenges()
+        {
+            _scenario.Challenges.Clear();
+        }
+
+        private void RemoveChallenge()
+        {
+            if (_scenario.Challenges.Count>0)
+                _scenario.Challenges.RemoveAt(_scenario.Challenges.Count-1);
+        }
+
+        private void AddChallenge()
+        {
+            DefenderChallenge newChallenge = null;
+            if (_scenario.Challenges.Count>0)
+            {
+                // Just clone the last one
+                var oldChallenge = _scenario.Challenges[_scenario.Challenges.Count-1];
+                newChallenge = oldChallenge.Clone();
+            }
+            else
+            {
+                newChallenge = new DefenderChallenge()
+                {
+                    PlayerTeamId = 2,
+                    MinimumDistFromSpawnPts = 8,
+                    MinimumDistFromGoalPts = 2,
+                    MaximumResourceCost = 1000,
+                    MaximumTotalUnitCount = 100,
+                    MaximumDefendersLostCount = 100,
+                    AttackersMustNotReachGoal = true,
+                };
+            }
+
+            // Default name is "*", "**", "***", etc., depending on how many exist.
+            newChallenge.Name = new string('*', _scenario.Challenges.Count+1);
+            _scenario.Challenges.Add(newChallenge);
+        }
+
+        private void EditChallenge(int challengeIndex)
+        {
+            if (challengeIndex<0 || challengeIndex>=_scenario.Challenges.Count)
+                return;
+
+            var challenge = _scenario.Challenges[challengeIndex];
+            int row = EditPoco(challenge);
+
+            var maxUnitTypes = new Dictionary<string,int>();
+            foreach (var unitType in _defenderClasses)
+            {
+                string oldValString = "no limit";
+                if (challenge.MaximumUnitTypeCount.ContainsKey(unitType.Name))
+                    oldValString = challenge.MaximumUnitTypeCount[unitType.Name].ToString();
+
+                var prompt = $"  Maximum number of {unitType.Name} (enter for {oldValString}, 'x' for no limit): ";
+                var input = _canvas.PromptForInput(0, row++, prompt);
+
+                var newValString = (string.IsNullOrWhiteSpace(input))? oldValString : input;
+
+                int newVal = 0;
+                if (int.TryParse(newValString, out newVal))
+                    maxUnitTypes[unitType.Name] = newVal;
+                else
+                    maxUnitTypes.Remove(unitType.Name);
+            }
+
+            challenge.MaximumUnitTypeCount = maxUnitTypes;
         }
     }
 }
