@@ -50,7 +50,7 @@ namespace BattlePlan.Resolver
             Debug.Assert(deltaAxisDist<=2);
 
             double distance = (deltaAxisDist==2)? _sqrt2 : deltaAxisDist;
-            double timeToMove = distance/_unitSpeedTilesPerSecond;
+            double timeToMove = distance/_searchForEntity.SpeedTilesPerSec;
 
             double penalty = 0.0;
 
@@ -118,7 +118,7 @@ namespace BattlePlan.Resolver
             const double fudgeFactor = 0.999;
 
             var dist = DiagonalDistance(fromNode, toNode);
-            var time = fudgeFactor * dist/_unitSpeedTilesPerSecond;
+            var time = fudgeFactor * dist/_searchForEntity.SpeedTilesPerSec;
             return time;
         }
 
@@ -135,10 +135,26 @@ namespace BattlePlan.Resolver
 
             // Hack.  Store data about the entity being moved and enemies and such.
             // TODO: Redesign this whole data structure.
-            _unitSpeedTilesPerSecond = entity.SpeedTilesPerSec;
-            _goals = _terrain.GoalPointsMap[entity.TeamId];
+            var goals = _terrain.GoalPointsMap[entity.TeamId];
             _searchForEntity = entity;
-            var result = _pathSolver.FindPath(entity.Position, _goals);
+            var result = _pathSolver.FindPath(entity.Position, goals);
+
+            if (_logger.IsTraceEnabled)
+                _logger.Trace(entity.Id + " - " + result.PerformanceSummary());
+
+            return result.Path;
+        }
+
+        public IList<Vector2Di> FindPathToSomewhere(BattleState battleState, BattleEntity entity, IEnumerable<Vector2Di> destinations)
+        {
+            // If, somehow, we're asked to find the path for an immobile object, return null.
+            if (entity.SpeedTilesPerSec <= 0.0)
+                return null;
+
+            // Hack.  Store data about the entity being moved and enemies and such.
+            // TODO: Redesign this whole data structure.
+            _searchForEntity = entity;
+            var result = _pathSolver.FindPath(entity.Position, destinations);
 
             if (_logger.IsTraceEnabled)
                 _logger.Trace(entity.Id + " - " + result.PerformanceSummary());
@@ -162,11 +178,7 @@ namespace BattlePlan.Resolver
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static double _sqrt2 = Math.Sqrt(2.0);
-
-        private IList<Vector2Di> _goals = null;
         private BattleEntity _searchForEntity = null;
-
-        private double _unitSpeedTilesPerSecond = 0.0;
 
         private readonly BattleState _battleState;
         private readonly Terrain _terrain;

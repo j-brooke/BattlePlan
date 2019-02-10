@@ -405,7 +405,7 @@ namespace BattlePlan.Resolver
             if (this.SpeedTilesPerSec>0 && this.IsAttacker)
             {
                 if (_plannedPath==null || _plannedPath.Count==0)
-                    ChoosePath(battleState);
+                    ChoosePathToGoal(battleState);
 
                 var nextPos = _plannedPath.Peek();
 
@@ -447,19 +447,27 @@ namespace BattlePlan.Resolver
                     }
                 }
 
-                // If there's an enemy that we have a straight path to, remember the path.
+                // If there are enemies in sight that we have straight paths to, charge one.
                 if (_plannedBerserkPath==null)
                 {
-                    var target = ListBerserkerTargetsInRange(battleState, berserkerAggroRange)
-                        .OrderBy( (ent) => this.Position.DistanceTo(ent.Position) )
-                        .FirstOrDefault();
-                    if (target != null)
+                    var potentialTargets = ListBerserkerTargetsInRange(battleState, berserkerAggroRange).ToList();
+                    if (potentialTargets.Count>0)
                     {
-                        this.BerserkTargetId = target.Id;
-                        _plannedBerserkPath = new Queue<Vector2Di>(
-                            battleState.Terrain.StraightWalkablePath(this.Position, target.Position));
-                        _plannedPath = null;
-                        _logger.Trace("{0} is planning a berserker charge on {1}", this.Id, target.Id);
+                        // This list contains only enemies that, considering only terrain, we have a straight path to.  But
+                        // we don't want all of our berserkers to follow a conga line, so we'll use our regular pathfinding
+                        // to choose a path that tries to go around friendly units, as needed.  Berserkers are much more interesting
+                        // when the behave like a hoard rather than a line at the DMV.
+                        var potentialTargetLocs = potentialTargets.Select( (targ) => targ.Position );
+                        var pathToTarget = battleState.FindPathToSomewhere(this, potentialTargetLocs);
+                        if (pathToTarget!=null)
+                        {
+                            var pathEnd = pathToTarget[pathToTarget.Count-1];
+                            var target = potentialTargets.Where( (targ) => targ.Position==pathEnd ).First();
+                            this.BerserkTargetId = target.Id;
+                            _plannedBerserkPath = new Queue<Vector2Di>(pathToTarget);
+                            _plannedPath = null;
+                            _logger.Trace("{0} is planning a berserker charge on {1}, {2} steps away", this.Id, target.Id, pathToTarget.Count);
+                        }
                     }
                 }
 
@@ -489,7 +497,7 @@ namespace BattlePlan.Resolver
             return actionEvent;
         }
 
-        private void ChoosePath(BattleState battleState)
+        private void ChoosePathToGoal(BattleState battleState)
         {
             var path = battleState.FindPathToGoal(this);
             _plannedPath = new Queue<Vector2Di>(path);

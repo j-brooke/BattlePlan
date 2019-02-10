@@ -14,7 +14,6 @@
 * General: rename "wall" to "rock" or "stone"?
 * Refactor to simplify teamId limits.
 * Units behavior:
-    * Smarter berserker pathfinding
     * Crossbow hold still while enemy in sight?
     * Crossbow only attack enemy combatants (unless path is blocked)?
 * Player: mode-locked version of editor for "playing" game

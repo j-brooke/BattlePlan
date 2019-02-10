@@ -198,6 +198,12 @@ namespace BattlePlan.Resolver
             return path;
         }
 
+        internal IList<Vector2Di> FindPathToSomewhere(BattleEntity entity, IEnumerable<Vector2Di> destinations)
+        {
+            var path = _pathGraph.FindPathToSomewhere(this, entity, destinations);
+            return path;
+        }
+
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private Terrain _terrain;
