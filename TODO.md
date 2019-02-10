@@ -1,13 +1,5 @@
-* General: exceptions and data validation
 * Viewer: check terminal size
-* Editor: play button
 * Editor: support for 4 teams?
-* General: formalized concepts of goals and victory
-    * Challenge constraints class?
-        * Which teams you can edit
-        * Can place attackers or defenders?
-        * Total unit cost?
-        * Max count of each unit type?
 * Units: tuning, including resource cost
 * Units: maybe new units?
     * Firespitter (S) - creates patches of DoT fire for any that move through it.
@@ -21,3 +13,9 @@
 * Viewer/Editor: map legend (what does @ mean??)
 * General: rename "wall" to "rock" or "stone"?
 * Refactor to simplify teamId limits.
+* Units behavior:
+    * Smarter berserker pathfinding
+    * Crossbow hold still while enemy in sight?
+    * Crossbow only attack enemy combatants (unless path is blocked)?
+* Player: mode-locked version of editor for "playing" game
+* Launcher: game overview UI for choosing scenarios to play, with challenge completeness tracking
