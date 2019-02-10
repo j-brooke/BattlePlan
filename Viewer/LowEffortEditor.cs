@@ -1178,9 +1178,12 @@ namespace BattlePlan.Viewer
 
             row += 1;
             _canvas.WriteText("(Backspace) clear all", col, row++, 0);
+            _canvas.WriteText("(D) set spawn dist all", col, row++, 0);
+            _canvas.WriteText("(G) set goal dist all", col, row++, 0);
             _canvas.WriteText("(+) add challenge", col, row++, 0);
             _canvas.WriteText("(-) remove challenge", col, row++, 0);
 
+            row += 1;
             for (int i=0; i<_scenario.Challenges.Count; ++i)
                 _canvas.WriteText($"({i+1}) edit \"{_scenario.Challenges[i].Name}\"", col, row++, 0);
 
@@ -1204,7 +1207,12 @@ namespace BattlePlan.Viewer
                 case '-':
                     RemoveChallenge();
                     return;
-
+                case 'd':
+                    SetAllChallengeSpawnDistance();
+                    return;
+                case 'g':
+                    SetAllChallengeGoalDistance();
+                    return;
             }
 
             // TODO: add set-minimum-distance-from-spawn button
@@ -1313,6 +1321,54 @@ namespace BattlePlan.Viewer
             }
 
             _statusMsg = buff.ToString();
+        }
+
+        /// <summary>
+        /// If spawn points and challenges exist, the cursor's distance to the closest spawn point is
+        /// set as the minimum spawn distance for all challenges.
+        /// </summary>
+        private void SetAllChallengeSpawnDistance()
+        {
+            if (_scenario.Terrain.SpawnPointsMap==null || _scenario.Challenges==null || _scenario.Challenges.Count==0)
+                return;
+
+            var cursorPos = new Vector2Di(_cursorX, _cursorY);
+            var allSpawnPts = _scenario.Terrain.SpawnPointsMap.Values.SelectMany( (list) => list );
+            if (!allSpawnPts.Any())
+                return;
+
+            var closestDist = (int)Math.Floor(allSpawnPts.Select( (spPt) => spPt.DistanceTo(cursorPos) ).Min());
+
+            _logger.Debug("Setting all challenge MinimumDistFromSpawnPts to {0}", closestDist);
+            foreach (var chal in _scenario.Challenges)
+                chal.MinimumDistFromSpawnPts = closestDist;
+
+            // Invalidate the terrain overlay so it will be rebuilt later.
+            _terrainOverlayTiles = null;
+        }
+
+        /// <summary>
+        /// If goal points and challenges exist, the cursor's distance to the closest goal point is
+        /// set as the minimum goal distance for all challenges.
+        /// </summary>
+        private void SetAllChallengeGoalDistance()
+        {
+            if (_scenario.Terrain.GoalPointsMap==null || _scenario.Challenges==null || _scenario.Challenges.Count==0)
+                return;
+
+            var cursorPos = new Vector2Di(_cursorX, _cursorY);
+            var allGoalPts = _scenario.Terrain.GoalPointsMap.Values.SelectMany( (list) => list );
+            if (!allGoalPts.Any())
+                return;
+
+            var closestDist = (int)Math.Floor(allGoalPts.Select( (spPt) => spPt.DistanceTo(cursorPos) ).Min());
+
+            _logger.Debug("Setting all challenge MinimumDistFromGoalPts to {0}", closestDist);
+            foreach (var chal in _scenario.Challenges)
+                chal.MinimumDistFromGoalPts = closestDist;
+
+            // Invalidate the terrain overlay so it will be rebuilt later.
+            _terrainOverlayTiles = null;
         }
     }
 }
