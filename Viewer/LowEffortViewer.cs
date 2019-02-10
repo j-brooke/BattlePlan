@@ -123,6 +123,8 @@ namespace BattlePlan.Viewer
                 lastFrameTimeMS = frameTimer.ElapsedMilliseconds;
             }
 
+            DrawScoreFrame();
+
             _canvas.Shutdown();
         }
 
@@ -326,6 +328,55 @@ namespace BattlePlan.Viewer
 
             row += 1;
             _canvas.WriteTextDirect("Press a key to continue", 0, row++);
+            _canvas.ReadKey();
+        }
+
+        private void DrawScoreFrame()
+        {
+            _canvas.BeginFrame();
+
+            int sidebarCol = _resolution.Terrain.Width + 2;
+            int row = 0;
+            var totalBreachCount = _resolution.AttackerBreachCounts.Values.Sum();
+            var totalDefenderCasualties = _resolution.DefenderCasualtyCounts.Values.Sum();
+
+            // TODO: fix this.  It doesn't differentiate between teams.
+
+            if (totalBreachCount==0)
+                _canvas.WriteText("Victory", sidebarCol, row++, 2);
+            else
+                _canvas.WriteText("Failure", sidebarCol, row++, -1);
+
+            _canvas.WriteText($"{totalBreachCount} attacker breaches", sidebarCol, row++, 0);
+            _canvas.WriteText($"{totalDefenderCasualties} defender casualties", sidebarCol, row++, 0);
+
+            if (_resolution.ChallengesAchieved!=null && _resolution.ChallengesAchieved.Count>0)
+            {
+                row += 1;
+                _canvas.WriteText("Challenges achieved", sidebarCol, row++, 0);
+                foreach (var challenge in _resolution.ChallengesAchieved)
+                    _canvas.WriteText($"  {challenge.Name}", sidebarCol, row++, challenge.PlayerTeamId);
+
+            }
+
+            if (_resolution.ChallengesFailed!=null && _resolution.ChallengesFailed.Count>0)
+            {
+                row += 1;
+                _canvas.WriteText("Challenges failed", sidebarCol, row++, 0);
+                foreach (var challenge in _resolution.ChallengesFailed)
+                    _canvas.WriteText($"  {challenge.Name}", sidebarCol, row++, 0);
+            }
+
+            // Draw the map and everything on it.
+            _canvas.PaintTerrain(_resolution.Terrain, null, 0, 0);
+            _canvas.PaintSpawnPoints(_resolution.Terrain, 0, 0);
+            _canvas.PaintGoalPoints(_resolution.Terrain, 0, 0);
+            _canvas.PaintEntities(_entities.Values, 0, 0);
+            _canvas.PaintDamageIndicators(_rencentDamageEvents, 0, 0);
+
+            _canvas.WriteText("Press any key to continue", 0, _resolution.Terrain.Height, 0);
+            _canvas.EndFrame();
+
             _canvas.ReadKey();
         }
     }

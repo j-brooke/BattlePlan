@@ -418,6 +418,7 @@ namespace BattlePlan.Viewer
         {
             switch (teamId)
             {
+                case -1: return ConsoleColor.Red;
                 case 1: return ConsoleColor.Yellow;
                 case 2: return ConsoleColor.Green;
                 default: return ConsoleColor.White;
