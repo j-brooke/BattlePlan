@@ -6,6 +6,7 @@ using System.IO;
 using Newtonsoft.Json;
 using BattlePlan.Common;
 using BattlePlan.MapGeneration;
+using BattlePlan.Resolver;
 
 namespace BattlePlan.Viewer
 {
@@ -79,11 +80,13 @@ namespace BattlePlan.Viewer
                 WriteStatusMessage();
                 _canvas.EndFrame();
 
-                // Clear the status message after showing it once.
                 _statusMsg = null;
-
                 _canvas.ShowCursor(_cursorX, _cursorY);
                 ProcessUserInput();
+
+                // Set the default status bar if nothing else set
+                if (_statusMsg==null)
+                    SetDefaultStatusBar();
             }
 
             _canvas.Shutdown();
@@ -257,8 +260,6 @@ namespace BattlePlan.Viewer
                 // Invalidate the LoS map.
                 _terrainOverlayTiles = null;
             }
-
-            _statusMsg = $"({_cursorX}, {_cursorY})";
         }
 
         private void CycleMode()
@@ -1282,6 +1283,36 @@ namespace BattlePlan.Viewer
             }
 
             challenge.MaximumUnitTypeCount = maxUnitTypes;
+        }
+
+        private void SetDefaultStatusBar()
+        {
+            var buff = new System.Text.StringBuilder();
+
+            // Cursor position
+            buff.Append('(').Append(_cursorX).Append(',').Append(_cursorY).Append(") ");
+
+            bool errors = Validator.FindTerrainErrors(_scenario.Terrain).Any();
+            errors |= Validator.FindAttackPlanErrors(_scenario.Terrain, _unitTypes, _scenario.AttackPlans).Any();
+            errors |= Validator.FindDefensePlanErrors(_scenario.Terrain, _unitTypes, _scenario.DefensePlans).Any();
+
+            if (errors)
+            {
+                buff.Append("ERRORS - press C for details");
+            }
+            else if (_scenario.Challenges!=null && _scenario.Challenges.Count>0)
+            {
+                buff.Append("Eligible: ");
+                var eligList = new List<string>();
+                foreach (var chal in _scenario.Challenges)
+                {
+                    var eligible = !Validator.GetChallengeDisqualifiers(_scenario, null, _unitTypes, chal).Any();
+                    if (eligible)
+                        buff.Append(chal.Name).Append(' ');
+                }
+            }
+
+            _statusMsg = buff.ToString();
         }
     }
 }

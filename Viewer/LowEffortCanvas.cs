@@ -17,10 +17,11 @@ namespace BattlePlan.Viewer
         public LowEffortCanvas()
         {
             // Test some of the system rules
+            _originalCursorSize = Console.CursorSize;
             _canSetCursorSize = true;
             try
             {
-                Console.CursorSize = 50;
+                Console.CursorSize = 100;
             }
             catch (PlatformNotSupportedException)
             {
@@ -40,7 +41,6 @@ namespace BattlePlan.Viewer
             // for a line of input.  See PromptForInput below.)
             Console.TreatControlCAsInput = true;
 
-            _originalCursorSize = Console.CursorSize;
             if (_canSetCursorSize)
                 Console.CursorSize = 100;
 
@@ -327,6 +327,8 @@ namespace BattlePlan.Viewer
             if (_canSetCursorSize)
                 Console.CursorSize = _originalCursorSize;
 
+            Console.SetCursorPosition(x, y);
+            Console.Write(new string(' ', Console.WindowWidth-x-1));
             Console.SetCursorPosition(x, y);
             Console.Write(prompt);
 
