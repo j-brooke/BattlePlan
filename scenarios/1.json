@@ -160,5 +160,40 @@
       ]
     }
   ],
-  "DefensePlans": []
+  "DefensePlans": [],
+  "Challenges": [
+    {
+      "Name": "*",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 12,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1000,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 12,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 750,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "***",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 12,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 500,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    }
+  ]
 }

@@ -83,120 +83,6 @@
       ]
     }
   },
-  "UnitTypes": [
-    {
-      "Name": "Grunt",
-      "Symbol": "T",
-      "Behavior": 1,
-      "CanAttack": true,
-      "CanDefend": false,
-      "SpeedTilesPerSec": 1.5,
-      "InitialHitPoints": 100,
-      "WeaponUseTime": 0.5,
-      "WeaponReloadTime": 0.5,
-      "WeaponRangeTiles": 1.5,
-      "WeaponDamage": 60,
-      "ResourceCost": 20,
-      "CrowdAversionBias": 2.0,
-      "HurtAversionBias": 2.0
-    },
-    {
-      "Name": "Scout",
-      "Symbol": "i",
-      "Behavior": 1,
-      "CanAttack": true,
-      "CanDefend": false,
-      "SpeedTilesPerSec": 2.5,
-      "InitialHitPoints": 60,
-      "WeaponUseTime": 0.5,
-      "WeaponReloadTime": 0.5,
-      "WeaponRangeTiles": 1.5,
-      "WeaponDamage": 40,
-      "ResourceCost": 50,
-      "CrowdAversionBias": 5.0,
-      "HurtAversionBias": 100.0
-    },
-    {
-      "Name": "Berserker",
-      "Symbol": "Y",
-      "Behavior": 3,
-      "CanAttack": true,
-      "CanDefend": false,
-      "SpeedTilesPerSec": 2.0,
-      "InitialHitPoints": 200,
-      "WeaponUseTime": 0.5,
-      "WeaponReloadTime": 0.5,
-      "WeaponRangeTiles": 1.5,
-      "WeaponDamage": 75,
-      "ResourceCost": 150,
-      "CrowdAversionBias": 5.0,
-      "HurtAversionBias": 0.0
-    },
-    {
-      "Name": "Crossbowman",
-      "Symbol": "]",
-      "Behavior": 2,
-      "CanAttack": true,
-      "CanDefend": false,
-      "SpeedTilesPerSec": 1.5,
-      "InitialHitPoints": 75,
-      "WeaponUseTime": 0.3,
-      "WeaponReloadTime": 1.2,
-      "WeaponRangeTiles": 9.0,
-      "WeaponDamage": 40,
-      "ResourceCost": 100,
-      "CrowdAversionBias": 1.0,
-      "HurtAversionBias": 1.0
-    },
-    {
-      "Name": "Archer",
-      "Symbol": "{",
-      "Behavior": 2,
-      "CanAttack": false,
-      "CanDefend": true,
-      "SpeedTilesPerSec": 1.5,
-      "InitialHitPoints": 75,
-      "WeaponUseTime": 0.3,
-      "WeaponReloadTime": 0.7,
-      "WeaponRangeTiles": 12.0,
-      "WeaponDamage": 20,
-      "ResourceCost": 100,
-      "CrowdAversionBias": 1.0,
-      "HurtAversionBias": 1.0
-    },
-    {
-      "Name": "Pikeman",
-      "Symbol": "^",
-      "Behavior": 2,
-      "CanAttack": false,
-      "CanDefend": true,
-      "SpeedTilesPerSec": 1.5,
-      "InitialHitPoints": 100,
-      "WeaponUseTime": 0.5,
-      "WeaponReloadTime": 0.5,
-      "WeaponRangeTiles": 2.3,
-      "WeaponDamage": 60,
-      "ResourceCost": 75,
-      "CrowdAversionBias": 2.0,
-      "HurtAversionBias": 2.0
-    },
-    {
-      "Name": "Barrier",
-      "Symbol": "#",
-      "Behavior": 0,
-      "CanAttack": false,
-      "CanDefend": true,
-      "SpeedTilesPerSec": 0.0,
-      "InitialHitPoints": 150,
-      "WeaponUseTime": 0.0,
-      "WeaponReloadTime": 0.0,
-      "WeaponRangeTiles": 0.0,
-      "WeaponDamage": 0,
-      "ResourceCost": 25,
-      "CrowdAversionBias": 0.0,
-      "HurtAversionBias": 0.0
-    }
-  ],
   "AttackPlans": [
     {
       "TeamId": 1,
@@ -257,7 +143,46 @@
           "SpawnPointIndex": 0
         }
       ]
+    },
+    {
+      "TeamId": 2,
+      "Spawns": []
     }
   ],
-  "DefensePlans": []
+  "DefensePlans": [],
+  "Challenges": [
+    {
+      "Name": "*",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 12,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1200,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 12,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 800,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "***",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 12,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 500,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    }
+  ]
 }
