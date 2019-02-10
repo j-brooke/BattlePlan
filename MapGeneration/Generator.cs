@@ -33,13 +33,13 @@ namespace BattlePlan.MapGeneration
                     GrowDot(_waterType);
 
             // Cover the map with randomly sized rectangles of blocked ground.
-            for (int i=0; i<_options.WallRectCount; ++i)
+            for (int i=0; i<_options.StoneRectCount; ++i)
                 ApplyRandomRect(1);
 
-            // Add some random wall dots adjacent to existing ones to grow the region in a less blocky way.
-            if (_options.WallDotCount>0 && HasAnyOfType(_wallType))
-                for (int i=0; i<_options.WallDotCount; ++i)
-                    GrowDot(_wallType);
+            // Add some random stone dots adjacent to existing ones to grow the region in a less blocky way.
+            if (_options.StoneDotCount>0 && HasAnyOfType(_stoneType))
+                for (int i=0; i<_options.StoneDotCount; ++i)
+                    GrowDot(_stoneType);
 
             // Create spawn points and goal points.
             for (int sp=0; sp<_options.SpawnPointCount; ++sp)
@@ -64,7 +64,7 @@ namespace BattlePlan.MapGeneration
 
         // Hard-coded assumptions about terrain types.
         private const int _openType = 0;
-        private const int _wallType = 1;
+        private const int _stoneType = 1;
         private const int _waterType = 2;
         private const int _fogType = 3;
 

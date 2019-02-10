@@ -32,7 +32,7 @@ namespace BattlePlan.Common
                     TileTypes = new List<TileCharacteristics>()
                 {
                     new TileCharacteristics() { BlocksMovement=false, BlocksVision=false, Appearance=" ", Name="Open" },
-                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=true, Appearance=":", Name="Wall" },
+                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=true, Appearance=":", Name="Stone" },
                     new TileCharacteristics() { BlocksMovement=true, BlocksVision=false, Appearance="~", Name="Water" },
                     new TileCharacteristics() { BlocksMovement=false, BlocksVision=true, Appearance="@", Name="Fog" },
                 },

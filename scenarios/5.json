@@ -11,7 +11,7 @@
         "BlocksMovement": true,
         "BlocksVision": true,
         "Appearance": ":",
-        "Name": "Wall"
+        "Name": "Stone"
       },
       {
         "BlocksMovement": true,

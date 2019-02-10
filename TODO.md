@@ -11,7 +11,6 @@
     * damage reduction from some directions?
 * Map generator: generator seed string?
 * Viewer/Editor: map legend (what does @ mean??)
-* General: rename "wall" to "rock" or "stone"?
 * Refactor to simplify teamId limits.
 * Units behavior:
     * Crossbow hold still while enemy in sight?

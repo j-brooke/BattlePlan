@@ -20,7 +20,7 @@ namespace BattlePlan.MapGeneration
         public int Width { get; set; } = 50;
 
         /// <summary>
-        /// Maximum width of random rectangles (for walls, water, etc).  If the map's width is larger than its
+        /// Maximum width of random rectangles (for stones, water, etc).  If the map's width is larger than its
         /// height, you probably want the chunk sizes to be wider than they are high as well.
         /// </summary>
         public int ChunkSizeX { get; set; } = 7;
@@ -31,7 +31,7 @@ namespace BattlePlan.MapGeneration
         public int ChunkSizeY{ get; set; } = 4;
 
         /// <summary>
-        /// Number of random rectangles of water created on the map.  This happens before walls, so some may be
+        /// Number of random rectangles of water created on the map.  This happens before stones, so some may be
         /// overwritten.
         /// </summary>
         public int WaterRectCount { get; set; } = 4;
@@ -42,17 +42,17 @@ namespace BattlePlan.MapGeneration
         public int WaterDotCount { get; set; } = 30;
 
         /// <summary>
-        /// Number of random wall rectangles to apply to the map.
+        /// Number of random stone rectangles to apply to the map.
         /// </summary>
-        public int WallRectCount { get; set; } = 60;
+        public int StoneRectCount { get; set; } = 60;
 
         /// <summary>
-        /// Number of tiles by which existing wall regions (from the rectangles above) can grow.
+        /// Number of tiles by which existing stone regions (from the rectangles above) can grow.
         /// </summary>
-        public int WallDotCount { get; set; } = 200;
+        public int StoneDotCount { get; set; } = 200;
 
         /// <summary>
-        /// Number of open rectangles applied at once, causing already placed walls/water to be removed.
+        /// Number of open rectangles applied at once, causing already placed stones/water to be removed.
         /// This is repeatedly applied until all spawn/goal points are reachable from each other.
         /// </summary>
         public int OpenRectCount { get; set; } = 10;
