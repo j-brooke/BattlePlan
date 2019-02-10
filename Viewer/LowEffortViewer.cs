@@ -35,6 +35,17 @@ namespace BattlePlan.Viewer
         {
             _resolution = resolution;
 
+            _canvas.Init(resolution.Terrain.Height+1);
+            _canvas.UseColor = UseColor;
+
+            // If the resolution had error messages, show those and exit.
+            if (_resolution.ErrorMessages!=null && _resolution.ErrorMessages.Count>0)
+            {
+                ShowErrorErrorMessages(resolution);
+                _canvas.Shutdown();
+                return;
+            }
+
             _unitTypeMap = new Dictionary<string, UnitCharacteristics>();
             if (resolution.UnitTypes != null)
             {
@@ -49,9 +60,6 @@ namespace BattlePlan.Viewer
 
             _displaySpeed = 1.0;
             _exitRequested = false;
-
-            _canvas.Init(resolution.Terrain.Height+1);
-            _canvas.UseColor = UseColor;
 
             var frameTimer = new System.Diagnostics.Stopwatch();
             long lastFrameTimeMS = 0;
@@ -302,6 +310,23 @@ namespace BattlePlan.Viewer
         {
             var msg = $"{_displayTime.ToString("F2")}  (1) pause, (2-5) speed, (Space) step, (L/R-arrow) skip, (ESC) exit";
             _canvas.WriteText(msg, 0, _resolution.Terrain.Height, 0);
+        }
+
+        private void ShowErrorErrorMessages(BattleResolution resolution)
+        {
+            int row = 0;
+
+            _canvas.ClearScreen();
+            _canvas.WriteTextDirect("Scenario is invalid", 0, row++);
+
+            foreach (var err in resolution.ErrorMessages)
+            {
+                _canvas.WriteTextDirect("  * " + err, 0, row++);
+            }
+
+            row += 1;
+            _canvas.WriteTextDirect("Press a key to continue", 0, row++);
+            _canvas.ReadKey();
         }
     }
 }

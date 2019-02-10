@@ -15,8 +15,6 @@ namespace BattlePlan.Resolver
         public Terrain Terrain => _terrain;
         public BattleResolution Resolve(Scenario scenario, IList<UnitCharacteristics> unitTypes)
         {
-            _runTimer = System.Diagnostics.Stopwatch.StartNew();
-
             _terrain = scenario.Terrain;
             _attackPlans = new List<AttackPlan>(scenario.AttackPlans);
             _defensePlans = new List<DefensePlan>(scenario.DefensePlans ?? Enumerable.Empty<DefensePlan>());
@@ -26,11 +24,17 @@ namespace BattlePlan.Resolver
             foreach (var unitType in unitTypes)
                 _unitTypeMap.Add(unitType.Name, unitType);
 
-            // TODO: validate
-            // * terrain is passable from spawn to goal
-            // * attack and defense plans use only legal units
-            // * defenders placed in legal locations
-            // * attack spawns are in legal places
+            // Validate and exit early if we fail.
+            var valErrs = GetValidationFailures(scenario, unitTypes);
+            if (valErrs.Any())
+            {
+                return new BattleResolution()
+                {
+                    Terrain = scenario.Terrain,
+                    UnitTypes = unitTypes,
+                    ErrorMessages = valErrs,
+                };
+            }
 
             _events = new List<BattleEvent>();
             _entities = new List<BattleEntity>();
@@ -140,14 +144,20 @@ namespace BattlePlan.Resolver
 
             _logger.Info("Resolution pathfinding stats: " + _pathGraph.DebugInfo() );
 
-            return new BattleResolution()
+            var resolution = new BattleResolution()
             {
                 Terrain = _terrain,
                 UnitTypes = _unitTypeMap.Values.ToList(),
                 Events = _events,
                 AttackerBreachCounts = attackerBreachCounts,
                 DefenderCasualtyCounts = defenderCasualtyCounts,
+                ChallengesAchieved = new List<DefenderChallenge>(),
+                ChallengesFailed = new List<DefenderChallenge>(),
             };
+
+            ResolveChallenges(scenario, resolution, unitTypes);
+
+            return resolution;
         }
 
         internal HurtMap HurtMap => _hurtMap;
@@ -190,7 +200,6 @@ namespace BattlePlan.Resolver
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private System.Diagnostics.Stopwatch _runTimer;
         private Terrain _terrain;
         private List<AttackPlan> _attackPlans;
         private List<DefensePlan> _defensePlans;
@@ -296,6 +305,46 @@ namespace BattlePlan.Resolver
             var id = $"{cls}{_nextId.ToString()}";
             _nextId += 1;
             return id;
+        }
+
+        private IList<string> GetValidationFailures(Scenario scenario, IEnumerable<UnitCharacteristics> unitTypes)
+        {
+            var errs = new List<string>();
+            errs.AddRange(Validator.FindTerrainErrors(scenario.Terrain));
+
+            if (errs.Count==0)
+            {
+                errs.AddRange(Validator.FindAttackPlanErrors(scenario.Terrain, unitTypes, scenario.AttackPlans));
+                errs.AddRange(Validator.FindDefensePlanErrors(scenario.Terrain, unitTypes, scenario.DefensePlans));
+            }
+
+            return errs;
+        }
+
+        private void ResolveChallenges(Scenario scenario, BattleResolution resolution, IEnumerable<UnitCharacteristics> unitTypes)
+        {
+            if (scenario.Challenges != null)
+            {
+                foreach (var chal in scenario.Challenges)
+                {
+                    // Validate each challenge against the setup and results.  Put them into the appropriate
+                    // buckets in the BattleResolution.  Log if necessary.
+                    var failures = Validator.GetChallengeDisqualifiers(scenario, resolution, unitTypes, chal);
+                    if (failures.Any())
+                    {
+                        resolution.ChallengesFailed.Add(chal);
+                        var buff = new System.Text.StringBuilder($"Challenge '{chal.Name}' failed.");
+                        foreach (var msg in failures)
+                            buff.AppendLine().Append("    ").Append(msg);
+                        _logger.Debug(buff.ToString());
+                    }
+                    else
+                    {
+                        resolution.ChallengesAchieved.Add(chal);
+                        _logger.Debug($"Challenge '{chal.Name}' achieved.");
+                    }
+                }
+            }
         }
     }
 }

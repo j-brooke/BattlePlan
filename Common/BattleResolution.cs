@@ -22,5 +22,7 @@ namespace BattlePlan.Common
         public IDictionary<int,int> DefenderCasualtyCounts { get; set; }
 
         public IList<DefenderChallenge> ChallengesAchieved { get; set; }
+        public IList<DefenderChallenge> ChallengesFailed { get; set; }
+        public IList<string> ErrorMessages { get; set; }
     }
 }

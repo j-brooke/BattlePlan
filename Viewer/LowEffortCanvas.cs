@@ -82,7 +82,8 @@ namespace BattlePlan.Viewer
             if (_canSetCursorSize)
                 Console.CursorSize = _originalCursorSize;
 
-            _logger.Debug("Frame time (ms) stats: avg={0}; min={1}; max={2}", _totalFrameTime/_frameCount, _minFrameTime, _maxFrameTime);
+            var frameAvg = (_frameCount>0)? _totalFrameTime/_frameCount : 0;
+            _logger.Debug("Frame time (ms) stats: avg={0}; min={1}; max={2}", frameAvg, _minFrameTime, _maxFrameTime);
         }
 
         public void BeginFrame()
