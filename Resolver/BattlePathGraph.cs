@@ -88,19 +88,11 @@ namespace BattlePlan.Resolver
                 }
             }
 
-            // Add a penalty for tiles where this entity will take damage.
+            // Add a penalty for tiles where this entity will take damage. Normalize the DPS relative to the unit's health.
+            // (Should this be it's starting HP instead?)
             var enemyDpsInTile = _battleState.HurtMap.GetHurtFactor(toNode, _searchForEntity.TeamId);
-            {
-                // Normalize the DPS relative to the unit's health.  (Should this be it's starting HP instead?)
-                var myDeathPerSecond = enemyDpsInTile / _searchForEntity.HitPoints;
-                penalty += _searchForEntity.Class.HurtAversionBias * myDeathPerSecond;
-
-                // TODO: A possibly better approach would be to sum all the time-based penalties and time to move,
-                // above, and then assess a hurt penalty based on the DPS and how long we expect to stay in the tile.
-                // A barrier with an archer covering it should count for more than a separate barrier and archer at
-                // different places on the path.  On the other hand, if you make things too smart, it takes the fun out.
-                // Plus, this wouldn't allow for a unit to know how much team help it has.
-            }
+            var myDeathPerSecond = enemyDpsInTile / _searchForEntity.HitPoints;
+            penalty += _searchForEntity.Class.HurtAversionBias * myDeathPerSecond;
 
             return Math.Max(timeToMove + penalty, 0.0);
         }

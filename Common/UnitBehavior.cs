@@ -5,7 +5,7 @@ namespace BattlePlan.Common
     public enum UnitBehavior
     {
         /// <summary>
-        /// Unit won't attack or move.  It's likely a barrier, rock, or pacifist.
+        /// Unit won't attack or move.  It's likely a Barricade, rock, or pacifist.
         /// </summary>
         None,
 

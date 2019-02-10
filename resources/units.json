@@ -96,7 +96,7 @@
     "ResourceCost": 75
   },
   {
-    "Name": "Barrier",
+    "Name": "Barricade",
     "Symbol": "#",
     "Behavior": "None",
     "CanAttack": false,
