@@ -430,7 +430,7 @@ namespace BattlePlan.Resolver
 
         private BattleEvent ChooseActionMoveTowardEnemy(BattleState battleState, double time, double deltaSeconds)
         {
-            const double berserkerAggroRange = 12;
+            const double berserkerAggroRange = 14;
 
             BattleEvent actionEvent = null;
 

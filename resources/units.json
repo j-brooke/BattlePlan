@@ -64,6 +64,22 @@
     "ResourceCost": 100
   },
   {
+    "Name": "Assassin",
+    "Symbol": "&",
+    "Behavior": "Berserker",
+    "CanAttack": true,
+    "CanDefend": false,
+    "SpeedTilesPerSec": 2.5,
+    "InitialHitPoints": 125,
+    "WeaponUseTime": 0.1,
+    "WeaponReloadTime": 0.9,
+    "WeaponRangeTiles": 1.5,
+    "WeaponDamage": 75,
+    "CrowdAversionBias": 5.0,
+    "HurtAversionBias": 100.0,
+    "ResourceCost": 150
+  },
+  {
     "Name": "Archer",
     "Symbol": "{",
     "Behavior": "Marcher",

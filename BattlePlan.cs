@@ -5,10 +5,11 @@ using Newtonsoft.Json;
 using BattlePlan.Common;
 using BattlePlan.Resolver;
 using BattlePlan.MapGeneration;
+using Mono.Options;
 
 namespace BattlePlan
 {
-    class Program
+    static class BattlePlan
     {
         static void Main(string[] args)
         {
@@ -16,22 +17,53 @@ namespace BattlePlan
 
             try
             {
+                _logger.Info("===Beginning BattlePlan: " + string.Join(' ', args));
+
+                bool showHelp = false;
+                _cmdOptions = new OptionSet()
+                {
+                    {
+                        "h|help",
+                        "show this help info and exit",
+                        v => showHelp = (v!=null)
+                    },
+                    {
+                        "m|monochrome",
+                        "don't use color",
+                        v => _monochrome = (v!=null)
+                    }
+                };
+
+                IList<string> leftoverArgs;
+                try
+                {
+                    leftoverArgs = _cmdOptions.Parse(args);
+                }
+                catch (OptionException e)
+                {
+                    Console.WriteLine(_appName + ": " + e.Message);
+                    Console.WriteLine($"Try '{_appName} --help' for more information.");
+                    return;
+                }
+
+                if (showHelp)
+                {
+                    Help();
+                    return;
+                }
+
                 string verb = "play";
-                if (args.Length>0)
-                    verb = args[0];
+                if (leftoverArgs.Count>0)
+                    verb = leftoverArgs[0].ToLower();
 
                 string filename = null;
-                if (args.Length>1)
-                    filename = args[1];
+                if (leftoverArgs.Count>1)
+                    filename = leftoverArgs[1];
 
-                _logger.Info("===Beginning {0} {1}", verb, filename);
-
-                if (verb.Equals("play", StringComparison.CurrentCultureIgnoreCase))
+                if (verb=="play")
                     Play(filename);
-                else if (verb.Equals("edit", StringComparison.CurrentCultureIgnoreCase))
+                else if (verb=="edit")
                     Edit(filename);
-                else if (verb.Equals("test", StringComparison.CurrentCultureIgnoreCase))
-                    Test();
                 else
                     Help();
             }
@@ -45,7 +77,12 @@ namespace BattlePlan
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
+        private const string _appName = "BattlePlan";
+
         private const string _unitsFileName = "resources/units.json";
+
+        private static OptionSet _cmdOptions;
+        private static bool _monochrome = false;
 
         private static void Play(string filename)
         {
@@ -64,14 +101,14 @@ namespace BattlePlan
             var resolver = new BattleState();
             var result = resolver.Resolve(scenario, unitsList);
 
-            var viewer = new Viewer.LowEffortViewer();
+            var viewer = new Viewer.LowEffortViewer() { UseColor = !_monochrome };
             viewer.ShowBattleResolution(result);
         }
 
         private static void Edit(string filename)
         {
             List<UnitCharacteristics> unitsList = null;
-            var editor = new Viewer.LowEffortEditor();
+            var editor = new Viewer.LowEffortEditor() { UseColor = !_monochrome };
             Scenario scenarioToPlay = editor.EditScenario(filename);
 
             while (scenarioToPlay != null)
@@ -99,26 +136,8 @@ namespace BattlePlan
             Console.WriteLine("Usage: one of");
             Console.WriteLine("  dotnet run play filename");
             Console.WriteLine("  dotnet run edit [filename]");
-        }
 
-
-        private static void Test()
-        {
-            var fileText = File.ReadAllText("LICENSE");
-            var wordsFromFile = fileText.Split();
-
-            var pQueue = new Path.IntrinsicPriorityQueue<string>(Path.IntrinsicPriorityQueue<string>.LessThan);
-            foreach (var word in wordsFromFile)
-                pQueue.Enqueue(word);
-
-            foreach (var word in wordsFromFile)
-            {
-                if (word != word.ToLower())
-                    pQueue.Remove(word);
-            }
-
-            while (pQueue.Count>0)
-                Console.WriteLine(pQueue.Dequeue());
+            _cmdOptions.WriteOptionDescriptions(Console.Out);
         }
 
         private static JsonSerializerSettings _serialOpts = new JsonSerializerSettings()
