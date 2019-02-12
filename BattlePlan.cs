@@ -60,12 +60,21 @@ namespace BattlePlan
                 if (leftoverArgs.Count>1)
                     filename = leftoverArgs[1];
 
-                if (verb=="play")
-                    Play(filename);
-                else if (verb=="edit")
-                    Edit(filename);
-                else
-                    Help();
+                switch (verb)
+                {
+                    case "resolve":
+                        ResolveAndShow(filename);
+                        break;
+                    case "edit":
+                        Edit(filename, false);
+                        break;
+                    case "play":
+                        Edit(filename, true);
+                        break;
+                    default:
+                        Help();
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -84,7 +93,7 @@ namespace BattlePlan
         private static OptionSet _cmdOptions;
         private static bool _monochrome = false;
 
-        private static void Play(string filename)
+        private static void ResolveAndShow(string filename)
         {
             if (String.IsNullOrWhiteSpace(filename))
             {
@@ -105,10 +114,23 @@ namespace BattlePlan
             viewer.ShowBattleResolution(result);
         }
 
-        private static void Edit(string filename)
+        private static void Edit(string filename, bool playerView)
         {
+            // Only allow playerView if a filename is provided.  Not much fun to play an empty field
+            // with no spawns, goals, or attackers.
+            if (playerView && String.IsNullOrWhiteSpace(filename))
+            {
+                Console.WriteLine("Please provide a filename");
+                return;
+            }
+
             List<UnitCharacteristics> unitsList = null;
-            var editor = new Viewer.LowEffortEditor() { UseColor = !_monochrome };
+            var editor = new Viewer.LowEffortEditor()
+            {
+                UseColor = !_monochrome,
+                PlayerView = playerView,
+            };
+
             Scenario scenarioToPlay = editor.EditScenario(filename);
 
             while (scenarioToPlay != null)

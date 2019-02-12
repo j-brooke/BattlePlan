@@ -17,6 +17,12 @@ namespace BattlePlan.Viewer
     {
         public bool UseColor { get; set;  } = true;
 
+        /// <summary>
+        /// If true, the user is locked in to defender playement mode for team 2, and they
+        /// get a slightly simplified sidebar.
+        /// </summary>
+        public bool PlayerView { get; set; } = false;
+
         public LowEffortEditor()
         {
             LoadOrCreateGeneratorOptions();
@@ -98,6 +104,7 @@ namespace BattlePlan.Viewer
         }
         private const int _minimumTeamId = 1;
         private const int _maximumTeamId = 2;
+        private const int _playerViewTeamId = 2;
 
         private const string _unitsFileName = "resources/units.json";
 
@@ -147,101 +154,26 @@ namespace BattlePlan.Viewer
 
             _cursorX = 0;
             _cursorY = 0;
-            _mode = EditorMode.Terrain;
-            _teamId = _minimumTeamId;
             _paintEnabled = false;
             _terrainOverlayTiles = null;
             _showDefenderLOS = false;
+            _showForbiddenTiles = false;
+
+            if (this.PlayerView)
+            {
+                _mode = EditorMode.Defenders;
+                _teamId = _playerViewTeamId;
+            }
+            else
+            {
+                _mode = EditorMode.Terrain;
+                _teamId = _minimumTeamId;
+            }
 
             _canvas.Init(_scenario.Terrain.Height+1);
             _canvas.UseColor = this.UseColor;
         }
 
-        private void ProcessUserInput()
-        {
-            // Wait for a key press.
-            var keyInfo = _canvas.ReadKey();
-
-            // If the shift key is held and an arrow is pressed, we want to move a large distance.
-            // Sadly, this is of limited use on MacOS - it doesn't give us modifiers for up and down arrows,
-            // for some reason.
-            int moveDist = ((keyInfo.Modifiers & ConsoleModifiers.Shift) != 0)? 10 : 1;
-
-            // First see if we can match on the key-code, for special keys like arrows.
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.UpArrow:
-                    MoveCursor(0, -moveDist);
-                    return;
-                case ConsoleKey.DownArrow:
-                    MoveCursor(0, +moveDist);
-                    return;
-                case ConsoleKey.LeftArrow:
-                    MoveCursor(-moveDist, 0);
-                    return;
-                case ConsoleKey.RightArrow:
-                    MoveCursor(+moveDist, 0);
-                    return;
-                case ConsoleKey.Escape:
-                    _exitEditor = true;
-                    break;
-                case ConsoleKey.Enter:
-                    CycleMode();
-                    return;
-                case ConsoleKey.Tab:
-                    _showForbiddenTiles = !_showForbiddenTiles;
-                    _terrainOverlayTiles = null;
-                    return;
-                case ConsoleKey.C:
-                    // Intercept Ctrl-C nicely.
-                    if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
-                        _exitEditor = true;
-                    else
-                        CheckForErrors();
-                    return;
-            }
-
-            // Now try to match on regular characters.  These aren't all represented in the ConsoleKey
-            // enum above.  Note that KeyChar gives you the proper shifted or ctrl'd ASCII code, so
-            // Shift-s is 'S'.
-            switch (keyInfo.KeyChar)
-            {
-                case 'l':
-                    PromptAndLoadScenario();
-                    return;
-                case 's':
-                    PromptAndSaveScenario();
-                    return;
-                case '`':
-                    this.UseColor = !this.UseColor;
-                    _canvas.UseColor = this.UseColor;
-                    return;
-                case 'v':
-                    _playAfterExit = true;
-                    _exitEditor = true;
-                    return;
-            }
-
-            // If we didn't return before now, look for mode-specific key handling.
-            switch (_mode)
-            {
-                case EditorMode.Terrain:
-                    ProcessKeyTerrainMode(keyInfo);
-                    return;
-                case EditorMode.Defenders:
-                    ProcessKeyDefendersMode(keyInfo);
-                    return;
-                case EditorMode.SpawnsAndGoals:
-                    ProcessKeySpawnsAndGoalsMode(keyInfo);
-                    return;
-                case EditorMode.Challenges:
-                    ProcessKeyChallengesMode(keyInfo);
-                    return;
-                case EditorMode.Attackers:
-                    ProcessKeyAttackersMode(keyInfo);
-                    return;
-            }
-        }
 
         private void MoveCursor(int deltaX, int deltaY)
         {
@@ -340,282 +272,6 @@ namespace BattlePlan.Viewer
             {
                 _logger.Warn(je, "Error loading GeneratorOptions file");
                 _statusMsg = je.Message;
-            }
-        }
-
-        private void WriteModeHelp()
-        {
-            int row = 0;
-            int col = _scenario.Terrain.Width + 2;
-            _canvas.WriteText("(Enter) mode:", col, row++, 0);
-            _canvas.WriteText($"{_mode}", col, row++, 0);
-
-            switch (_mode)
-            {
-                case EditorMode.Terrain:
-                    WriteModeHelpTerrain(col, ref row);
-                    break;
-                case EditorMode.Defenders:
-                    WriteModeHelpDefenders(col, ref row);
-                    break;
-                case EditorMode.SpawnsAndGoals:
-                    WriteModeHelpSpawnsAndGoals(col, ref row);
-                    break;
-                case EditorMode.Challenges:
-                    WriteModeHelpChallenges(col, ref row);
-                    break;
-                case EditorMode.Attackers:
-                    WriteModeHelpAttackers(col, ref row);
-                    break;
-                default:
-                    _canvas.WriteText("Not implemented", col, row++, 0);
-                    break;
-            }
-
-            row += 1;
-            _canvas.WriteText("(`) toggle color", col, row++, 0);
-            _canvas.WriteText("(Tab) toggle forbidden", col, row++, 0);
-            _canvas.WriteText("(L) load scenario", col, row++, 0);
-            _canvas.WriteText("(S) save scenario", col, row++, 0);
-            _canvas.WriteText("(C) check for errors", col, row++, 0);
-            _canvas.WriteText("(V) view resolution", col, row++, 0);
-            _canvas.WriteText("(ESC) exit", col, row++, 0);
-        }
-
-        private void WriteModeHelpTerrain(int col, ref int row)
-        {
-            Debug.Assert(_mode==EditorMode.Terrain);
-
-            var paintModeIndicator = _paintEnabled? "on" : "off";
-
-            row += 1;
-            _canvas.WriteText("(Space) change Tile", col, row++, 0);
-
-            row += 1;
-            for (int i=0; i<_scenario.Terrain.TileTypes.Count; ++i)
-            {
-                var name = _scenario.Terrain.TileTypes[i].Name;
-                _canvas.WriteText($"({i+1}) place {name}", col, row++, 0);
-            }
-
-            row += 1;
-            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-            _canvas.WriteText($"(P) toggle paint mode ({paintModeIndicator})", col, row++, 0);
-            _canvas.WriteText("(R) randomly generate", col, row++, 0);
-            _canvas.WriteText("(O) generator options", col, row++, 0);
-        }
-
-        private void ProcessKeyTerrainMode(ConsoleKeyInfo keyInfo)
-        {
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.Spacebar:
-                    CycleTileType();
-                    return;
-                case ConsoleKey.Backspace:
-                    ClearAllTiles();
-                    return;
-                case ConsoleKey.P:
-                    _paintEnabled = !_paintEnabled;
-                    return;
-                case ConsoleKey.R:
-                    GenerateTerrain();
-                    return;
-                case ConsoleKey.O:
-                    PromptToEditGeneratorOptions();
-                    return;
-            }
-
-            int keyNumberValue = keyInfo.KeyChar - '0';
-            if (keyNumberValue>=1 && keyNumberValue<=_scenario.Terrain.TileTypes.Count)
-            {
-                _scenario.Terrain.SetTileValue(_cursorX, _cursorY, (byte)(keyNumberValue-1));
-
-                // Invalidate the LoS map.
-                _terrainOverlayTiles = null;
-            }
-        }
-
-        private void WriteModeHelpDefenders(int col, ref int row)
-        {
-            Debug.Assert(_mode==EditorMode.Defenders);
-
-            _canvas.WriteText($"(T) Team {_teamId}", col, row++, _teamId);
-
-            row += 1;
-            _canvas.WriteText("(\\) toggle LoS", col, row++, 0);
-            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-            _canvas.WriteText("(1) none", col, row++, 0);
-
-            for (int i=0; i<_defenderClasses.Count; ++i)
-                _canvas.WriteText($"({i+2}) {_defenderClasses[i].Name}", col, row++, 0);
-
-            row += 1;
-            _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
-        }
-
-        private void ProcessKeyDefendersMode(ConsoleKeyInfo keyInfo)
-        {
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.T:
-                    CycleTeam();
-                    return;
-                case ConsoleKey.Backspace:
-                    RemoveAllDefenders();
-                    return;
-            }
-
-            switch (keyInfo.KeyChar)
-            {
-                case '1':
-                    RemoveDefender();
-                    return;
-                case '\\':
-                    _showDefenderLOS = !_showDefenderLOS;
-                    _terrainOverlayTiles = null;
-                    return;
-            }
-
-            int keyNumberValue = keyInfo.KeyChar - '0';
-            if (keyNumberValue>=2 && keyNumberValue<=_defenderClasses.Count+1)
-            {
-                PlaceDefender(_defenderClasses[keyNumberValue-2]);
-            }
-        }
-
-        private void WriteModeHelpSpawnsAndGoals(int col, ref int row)
-        {
-            Debug.Assert(_mode==EditorMode.SpawnsAndGoals);
-
-            _canvas.WriteText($"(T) team {_teamId}", col, row++, _teamId);
-
-            row += 1;
-            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-            _canvas.WriteText("(1) remove", col, row++, 0);
-            _canvas.WriteText("(2) add spawn O", col, row++, 0);
-            _canvas.WriteText("(3) add goal X", col, row++, 0);
-        }
-
-        private void ProcessKeySpawnsAndGoalsMode(ConsoleKeyInfo keyInfo)
-        {
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.T:
-                    CycleTeam();
-                    return;
-                case ConsoleKey.Backspace:
-                    ClearSpawnsAndGoalsForTeam();
-                    return;
-            }
-
-            switch (keyInfo.KeyChar)
-            {
-                case '1':
-                    ClearOneSpawnOrGoal();
-                    return;
-                case '2':
-                    AddOneSpawnPoint();
-                    return;
-                case '3':
-                    AddOneGoalPoint();
-                    return;
-            }
-        }
-
-        private void WriteModeHelpAttackers(int col, ref int row)
-        {
-            Debug.Assert(_mode==EditorMode.Attackers);
-
-            if (_scenario.AttackPlans==null)
-                _scenario.AttackPlans = new List<AttackPlan>();
-            AttackPlan plan = _scenario.AttackPlans.FirstOrDefault( (ap) => ap.TeamId == _teamId);
-            if (plan == null)
-            {
-                plan = new AttackPlan() { TeamId = _teamId };
-                _scenario.AttackPlans.Add(plan);
-            }
-
-            var hasSpawnPoint = _scenario.Terrain.SpawnPointsMap.ContainsKey(_teamId)
-                && (_selectedSpawnPointIndex>=0 && _selectedSpawnPointIndex<_scenario.Terrain.SpawnPointsMap[_teamId].Count);
-
-            var spawnPointText = (hasSpawnPoint)? _scenario.Terrain.SpawnPointsMap[_teamId][_selectedSpawnPointIndex].ToString()
-                : "none";
-
-            // Make a list of all spawn times currently in use.
-            var existingSpawnTimes = plan.Spawns.Select( (sp) => sp.Time )
-                .Distinct()
-                .OrderBy( (time) => time )
-                .ToList();
-            var existingTimesStr = String.Join(", ", existingSpawnTimes);
-
-            // Basic selections: team, spawn point delay, spawn point index.
-            _canvas.WriteText($"(T) team {_teamId}", col, row++, _teamId);
-            _canvas.WriteText($"(D) spawn delay time {_spawnTime}", col, row++, 0);
-            _canvas.WriteText("  " + existingTimesStr, col, row++, 0);
-            _canvas.WriteText($"(P) spawn point {spawnPointText}" , col, row++, 0);
-
-            if (hasSpawnPoint)
-            {
-                row += 1;
-                _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-                _canvas.WriteText($"(1) clear for this time", col, row++, 0);
-
-                // Write a list of all available attacker types.  But the trick part is, we also
-                // want to include the count for that unit type already assigned.
-                // This obviously breaks if we have >7 attacker types.
-                for (int i=0; i<_attackerClasses.Count; ++i)
-                {
-                    Func<AttackerSpawn,bool> matchFunc = (sp) =>
-                    {
-                        return ((int)Math.Round(sp.Time))==_spawnTime
-                            && sp.SpawnPointIndex == _selectedSpawnPointIndex
-                            && sp.UnitType == _attackerClasses[i].Name;
-                    };
-
-                    var count = plan.Spawns.Where( (matchFunc) ).Count();
-                    _canvas.WriteText($"({i+2}) Add {_attackerClasses[i].Name} {count}", col, row++, 0);
-                }
-
-                row += 1;
-                _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
-            }
-            else
-            {
-                row += 1;
-                _canvas.WriteText($"Please select a spawn point", col, row++, _teamId);
-            }
-        }
-
-        private void ProcessKeyAttackersMode(ConsoleKeyInfo keyInfo)
-        {
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.T:
-                    CycleTeam();
-                    return;
-                case ConsoleKey.D:
-                    PromptForSpawnDelay();
-                    return;
-                case ConsoleKey.P:
-                    CycleSpawnPointIndex();
-                    return;
-                case ConsoleKey.Backspace:
-                    ClearAllAttackersForTeam();
-                    return;
-            }
-
-            switch (keyInfo.KeyChar)
-            {
-                case '1':
-                    RemoveAttackersAtTime();
-                    return;
-            }
-
-            int keyNumberValue = keyInfo.KeyChar - '0';
-            if (keyNumberValue>=2 && keyNumberValue<=_attackerClasses.Count+1)
-            {
-                AddAttackerSpawn(_attackerClasses[keyNumberValue-2]);
             }
         }
 
@@ -1079,7 +735,7 @@ namespace BattlePlan.Viewer
             var screen = _canvas.GetDisplaySize();
             if (screen.X<minX || screen.Y<minY)
             {
-                var msg = "Your terminal window is too small for this application.  "
+                var msg = "Your terminal window is too small for this scenario.  "
                     + $"Minimum=({minX}, {minY}); recommended=({suggestedX}, {suggestedY})";
 
                 _logger.Warn(msg);
@@ -1370,5 +1026,499 @@ namespace BattlePlan.Viewer
             // Invalidate the terrain overlay so it will be rebuilt later.
             _terrainOverlayTiles = null;
         }
+
+        #region UIPages
+
+        private void WriteModeHelp()
+        {
+            if (this.PlayerView)
+                WritePlayerViewHelp();
+            else
+                WriteEditorModeHelp();
+        }
+
+        private void ProcessUserInput()
+        {
+            // Wait for a key press.
+            var keyInfo = _canvas.ReadKey();
+
+            // If the shift key is held and an arrow is pressed, we want to move a large distance.
+            // Sadly, this is of limited use on MacOS - it doesn't give us modifiers for up and down arrows,
+            // for some reason.
+            int moveDist = ((keyInfo.Modifiers & ConsoleModifiers.Shift) != 0)? 10 : 1;
+
+            // First see if we can match on the key-code, for special keys like arrows.
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.UpArrow:
+                    MoveCursor(0, -moveDist);
+                    return;
+                case ConsoleKey.DownArrow:
+                    MoveCursor(0, +moveDist);
+                    return;
+                case ConsoleKey.LeftArrow:
+                    MoveCursor(-moveDist, 0);
+                    return;
+                case ConsoleKey.RightArrow:
+                    MoveCursor(+moveDist, 0);
+                    return;
+                case ConsoleKey.Escape:
+                    _exitEditor = true;
+                    break;
+                case ConsoleKey.Tab:
+                    _showForbiddenTiles = !_showForbiddenTiles;
+                    _terrainOverlayTiles = null;
+                    return;
+                case ConsoleKey.C:
+                    // Intercept Ctrl-C nicely.
+                    if ((keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
+                        _exitEditor = true;
+                    else
+                        CheckForErrors();
+                    return;
+            }
+
+            // Now try to match on regular characters.  These aren't all represented in the ConsoleKey
+            // enum above.  Note that KeyChar gives you the proper shifted or ctrl'd ASCII code, so
+            // Shift-s is 'S'.
+            switch (keyInfo.KeyChar)
+            {
+                case 'l':
+                    PromptAndLoadScenario();
+                    return;
+                case 's':
+                    PromptAndSaveScenario();
+                    return;
+                case '`':
+                    this.UseColor = !this.UseColor;
+                    _canvas.UseColor = this.UseColor;
+                    return;
+                case 'v':
+                    _playAfterExit = true;
+                    _exitEditor = true;
+                    return;
+            }
+
+            if (this.PlayerView)
+                ProcessKeyPlayerView(keyInfo);
+            else
+                ProcessEditorUserInput(keyInfo);
+        }
+
+        // -- Editor View ---
+        private void WriteEditorModeHelp()
+        {
+            int row = 0;
+            int col = _scenario.Terrain.Width + 2;
+            _canvas.WriteText("(Enter) mode:", col, row++, 0);
+            _canvas.WriteText($"{_mode}", col, row++, 0);
+
+            switch (_mode)
+            {
+                case EditorMode.Terrain:
+                    WriteModeHelpTerrain(col, ref row);
+                    break;
+                case EditorMode.Defenders:
+                    WriteModeHelpDefenders(col, ref row);
+                    break;
+                case EditorMode.SpawnsAndGoals:
+                    WriteModeHelpSpawnsAndGoals(col, ref row);
+                    break;
+                case EditorMode.Challenges:
+                    WriteModeHelpChallenges(col, ref row);
+                    break;
+                case EditorMode.Attackers:
+                    WriteModeHelpAttackers(col, ref row);
+                    break;
+                default:
+                    _canvas.WriteText("Not implemented", col, row++, 0);
+                    break;
+            }
+
+            row += 1;
+            _canvas.WriteText("(`) toggle color", col, row++, 0);
+            _canvas.WriteText("(Tab) toggle forbidden", col, row++, 0);
+            _canvas.WriteText("(L) load scenario", col, row++, 0);
+            _canvas.WriteText("(S) save scenario", col, row++, 0);
+            _canvas.WriteText("(C) check for errors", col, row++, 0);
+            _canvas.WriteText("(V) view resolution", col, row++, 0);
+            _canvas.WriteText("(ESC) exit", col, row++, 0);
+        }
+
+        private void ProcessEditorUserInput(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.Enter:
+                    CycleMode();
+                    return;
+            }
+
+            // If we didn't return before now, look for mode-specific key handling.
+            switch (_mode)
+            {
+                case EditorMode.Terrain:
+                    ProcessKeyTerrainMode(keyInfo);
+                    return;
+                case EditorMode.Defenders:
+                    ProcessKeyDefendersMode(keyInfo);
+                    return;
+                case EditorMode.SpawnsAndGoals:
+                    ProcessKeySpawnsAndGoalsMode(keyInfo);
+                    return;
+                case EditorMode.Challenges:
+                    ProcessKeyChallengesMode(keyInfo);
+                    return;
+                case EditorMode.Attackers:
+                    ProcessKeyAttackersMode(keyInfo);
+                    return;
+            }
+        }
+
+        private void WriteModeHelpTerrain(int col, ref int row)
+        {
+            Debug.Assert(_mode==EditorMode.Terrain);
+
+            var paintModeIndicator = _paintEnabled? "on" : "off";
+
+            row += 1;
+            _canvas.WriteText("(Space) change Tile", col, row++, 0);
+
+            row += 1;
+            for (int i=0; i<_scenario.Terrain.TileTypes.Count; ++i)
+            {
+                var name = _scenario.Terrain.TileTypes[i].Name;
+                _canvas.WriteText($"({i+1}) place {name}", col, row++, 0);
+            }
+
+            row += 1;
+            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
+            _canvas.WriteText($"(P) toggle paint mode ({paintModeIndicator})", col, row++, 0);
+            _canvas.WriteText("(R) randomly generate", col, row++, 0);
+            _canvas.WriteText("(O) generator options", col, row++, 0);
+        }
+
+        private void ProcessKeyTerrainMode(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.Spacebar:
+                    CycleTileType();
+                    return;
+                case ConsoleKey.Backspace:
+                    ClearAllTiles();
+                    return;
+                case ConsoleKey.P:
+                    _paintEnabled = !_paintEnabled;
+                    return;
+                case ConsoleKey.R:
+                    GenerateTerrain();
+                    return;
+                case ConsoleKey.O:
+                    PromptToEditGeneratorOptions();
+                    return;
+            }
+
+            int keyNumberValue = keyInfo.KeyChar - '0';
+            if (keyNumberValue>=1 && keyNumberValue<=_scenario.Terrain.TileTypes.Count)
+            {
+                _scenario.Terrain.SetTileValue(_cursorX, _cursorY, (byte)(keyNumberValue-1));
+
+                // Invalidate the LoS map.
+                _terrainOverlayTiles = null;
+            }
+        }
+
+        private void WriteModeHelpDefenders(int col, ref int row)
+        {
+            Debug.Assert(_mode==EditorMode.Defenders);
+
+            _canvas.WriteText($"(T) Team {_teamId}", col, row++, _teamId);
+
+            row += 1;
+            _canvas.WriteText("(\\) toggle LoS", col, row++, 0);
+            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
+            _canvas.WriteText("(1) none", col, row++, 0);
+
+            for (int i=0; i<_defenderClasses.Count; ++i)
+                _canvas.WriteText($"({i+2}) {_defenderClasses[i].Name}", col, row++, 0);
+
+            row += 1;
+            _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
+        }
+
+        private void ProcessKeyDefendersMode(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.T:
+                    CycleTeam();
+                    return;
+                case ConsoleKey.Backspace:
+                    RemoveAllDefenders();
+                    return;
+            }
+
+            switch (keyInfo.KeyChar)
+            {
+                case '1':
+                    RemoveDefender();
+                    return;
+                case '\\':
+                    _showDefenderLOS = !_showDefenderLOS;
+                    _terrainOverlayTiles = null;
+                    return;
+            }
+
+            int keyNumberValue = keyInfo.KeyChar - '0';
+            if (keyNumberValue>=2 && keyNumberValue<=_defenderClasses.Count+1)
+            {
+                PlaceDefender(_defenderClasses[keyNumberValue-2]);
+            }
+        }
+
+        private void WriteModeHelpSpawnsAndGoals(int col, ref int row)
+        {
+            Debug.Assert(_mode==EditorMode.SpawnsAndGoals);
+
+            _canvas.WriteText($"(T) team {_teamId}", col, row++, _teamId);
+
+            row += 1;
+            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
+            _canvas.WriteText("(1) remove", col, row++, 0);
+            _canvas.WriteText("(2) add spawn O", col, row++, 0);
+            _canvas.WriteText("(3) add goal X", col, row++, 0);
+        }
+
+        private void ProcessKeySpawnsAndGoalsMode(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.T:
+                    CycleTeam();
+                    return;
+                case ConsoleKey.Backspace:
+                    ClearSpawnsAndGoalsForTeam();
+                    return;
+            }
+
+            switch (keyInfo.KeyChar)
+            {
+                case '1':
+                    ClearOneSpawnOrGoal();
+                    return;
+                case '2':
+                    AddOneSpawnPoint();
+                    return;
+                case '3':
+                    AddOneGoalPoint();
+                    return;
+            }
+        }
+
+        private void WriteModeHelpAttackers(int col, ref int row)
+        {
+            Debug.Assert(_mode==EditorMode.Attackers);
+
+            if (_scenario.AttackPlans==null)
+                _scenario.AttackPlans = new List<AttackPlan>();
+            AttackPlan plan = _scenario.AttackPlans.FirstOrDefault( (ap) => ap.TeamId == _teamId);
+            if (plan == null)
+            {
+                plan = new AttackPlan() { TeamId = _teamId };
+                _scenario.AttackPlans.Add(plan);
+            }
+
+            var hasSpawnPoint = _scenario.Terrain.SpawnPointsMap.ContainsKey(_teamId)
+                && (_selectedSpawnPointIndex>=0 && _selectedSpawnPointIndex<_scenario.Terrain.SpawnPointsMap[_teamId].Count);
+
+            var spawnPointText = (hasSpawnPoint)? _scenario.Terrain.SpawnPointsMap[_teamId][_selectedSpawnPointIndex].ToString()
+                : "none";
+
+            // Make a list of all spawn times currently in use.
+            var existingSpawnTimes = plan.Spawns.Select( (sp) => sp.Time )
+                .Distinct()
+                .OrderBy( (time) => time )
+                .ToList();
+            var existingTimesStr = String.Join(", ", existingSpawnTimes);
+
+            // Basic selections: team, spawn point delay, spawn point index.
+            _canvas.WriteText($"(T) team {_teamId}", col, row++, _teamId);
+            _canvas.WriteText($"(D) spawn delay time {_spawnTime}", col, row++, 0);
+            _canvas.WriteText("  " + existingTimesStr, col, row++, 0);
+            _canvas.WriteText($"(P) spawn point {spawnPointText}" , col, row++, 0);
+
+            if (hasSpawnPoint)
+            {
+                row += 1;
+                _canvas.WriteText("(Backspace) clear all", col, row++, 0);
+                _canvas.WriteText($"(1) clear for this time", col, row++, 0);
+
+                // Write a list of all available attacker types.  But the trick part is, we also
+                // want to include the count for that unit type already assigned.
+                // This obviously breaks if we have >7 attacker types.
+                for (int i=0; i<_attackerClasses.Count; ++i)
+                {
+                    Func<AttackerSpawn,bool> matchFunc = (sp) =>
+                    {
+                        return ((int)Math.Round(sp.Time))==_spawnTime
+                            && sp.SpawnPointIndex == _selectedSpawnPointIndex
+                            && sp.UnitType == _attackerClasses[i].Name;
+                    };
+
+                    var count = plan.Spawns.Where( (matchFunc) ).Count();
+                    _canvas.WriteText($"({i+2}) Add {_attackerClasses[i].Name} {count}", col, row++, 0);
+                }
+
+                row += 1;
+                _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
+            }
+            else
+            {
+                row += 1;
+                _canvas.WriteText($"Please select a spawn point", col, row++, _teamId);
+            }
+        }
+
+        private void ProcessKeyAttackersMode(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.T:
+                    CycleTeam();
+                    return;
+                case ConsoleKey.D:
+                    PromptForSpawnDelay();
+                    return;
+                case ConsoleKey.P:
+                    CycleSpawnPointIndex();
+                    return;
+                case ConsoleKey.Backspace:
+                    ClearAllAttackersForTeam();
+                    return;
+            }
+
+            switch (keyInfo.KeyChar)
+            {
+                case '1':
+                    RemoveAttackersAtTime();
+                    return;
+            }
+
+            int keyNumberValue = keyInfo.KeyChar - '0';
+            if (keyNumberValue>=2 && keyNumberValue<=_attackerClasses.Count+1)
+            {
+                AddAttackerSpawn(_attackerClasses[keyNumberValue-2]);
+            }
+        }
+
+
+        // ---Player view---
+
+        private void WritePlayerViewHelp()
+        {
+            Debug.Assert(this.PlayerView);
+
+            int col = _scenario.Terrain.Width + 2;
+            int row = 0;
+
+            _canvas.WriteText("Place defenders", col, row++, _playerViewTeamId);
+            row += 1;
+
+            _canvas.WriteText("(H) show help screen", col, row++, 0);
+            _canvas.WriteText("(Arrow keys) move cursor", col, row++, 0);
+            _canvas.WriteText("(\\) toggle LoS", col, row++, 0);
+            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
+            _canvas.WriteText("(1) none", col, row++, 0);
+
+            for (int i=0; i<_defenderClasses.Count; ++i)
+                _canvas.WriteText($"({i+2}) {_defenderClasses[i].Name}", col, row++, 0);
+
+            row += 1;
+            _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
+
+            row += 1;
+            _canvas.WriteText("(`) toggle color", col, row++, 0);
+            _canvas.WriteText("(Tab) toggle forbidden", col, row++, 0);
+            _canvas.WriteText("(L) load game", col, row++, 0);
+            _canvas.WriteText("(S) save game", col, row++, 0);
+            _canvas.WriteText("(C) check for errors", col, row++, 0);
+            _canvas.WriteText("(V) view resolution", col, row++, 0);
+            _canvas.WriteText("(ESC) exit", col, row++, 0);
+        }
+
+        private void ProcessKeyPlayerView(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.Backspace:
+                    RemoveAllDefenders();
+                    return;
+            }
+
+            switch (keyInfo.KeyChar)
+            {
+                case 'h':
+                    ShowFullScreenPlayerHelp();
+                    return;
+                case '1':
+                    RemoveDefender();
+                    return;
+                case '\\':
+                    _showDefenderLOS = !_showDefenderLOS;
+                    _terrainOverlayTiles = null;
+                    return;
+            }
+
+            int keyNumberValue = keyInfo.KeyChar - '0';
+            if (keyNumberValue>=2 && keyNumberValue<=_defenderClasses.Count+1)
+            {
+                PlaceDefender(_defenderClasses[keyNumberValue-2]);
+            }
+        }
+
+        private void ShowFullScreenPlayerHelp()
+        {
+            _canvas.ClearScreen();
+
+            int row = 0;
+
+            _canvas.WriteTextDirect("Intro", 0, row++);
+            _canvas.WriteTextDirect(" * Place defenders to stop the enemy team from reaching the goal.", 0, row++);
+            _canvas.WriteTextDirect(" * Press V to see the battle results.", 0, row++);
+            _canvas.WriteTextDirect(" * Beat challenges by using fewer resources and avoiding forbidden areas.", 0, row++);
+
+            row += 1;
+            _canvas.WriteTextDirect("Terrain", 0, row++);
+            _canvas.WriteTextDirect("   Open - Units can see and move through here.", 0, row++);
+            _canvas.WriteTextDirect(" : Stone - Units can't see or move through stone.", 0, row++);
+            _canvas.WriteTextDirect(" ~ Water - Prevents movement but not vision or attacks.", 0, row++);
+            _canvas.WriteTextDirect(" @ Fog - Reduces vision and attack range to 1 tile, but doesn't prevent movement.", 0, row++);
+
+            row += 1;
+            _canvas.WriteTextDirect("Attackers", 0, row++);
+            _canvas.WriteTextDirect(" T Grunt - Moves toward the goal, but attacks things in the way.", 0, row++);
+            _canvas.WriteTextDirect(" i Scout - Tries to avoid defenders while moving toward the goal.", 0, row++);
+            _canvas.WriteTextDirect(" ] Crossbowman - Moves toward the goal, but attacks at range along the way.", 0, row++);
+            _canvas.WriteTextDirect(" Y Berserker - Attacks any enemy it sees.", 0, row++);
+            _canvas.WriteTextDirect(" & Assassin - Chooses the best approach to attack enemies it seees.", 0, row++);
+
+            row += 1;
+            _canvas.WriteTextDirect("Defenders (all immobile)", 0, row++);
+            _canvas.WriteTextDirect(" { Archer - Attacks any enemies at long range.", 0, row++);
+            _canvas.WriteTextDirect(" ^ Pikeman - Attacks enemies within 2 tiles.", 0, row++);
+            _canvas.WriteTextDirect(" # Barricade - Doesn't attack, but blocks enemy movement until destroyed.", 0, row++);
+
+            // Wait for the user to press a key.  We don't care what key it is, unless it's
+            // control-c, in which case we should honor their desire to quit.
+            row++;
+            _canvas.WriteTextDirect("Press a key to continue", 0, row++);
+
+            var keyInfo = _canvas.ReadKey();
+            if (keyInfo.Key==ConsoleKey.C && (keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
+                _exitEditor = true;
+        }
+
+        #endregion UIPages
     }
 }
