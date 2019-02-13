@@ -71,6 +71,9 @@ namespace BattlePlan
                     case "play":
                         Edit(filename, true);
                         break;
+                    case "menu":
+                        GameMenu();
+                        break;
                     default:
                         Help();
                         break;
@@ -86,7 +89,7 @@ namespace BattlePlan
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private const string _appName = "BattlePlan";
+        private const string _appName = "BattlePlan.dll";
 
         private const string _unitsFileName = "resources/units.json";
 
@@ -156,8 +159,10 @@ namespace BattlePlan
         private static void Help()
         {
             Console.WriteLine("Usage: one of");
-            Console.WriteLine("  dotnet run play filename");
-            Console.WriteLine("  dotnet run edit [filename]");
+            Console.WriteLine($"  dotnet {_appName} menu");
+            Console.WriteLine($"  dotnet {_appName} resolve <filename>");
+            Console.WriteLine($"  dotnet {_appName} edit");
+            Console.WriteLine($"  dotnet {_appName} play <filename>");
 
             _cmdOptions.WriteOptionDescriptions(Console.Out);
         }
@@ -178,6 +183,12 @@ namespace BattlePlan
             var fileContentsAsString = File.ReadAllText(filename);
             var unitList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(fileContentsAsString);
             return unitList;
+        }
+
+        private static void GameMenu()
+        {
+            var menu = new Viewer.LowEffortGameMenu() { UseColor = !_monochrome };
+            menu.Run();
         }
     }
 }

@@ -735,11 +735,16 @@ namespace BattlePlan.Viewer
             var screen = _canvas.GetDisplaySize();
             if (screen.X<minX || screen.Y<minY)
             {
-                var msg = "Your terminal window is too small for this scenario.  "
+                var msg = "Your terminal window is too small for this scenario.\n"
                     + $"Minimum=({minX}, {minY}); recommended=({suggestedX}, {suggestedY})";
 
                 _logger.Warn(msg);
                 Console.WriteLine(msg);
+                Console.WriteLine();
+
+                Console.Write("Press any key to exit");
+                Console.ReadKey();
+
                 return false;
             }
 
