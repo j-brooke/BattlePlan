@@ -146,6 +146,7 @@ namespace BattlePlan.Resolver
 
             var resolution = new BattleResolution()
             {
+                BannerText = new List<string>(scenario.BannerText ?? Enumerable.Empty<string>() ),
                 Terrain = _terrain,
                 UnitTypes = _unitTypeMap.Values.ToList(),
                 Events = _events,

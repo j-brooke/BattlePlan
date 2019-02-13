@@ -35,7 +35,10 @@ namespace BattlePlan.Viewer
         {
             _resolution = resolution;
 
-            _canvas.Init(resolution.Terrain.Height+1);
+            _topMapRow = resolution.BannerText.Count;
+            _statusBarRow = _topMapRow + resolution.Terrain.Height;
+
+            _canvas.Init(_statusBarRow+1);
             _canvas.UseColor = UseColor;
 
             // If the resolution had error messages, show those and exit.
@@ -97,16 +100,16 @@ namespace BattlePlan.Viewer
                 RemoveOldTextEvents(maxTextEvents);
 
                 _canvas.BeginFrame();
+                WriteBannerText();
 
-                // Draw text events first.  Otherwise if they go past the edge of the screen, they trash part of the map.
-                _canvas.WriteTextEvents(_recentTextEvents, resolution.Terrain.Width + 2, 0);
+                _canvas.WriteTextEvents(_recentTextEvents, resolution.Terrain.Width + 2, _topMapRow);
 
                 // Draw the map and everything on it.
-                _canvas.PaintTerrain(resolution.Terrain, null, 0, 0);
-                _canvas.PaintSpawnPoints(resolution.Terrain, 0, 0);
-                _canvas.PaintGoalPoints(resolution.Terrain, 0, 0);
-                _canvas.PaintEntities(_entities.Values, 0, 0);
-                _canvas.PaintDamageIndicators(_rencentDamageEvents, 0, 0);
+                _canvas.PaintTerrain(resolution.Terrain, null, 0, _topMapRow);
+                _canvas.PaintSpawnPoints(resolution.Terrain, 0, _topMapRow);
+                _canvas.PaintGoalPoints(resolution.Terrain, 0, _topMapRow);
+                _canvas.PaintEntities(_entities.Values, 0, _topMapRow);
+                _canvas.PaintDamageIndicators(_rencentDamageEvents, 0, _topMapRow);
 
                 WriteKeyHelp();
 
@@ -140,6 +143,9 @@ namespace BattlePlan.Viewer
         private double _displayTime;
         private double _displaySpeed;
         private bool _repaintAll;
+
+        private int _topMapRow;
+        private int _statusBarRow;
 
         private void ProcessEvent(BattleEvent evt)
         {
@@ -311,7 +317,7 @@ namespace BattlePlan.Viewer
         private void WriteKeyHelp()
         {
             var msg = $"{_displayTime.ToString("F2")}  (1) pause, (2-5) speed, (Space) step, (L/R-arrow) skip, (ESC) exit";
-            _canvas.WriteText(msg, 0, _resolution.Terrain.Height, 0);
+            _canvas.WriteText(msg, 0, _statusBarRow, 0);
         }
 
         private void ShowErrorErrorMessages(BattleResolution resolution)
@@ -336,7 +342,7 @@ namespace BattlePlan.Viewer
             _canvas.BeginFrame();
 
             int sidebarCol = _resolution.Terrain.Width + 2;
-            int row = 0;
+            int row = _topMapRow;
             var totalBreachCount = _resolution.AttackerBreachCounts.Values.Sum();
             var totalDefenderCasualties = _resolution.DefenderCasualtyCounts.Values.Sum();
 
@@ -368,16 +374,26 @@ namespace BattlePlan.Viewer
             }
 
             // Draw the map and everything on it.
-            _canvas.PaintTerrain(_resolution.Terrain, null, 0, 0);
-            _canvas.PaintSpawnPoints(_resolution.Terrain, 0, 0);
-            _canvas.PaintGoalPoints(_resolution.Terrain, 0, 0);
-            _canvas.PaintEntities(_entities.Values, 0, 0);
-            _canvas.PaintDamageIndicators(_rencentDamageEvents, 0, 0);
+            WriteBannerText();
+            _canvas.PaintTerrain(_resolution.Terrain, null, 0, _topMapRow);
+            _canvas.PaintSpawnPoints(_resolution.Terrain, 0, _topMapRow);
+            _canvas.PaintGoalPoints(_resolution.Terrain, 0, _topMapRow);
+            _canvas.PaintEntities(_entities.Values, 0, _topMapRow);
+            _canvas.PaintDamageIndicators(_rencentDamageEvents, 0, _topMapRow);
 
-            _canvas.WriteText("Press any key to continue", 0, _resolution.Terrain.Height, 0);
+            _canvas.WriteText("Press any key to continue", 0, _statusBarRow, 0);
             _canvas.EndFrame();
 
             _canvas.ReadKey();
+        }
+
+        private void WriteBannerText()
+        {
+            if (_resolution.BannerText != null)
+            {
+                for (int row=0; row<_resolution.BannerText.Count; ++row)
+                    _canvas.WriteText(_resolution.BannerText[row], 0, row, 0);
+            }
         }
     }
 }

@@ -5,6 +5,10 @@ namespace BattlePlan.Common
 {
     public class BattleResolution
     {
+        /// <summary>
+        /// Optional text shown at the top of the screen for tutorials or flavor.
+        /// </summary>
+        public IList<string> BannerText { get; set; }
         public Terrain Terrain { get; set; }
         public IList<UnitCharacteristics> UnitTypes { get; set; }
         public IList<BattleEvent> Events { get; set; }
