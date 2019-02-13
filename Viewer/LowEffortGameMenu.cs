@@ -23,6 +23,8 @@ namespace BattlePlan.Viewer
 
         public void Run()
         {
+            LoadHighScores();
+
             while (true)
             {
                 Console.TreatControlCAsInput = false;
@@ -41,6 +43,9 @@ namespace BattlePlan.Viewer
         }
 
         private const string _unitsFileName = "resources/units.json";
+        private const string _highScoreFileName = "games/highscores.json";
+
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private static string[] _bannerText =
         {
@@ -59,6 +64,7 @@ namespace BattlePlan.Viewer
         private string _scenarioPath;
         private string _sectionPath;
         private List<UnitCharacteristics> _unitsList;
+        private List<HighScoreEntry> _highScores;
 
         private void PrintBanner()
         {
@@ -93,26 +99,34 @@ namespace BattlePlan.Viewer
 
         private void ChooseScenario(string sectionPath)
         {
+            // We assume any .json files here are scenarios.
             var filesInSection = Directory.EnumerateFiles(sectionPath, "*.json");
 
             Console.Clear();
             PrintBanner();
 
-            Console.WriteLine($"Scenarios in {sectionPath}");
-            Console.WriteLine();
+            // Show a table of the scenario name, and their best (lowest) resource score for each star challenge
+            // level, and the date it was achieved.
+            var tableFormat = "{0,-12}{1,-15}{2,-15}{3,-15}";
+            Console.WriteLine(string.Format(tableFormat, "Scenario", "1-star", "2-star", "3-star"));
 
             foreach (var file in filesInSection)
             {
                 var name = System.IO.Path.GetFileNameWithoutExtension(file);
 
-                // TODO: add high score tracking
+                var oneStar = GetHighScore(file, "*");
+                var twoStar = GetHighScore(file, "**");
+                var threeStar = GetHighScore(file, "***");
 
-                Console.WriteLine(name);
+                var line = string.Format(tableFormat, name, HighScoreString(oneStar), HighScoreString(twoStar), HighScoreString(threeStar));
+                Console.WriteLine(line);
             }
 
             Console.WriteLine();
             Console.Write("Choose a scenario or enter to go back: ");
 
+            // We're assuming they're giving us the actual file name (minus the .json extension).  The reason is
+            // that the file names will probably just be numbers anyway.
             var input = Console.ReadLine();
 
             _scenarioPath = null;
@@ -127,6 +141,10 @@ namespace BattlePlan.Viewer
             }
         }
 
+        /// <summary>
+        /// Runs the editor in player-view on the selected scenario.  If the user hits view-resolution,
+        /// the editor will return a scenario that we pass along to the resolver and viewer.
+        /// </summary>
         private void LaunchScenario(string scenarioPath)
         {
             // Copy the subdirectories and file name from the scenario directory on, and then
@@ -161,11 +179,109 @@ namespace BattlePlan.Viewer
                 var resolver = new BattleState();
                 var result = resolver.Resolve(scenarioToPlay, _unitsList);
 
+                UpdateHighScoresIfNecessary(scenarioPath, result);
+
                 var viewer = new Viewer.LowEffortViewer() { UseColor = editor.UseColor };
                 viewer.ShowBattleResolution(result);
 
                 scenarioToPlay = editor.EditScenario(scenarioToPlay);
             }
+        }
+
+        private void LoadHighScores()
+        {
+            _highScores = new List<HighScoreEntry>();
+
+            if (File.Exists(_highScoreFileName))
+            {
+                try
+                {
+                    var fileContentsAsString = File.ReadAllText(_highScoreFileName);
+                    _highScores = JsonConvert.DeserializeObject<List<HighScoreEntry>>(fileContentsAsString);
+                }
+                catch (IOException ex)
+                {
+                    _logger.Error("Can't load high score file", ex);
+                }
+                catch (JsonException ex)
+                {
+                    _logger.Error("Can't load high score file", ex);
+                }
+            }
+        }
+
+        private void SaveHighScores()
+        {
+            try
+            {
+                var fileContentsAsString = JsonConvert.SerializeObject(_highScores);
+                File.WriteAllText(_highScoreFileName, fileContentsAsString);
+            }
+            catch (IOException ex)
+            {
+                _logger.Error("Can't save high score file", ex);
+            }
+            catch (JsonException ex)
+            {
+                _logger.Error("Can't save high score file", ex);
+            }
+        }
+
+        private HighScoreEntry GetHighScore(string scenarioPath, string challengeName)
+        {
+            return _highScores.FirstOrDefault( (hse) => hse.ScenarioPath==scenarioPath && hse.ChallengeName==challengeName );
+        }
+
+        private bool UpdateHighScore(string scenarioPath, string challengeName, int resourceCost)
+        {
+            var existingEntry = GetHighScore(scenarioPath, challengeName);
+            if (existingEntry == null)
+            {
+                var newEntry = new HighScoreEntry()
+                {
+                    ScenarioPath = scenarioPath,
+                    ChallengeName = challengeName,
+                    BestResourceCost = resourceCost,
+                    BestDate = DateTime.Now,
+                };
+                _highScores.Add(newEntry);
+                return true;
+            }
+            else if (resourceCost < existingEntry.BestResourceCost)
+            {
+                existingEntry.BestResourceCost = resourceCost;
+                existingEntry.BestDate = DateTime.Now;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void UpdateHighScoresIfNecessary(string scenarioPath, BattleResolution resolution)
+        {
+            if (resolution?.ChallengesAchieved != null)
+            {
+                bool wereAnyUpdated = false;
+                foreach (var chal in resolution.ChallengesAchieved)
+                {
+                    int resourcesUsed = 0;
+                    resolution.DefenderResourceTotals.TryGetValue(chal.PlayerTeamId, out resourcesUsed);
+                    wereAnyUpdated = UpdateHighScore(scenarioPath, chal.Name, resourcesUsed);
+                }
+
+                if (wereAnyUpdated)
+                    SaveHighScores();
+            }
+        }
+
+        private string HighScoreString(HighScoreEntry entry)
+        {
+            if (entry == null)
+                return "---";
+            else
+                return $"{entry.BestDate:d} ({entry.BestResourceCost})";
         }
     }
 }

@@ -156,6 +156,7 @@ namespace BattlePlan.Resolver
             };
 
             ResolveChallenges(scenario, resolution, unitTypes);
+            CountResources(scenario, resolution);
 
             return resolution;
         }
@@ -350,6 +351,57 @@ namespace BattlePlan.Resolver
                         _logger.Debug($"Challenge '{chal.Name}' achieved.");
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Adds up the resource cost used by each team for attacking and defending, and populates
+        /// the resolution.
+        /// </summary>
+        private void CountResources(Scenario scenario, BattleResolution resolution)
+        {
+            if (scenario.DefensePlans != null)
+            {
+                var defenderMap = new Dictionary<int,int>();
+
+                foreach (var plan in scenario.DefensePlans)
+                {
+                    if (plan.Placements==null)
+                        continue;
+
+                    var countForPlan = 0;
+                    foreach (var placement in plan.Placements)
+                        countForPlan += _unitTypeMap[placement.UnitType].ResourceCost;
+
+                    if (defenderMap.ContainsKey(plan.TeamId))
+                        defenderMap[plan.TeamId] += countForPlan;
+                    else
+                        defenderMap[plan.TeamId] = countForPlan;
+                }
+
+                resolution.DefenderResourceTotals = defenderMap;
+            }
+
+            if (scenario.AttackPlans != null)
+            {
+                var attackerMap = new Dictionary<int,int>();
+
+                foreach (var plan in scenario.AttackPlans)
+                {
+                    if (plan.Spawns==null)
+                        continue;
+
+                    var countForPlan = 0;
+                    foreach (var spawn in plan.Spawns)
+                        countForPlan += _unitTypeMap[spawn.UnitType].ResourceCost;
+
+                    if (attackerMap.ContainsKey(plan.TeamId))
+                        attackerMap[plan.TeamId] += countForPlan;
+                    else
+                        attackerMap[plan.TeamId] = countForPlan;
+                }
+
+                resolution.AttackerResourceTotals = attackerMap;
             }
         }
     }

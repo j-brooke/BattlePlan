@@ -23,6 +23,19 @@ namespace BattlePlan.Common
 
         public IList<DefenderChallenge> ChallengesAchieved { get; set; }
         public IList<DefenderChallenge> ChallengesFailed { get; set; }
+
+        /// <summary>
+        /// Key value pairs where the key is TeamID and the value is the resource total of attacking
+        /// units.
+        /// </summary>
+        public IDictionary<int,int> AttackerResourceTotals { get; set; }
+
+        /// <summary>
+        /// Key value pairs where the key is TeamID and the value is the resource total of defending
+        /// units.
+        /// </summary>
+        public IDictionary<int,int> DefenderResourceTotals { get; set; }
+
         public IList<string> ErrorMessages { get; set; }
     }
 }
