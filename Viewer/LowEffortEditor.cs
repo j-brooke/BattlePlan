@@ -78,10 +78,11 @@ namespace BattlePlan.Viewer
 
                 // Draw the map and everything on it.
                 _canvas.BeginFrame();
+                WriteBannerText();
                 WriteModeHelp();
-                _canvas.PaintTerrain(_scenario.Terrain, terrainOverride, 0, 0);
-                _canvas.PaintSpawnPoints(_scenario.Terrain, 0, 0);
-                _canvas.PaintGoalPoints(_scenario.Terrain, 0, 0);
+                _canvas.PaintTerrain(_scenario.Terrain, terrainOverride, 0, _topMapRow);
+                _canvas.PaintSpawnPoints(_scenario.Terrain, 0, _topMapRow);
+                _canvas.PaintGoalPoints(_scenario.Terrain, 0, _topMapRow);
                 DrawDefenderPlacements();
                 WriteStatusMessage();
                 _canvas.EndFrame();
@@ -122,8 +123,15 @@ namespace BattlePlan.Viewer
         private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
         private GeneratorOptions _mapGenOptions;
         private Scenario _scenario;
+
+        // Actual cursor position on screen
         private int _cursorX;
         private int _cursorY;
+
+        // Cursor position relative to the map
+        private int _mapX => _cursorX;
+        private int _mapY => _cursorY - _topMapRow;
+
         private bool _exitEditor;
         private bool _playAfterExit;
         private EditorMode _mode;
@@ -141,6 +149,8 @@ namespace BattlePlan.Viewer
         private int[,] _terrainOverlayTiles;
         private int _totalResourceCost;
         private IList<UnitCharacteristics> _unitTypes;
+        private int _topMapRow;
+        private int _statusBarRow;
 
 
         /// <summary>
@@ -152,8 +162,6 @@ namespace BattlePlan.Viewer
             _attackerClasses = _unitTypes.Where( (uc) => uc.CanAttack ).ToList();
             _defenderClasses = _unitTypes.Where( (uc) => uc.CanDefend ).ToList();
 
-            _cursorX = 0;
-            _cursorY = 0;
             _paintEnabled = false;
             _terrainOverlayTiles = null;
             _showDefenderLOS = false;
@@ -170,24 +178,31 @@ namespace BattlePlan.Viewer
                 _teamId = _minimumTeamId;
             }
 
-            _canvas.Init(_scenario.Terrain.Height+1);
+            _topMapRow = _scenario.BannerText?.Count ?? 0;
+            _statusBarRow = _topMapRow + _scenario.Terrain.Height;
+
+            _cursorX = 0;
+            _cursorY = _topMapRow;
+
+            _canvas.Init(_statusBarRow+1);
             _canvas.UseColor = this.UseColor;
         }
 
 
         private void MoveCursor(int deltaX, int deltaY)
         {
-            var oldX = _cursorX;
-            var oldY = _cursorY;
+            var oldMapX = _mapX;
+            var oldMapY = _mapY;
+
             _cursorX = Math.Max(0, Math.Min(_scenario.Terrain.Width-1, _cursorX+deltaX));
-            _cursorY = Math.Max(0, Math.Min(_scenario.Terrain.Height-1, _cursorY+deltaY));
+            _cursorY = Math.Max(_topMapRow, Math.Min(_scenario.Terrain.Height+_topMapRow-1, _cursorY+deltaY));
 
             // If we're in terrain mode and painting is on, copy the tile value from the previous tile
             // to the new one.
-            if (_paintEnabled && _mode==EditorMode.Terrain && (oldX != _cursorX || oldY != _cursorY))
+            if (_paintEnabled && _mode==EditorMode.Terrain && (oldMapX != _mapX || oldMapY != _mapY))
             {
-                var tileVal = _scenario.Terrain.GetTileValue(oldX, oldY);
-                _scenario.Terrain.SetTileValue(_cursorX, _cursorY, tileVal);
+                var tileVal = _scenario.Terrain.GetTileValue(oldMapX, oldMapY);
+                _scenario.Terrain.SetTileValue(_mapX, _mapY, tileVal);
 
                 // Invalidate the LoS map.
                 _terrainOverlayTiles = null;
@@ -225,7 +240,9 @@ namespace BattlePlan.Viewer
             _terrainOverlayTiles = null;
 
             // Resize the canvas
-            _canvas.Init(_scenario.Terrain.Height+1);
+            _topMapRow = _scenario.BannerText?.Count ?? 0;
+            _statusBarRow = _topMapRow + _scenario.Terrain.Height;
+            _canvas.Init(_statusBarRow+1);
         }
 
         private void LoadOrCreateGeneratorOptions()
@@ -277,13 +294,13 @@ namespace BattlePlan.Viewer
 
         private void CycleTileType()
         {
-            if (_cursorX<0 || _cursorY<0 || _cursorX>=_scenario.Terrain.Width || _cursorY>=_scenario.Terrain.Height)
+            if (_mapX<0 || _mapY<0 || _mapX>=_scenario.Terrain.Width || _mapY>=_scenario.Terrain.Height)
                 return;
 
-            byte newTileVal = (byte)(_scenario.Terrain.GetTileValue(_cursorX, _cursorY) + 1);
+            byte newTileVal = (byte)(_scenario.Terrain.GetTileValue(_mapX, _mapY) + 1);
             if (newTileVal >= _scenario.Terrain.TileTypes.Count)
                 newTileVal = 0;
-            _scenario.Terrain.SetTileValue(_cursorX, _cursorY, newTileVal);
+            _scenario.Terrain.SetTileValue(_mapX, _mapY, newTileVal);
 
             // Invalidate the LoS map.
             _terrainOverlayTiles = null;
@@ -299,7 +316,7 @@ namespace BattlePlan.Viewer
             var prompt = String.IsNullOrEmpty(_lastScenarioFilename)?
                 "Load file name: "
                 : $"Load file name (enter for {_lastScenarioFilename}): ";
-            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
+            var input = _canvas.PromptForInput(0, _statusBarRow, prompt);
 
             try
             {
@@ -329,7 +346,7 @@ namespace BattlePlan.Viewer
             var prompt = String.IsNullOrEmpty(_lastScenarioFilename)?
                 "Save file name: "
                 : $"Save file name (enter for {_lastScenarioFilename}): ";
-            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
+            var input = _canvas.PromptForInput(0, _statusBarRow, prompt);
 
             try
             {
@@ -348,9 +365,18 @@ namespace BattlePlan.Viewer
         private void WriteStatusMessage()
         {
             if (!String.IsNullOrEmpty(_statusMsg))
-                _canvas.WriteText(_statusMsg, 0, _scenario.Terrain.Height, 0);
+                _canvas.WriteText(_statusMsg, 0, _statusBarRow, 0);
             else
-                _canvas.WriteText("", 0, _scenario.Terrain.Height, 0);
+                _canvas.WriteText("", 0, _statusBarRow, 0);
+        }
+
+        private void WriteBannerText()
+        {
+            if (_scenario.BannerText != null)
+            {
+                for (int row=0; row<_scenario.BannerText.Count; ++row)
+                    _canvas.WriteText(_scenario.BannerText[row], 0, row, 0);
+            }
         }
 
         private void CycleTeam()
@@ -365,13 +391,13 @@ namespace BattlePlan.Viewer
         {
             foreach (var plan in _scenario.DefensePlans)
             {
-                _canvas.PaintDefensePlan(plan, _unitTypes, 0, 0);
+                _canvas.PaintDefensePlan(plan, _unitTypes, 0, _topMapRow);
             }
         }
 
         private void RemoveDefender()
         {
-            var cursorPos = new Vector2Di(_cursorX, _cursorY);
+            var cursorPos = new Vector2Di(_mapX, _mapY);
             foreach (var plan in _scenario.DefensePlans)
                 plan.Placements = plan.Placements.Where( (placement) => placement.Position!=cursorPos )
                     .ToList();
@@ -407,7 +433,7 @@ namespace BattlePlan.Viewer
             var placement = new DefenderPlacement()
             {
                 UnitType = unitClass.Name,
-                Position = new Vector2Di(_cursorX, _cursorY)
+                Position = new Vector2Di(_mapX, _mapY)
             };
             plan.Placements.Add(placement);
 
@@ -428,7 +454,7 @@ namespace BattlePlan.Viewer
 
         private void ClearOneSpawnOrGoal()
         {
-            var cursorPos = new Vector2Di(_cursorX, _cursorY);
+            var cursorPos = new Vector2Di(_mapX, _mapY);
             IList<Vector2Di> spawnsForTeam = null;
             _scenario.Terrain.SpawnPointsMap.TryGetValue(_teamId, out spawnsForTeam);
             spawnsForTeam?.Remove(cursorPos);
@@ -450,7 +476,7 @@ namespace BattlePlan.Viewer
                 spawnsForTeam = new List<Vector2Di>();
                 _scenario.Terrain.SpawnPointsMap[_teamId] = spawnsForTeam;
             }
-            spawnsForTeam.Add(new Vector2Di(_cursorX, _cursorY));
+            spawnsForTeam.Add(new Vector2Di(_mapX, _mapY));
 
             // Invalidate the terrain overlay map.  It will be rebuilt later.
             _terrainOverlayTiles = null;
@@ -465,7 +491,7 @@ namespace BattlePlan.Viewer
                 goalsForTeam = new List<Vector2Di>();
                 _scenario.Terrain.GoalPointsMap[_teamId] = goalsForTeam;
             }
-            goalsForTeam.Add(new Vector2Di(_cursorX, _cursorY));
+            goalsForTeam.Add(new Vector2Di(_mapX, _mapY));
 
             // Invalidate the terrain overlay map.  It will be rebuilt later.
             _terrainOverlayTiles = null;
@@ -475,7 +501,7 @@ namespace BattlePlan.Viewer
         {
             const int maxSaneTime = 1000;
             var prompt = $"Spawn Delay Time (enter for {_spawnTime}): ";
-            var input = _canvas.PromptForInput(0, _scenario.Terrain.Height, prompt);
+            var input = _canvas.PromptForInput(0, _statusBarRow, prompt);
 
             if (!String.IsNullOrWhiteSpace(input))
             {
@@ -728,7 +754,7 @@ namespace BattlePlan.Viewer
         private bool TestScreenSize(Terrain terrain)
         {
             var minX = terrain.Width;
-            var minY = terrain.Height+1;
+            var minY = _statusBarRow+1;
             var suggestedX = minX + 20;
             var suggestedY = minY;
 
@@ -959,7 +985,7 @@ namespace BattlePlan.Viewer
             var buff = new System.Text.StringBuilder();
 
             // Cursor position
-            buff.Append('(').Append(_cursorX).Append(',').Append(_cursorY).Append(") ");
+            buff.Append('(').Append(_mapX).Append(',').Append(_mapY).Append(") ");
 
             bool errors = Validator.FindTerrainErrors(_scenario.Terrain).Any();
             errors |= Validator.FindAttackPlanErrors(_scenario.Terrain, _unitTypes, _scenario.AttackPlans).Any();
@@ -993,12 +1019,12 @@ namespace BattlePlan.Viewer
             if (_scenario.Terrain.SpawnPointsMap==null || _scenario.Challenges==null || _scenario.Challenges.Count==0)
                 return;
 
-            var cursorPos = new Vector2Di(_cursorX, _cursorY);
+            var cursorMapPos = new Vector2Di(_mapX, _mapY);
             var allSpawnPts = _scenario.Terrain.SpawnPointsMap.Values.SelectMany( (list) => list );
             if (!allSpawnPts.Any())
                 return;
 
-            var closestDist = (int)Math.Floor(allSpawnPts.Select( (spPt) => spPt.DistanceTo(cursorPos) ).Min());
+            var closestDist = (int)Math.Floor(allSpawnPts.Select( (spPt) => spPt.DistanceTo(cursorMapPos) ).Min());
 
             _logger.Debug("Setting all challenge MinimumDistFromSpawnPts to {0}", closestDist);
             foreach (var chal in _scenario.Challenges)
@@ -1017,12 +1043,12 @@ namespace BattlePlan.Viewer
             if (_scenario.Terrain.GoalPointsMap==null || _scenario.Challenges==null || _scenario.Challenges.Count==0)
                 return;
 
-            var cursorPos = new Vector2Di(_cursorX, _cursorY);
+            var cursorMapPos = new Vector2Di(_mapX, _mapY);
             var allGoalPts = _scenario.Terrain.GoalPointsMap.Values.SelectMany( (list) => list );
             if (!allGoalPts.Any())
                 return;
 
-            var closestDist = (int)Math.Floor(allGoalPts.Select( (spPt) => spPt.DistanceTo(cursorPos) ).Min());
+            var closestDist = (int)Math.Floor(allGoalPts.Select( (spPt) => spPt.DistanceTo(cursorMapPos) ).Min());
 
             _logger.Debug("Setting all challenge MinimumDistFromGoalPts to {0}", closestDist);
             foreach (var chal in _scenario.Challenges)
@@ -1113,8 +1139,8 @@ namespace BattlePlan.Viewer
         // -- Editor View ---
         private void WriteEditorModeHelp()
         {
-            int row = 0;
-            int col = _scenario.Terrain.Width + 2;
+            int row = _topMapRow;
+            int col = _scenario.Terrain.Width + 1;
             _canvas.WriteText("(Enter) mode:", col, row++, 0);
             _canvas.WriteText($"{_mode}", col, row++, 0);
 
@@ -1227,7 +1253,7 @@ namespace BattlePlan.Viewer
             int keyNumberValue = keyInfo.KeyChar - '0';
             if (keyNumberValue>=1 && keyNumberValue<=_scenario.Terrain.TileTypes.Count)
             {
-                _scenario.Terrain.SetTileValue(_cursorX, _cursorY, (byte)(keyNumberValue-1));
+                _scenario.Terrain.SetTileValue(_mapX, _mapY, (byte)(keyNumberValue-1));
 
                 // Invalidate the LoS map.
                 _terrainOverlayTiles = null;
@@ -1424,8 +1450,8 @@ namespace BattlePlan.Viewer
         {
             Debug.Assert(this.PlayerView);
 
-            int col = _scenario.Terrain.Width + 2;
-            int row = 0;
+            int col = _scenario.Terrain.Width + 1;
+            int row = _topMapRow;
 
             _canvas.WriteText("Place defenders", col, row++, _playerViewTeamId);
             row += 1;

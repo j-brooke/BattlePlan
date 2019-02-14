@@ -102,7 +102,7 @@ namespace BattlePlan.Viewer
                 _canvas.BeginFrame();
                 WriteBannerText();
 
-                _canvas.WriteTextEvents(_recentTextEvents, resolution.Terrain.Width + 2, _topMapRow);
+                _canvas.WriteTextEvents(_recentTextEvents, resolution.Terrain.Width + 1, _topMapRow);
 
                 // Draw the map and everything on it.
                 _canvas.PaintTerrain(resolution.Terrain, null, 0, _topMapRow);
@@ -341,7 +341,7 @@ namespace BattlePlan.Viewer
         {
             _canvas.BeginFrame();
 
-            int sidebarCol = _resolution.Terrain.Width + 2;
+            int sidebarCol = _resolution.Terrain.Width + 1;
             int row = _topMapRow;
             var totalBreachCount = _resolution.AttackerBreachCounts.Values.Sum();
             var totalDefenderCasualties = _resolution.DefenderCasualtyCounts.Values.Sum();

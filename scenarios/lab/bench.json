@@ -1,0 +1,645 @@
+{
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Wall"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 120,
+    "Height": 52,
+    "Tiles": [
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAABAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAABAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQECAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQIBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQAAAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgEAAAABAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQECAgEAAAABAQEBAQEBAQEAAAAAAAEBAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
+      "AAAAAAAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAABAQEBAQEBAQEBAQEBAQEBAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAgICAgIBAQEBAQEBAAABAQEBAQEBAQEBAQECAgICAgEBAQAAAAAAAAAAAAABAQEBAQEBAQAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQIBAQEBAQEBAAABAQEBAQEBAQEBAQEBAgEBAQEBAQAAAAAAAAAAAAABAQEBAQEBAQAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAEBAQAAAAAAAAAAAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAABAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAABAQEAAAAAAAEBAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAABAQEAAAAAAAEBAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAABAQEAAAAAAAEBAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAgIBAQIBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAAAAAQICAgIBAQEBAQECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAgEBAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAAAAAAEBAgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        {
+          "X": 16,
+          "Y": 8
+        },
+        {
+          "X": 18,
+          "Y": 30
+        },
+        {
+          "X": 20,
+          "Y": 49
+        }
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        {
+          "X": 96,
+          "Y": 16
+        },
+        {
+          "X": 110,
+          "Y": 25
+        },
+        {
+          "X": 119,
+          "Y": 51
+        }
+      ]
+    }
+  },
+  "AttackPlans": [
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 10.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 20.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 50.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 1
+        }
+      ]
+    }
+  ],
+  "DefensePlans": [
+    {
+      "TeamId": 2,
+      "Placements": [
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 79,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 80,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 81,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 82,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 83,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 84,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 85,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 82,
+            "Y": 34
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 82,
+            "Y": 35
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 82,
+            "Y": 36
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 82,
+            "Y": 37
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 82,
+            "Y": 38
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 82,
+            "Y": 39
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 83,
+            "Y": 39
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 83,
+            "Y": 38
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 83,
+            "Y": 37
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 83,
+            "Y": 36
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 83,
+            "Y": 35
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 83,
+            "Y": 34
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 85,
+            "Y": 34
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 85,
+            "Y": 37
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 85,
+            "Y": 39
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 84,
+            "Y": 34
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 84,
+            "Y": 35
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 84,
+            "Y": 37
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 84,
+            "Y": 36
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 84,
+            "Y": 38
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 84,
+            "Y": 39
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 77,
+            "Y": 3
+          }
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": {
+            "X": 77,
+            "Y": 2
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 77,
+            "Y": 5
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 77,
+            "Y": 6
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 77,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 76,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 78,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 74,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 75,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": {
+            "X": 73,
+            "Y": 4
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 86,
+            "Y": 4
+          }
+        }
+      ]
+    }
+  ]
+}
