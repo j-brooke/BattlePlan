@@ -1,0 +1,87 @@
+BattlePlan - A game of epic ASCII tactics
+=========================================
+
+INTRO
+-----
+
+BattlePlan is a tower-defense game.  Unlike traditional tower-defense, attackers
+will adapt to your defenses, and they will try to kill you.  Don't let them.
+
+BattlePlan is currently implemented as a console application, which means you
+have to run it from your operating system's commandline: the text window with
+the oldschool blinky cursor.
+
+PREREQUISITES
+-------------
+
+To run BattlePlan, you need to have the ".NET Core" runtime installed.  This is
+a cross-platform version of Microsoft's .NET virtual machine.  It's open source
+and free.  It's like Java, but better.
+
+To install it, go to this page:
+
+    https://dotnet.microsoft.com/download
+
+Pick the tab for your OS and click the link for the ".NET Core 2.2 Runtime"
+installer.  (Although if you're a programmer, there's no harm in downloading
+the SDK.)
+
+Note that ".NET Core" is different from ".NET Framework": the latter is a
+for Windows only.  As Microsoft naming goes this is actually surprisingly
+clear.
+
+Then run the installer and click things that look important.
+
+RUNNING
+-------
+
+1. Open a commandline window.
+
+On Windows you get there from:
+
+    Start -> All Programs -> Accessories -> Command Prompt
+
+Or not, because everything is always in a different place in every Windows
+version.  Alternatively, click Start and then type:
+
+    cmd
+
+On Mac OS, go to the launchpad and click on Terminal.
+
+2. Resize the window.
+
+Your window is probably big enough for the "how to play" maps, but the bigger
+ones need more space.  I recommend 40 rows by 100 columns, but it's up to you.
+On Mac you can just drag the window corners to resize.  On Windows, you can
+drag the top or bottom of the window frame to change the number of rows, but
+you need to go to Properties to change the width.
+
+3. Navigate to the BattlePlan directory.
+
+The "cd" command changes your working directory.  Something like:
+
+    cd Downloads/BattlePlan_vX.Y.Z
+
+4. Launch the game menu.
+
+Type:
+
+    dotnet battleplan.dll
+
+You should be in the game menu now.  Choose a section (maybe "how-to-play")
+and then choose a scenario.
+
+EDITING
+-------
+
+Once you've got a feel for how the game works, assuming it does work, you might
+want to try creating some scenarios of your own.  From the commandline, type:
+
+    dotnet battleplan.dll edit
+
+or
+
+    dotnet battleplan.dll edit SomeFileName.json
+
+
+
