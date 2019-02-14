@@ -286,19 +286,19 @@ namespace BattlePlan.Viewer
                 {
                     // Play speed controls
                     case '1':
-                        _displaySpeed = 0.0;
-                        return;
-                    case '2':
                         _displaySpeed = 1.0;
                         return;
-                    case '3':
+                    case '2':
                         _displaySpeed = 2.0;
                         return;
-                    case '4':
+                    case '3':
                         _displaySpeed = 4.0;
                         return;
-                    case '5':
+                    case '4':
                         _displaySpeed = 8.0;
+                        return;
+                    case '5':
+                        _displaySpeed = 16.0;
                         return;
                 }
             }
@@ -316,7 +316,7 @@ namespace BattlePlan.Viewer
 
         private void WriteKeyHelp()
         {
-            var msg = $"{_displayTime.ToString("F2")}  (1) pause, (2-5) speed, (Space) step, (L/R-arrow) skip, (ESC) exit";
+            var msg = $"{_displayTime.ToString("F2")}  (1-5) speed, (Space) pause/step, (L/R-arrow) skip, (ESC) exit";
             _canvas.WriteText(msg, 0, _statusBarRow, 0);
         }
 
