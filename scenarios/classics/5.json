@@ -1,4 +1,5 @@
 {
+  "BannerText": [],
   "Terrain": {
     "TileTypes": [
       {
@@ -149,14 +150,19 @@
       "Spawns": []
     }
   ],
-  "DefensePlans": [],
+  "DefensePlans": [
+    {
+      "TeamId": 1,
+      "Placements": []
+    }
+  ],
   "Challenges": [
     {
       "Name": "*",
       "PlayerTeamId": 2,
       "MinimumDistFromSpawnPts": 12,
       "MinimumDistFromGoalPts": 2,
-      "MaximumResourceCost": 1200,
+      "MaximumResourceCost": 1400,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": true,
@@ -167,7 +173,7 @@
       "PlayerTeamId": 2,
       "MinimumDistFromSpawnPts": 12,
       "MinimumDistFromGoalPts": 2,
-      "MaximumResourceCost": 800,
+      "MaximumResourceCost": 1000,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": true,
@@ -178,7 +184,7 @@
       "PlayerTeamId": 2,
       "MinimumDistFromSpawnPts": 12,
       "MinimumDistFromGoalPts": 2,
-      "MaximumResourceCost": 500,
+      "MaximumResourceCost": 750,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": true,
