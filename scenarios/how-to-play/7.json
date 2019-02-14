@@ -1,7 +1,6 @@
 {
   "BannerText": [
-    "Pikemen ^ have a strong 2-tile range attack.",
-    "Scouts i will always look for the safest path."
+    "Sometimes the enemies spawn at multiple locations."
   ],
   "Terrain": {
     "TileTypes": [
@@ -33,13 +32,13 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "AQEBAQAAAAEBAQEBAQEBAAAAAAABAQAAAAEAAAAAAAAAAAEBAQEBAQEBAAAA",
-      "AQEBAQABAAAAAAAAAAABAQEAAAABAQABAAAAAAABAQAAAAAAAAEBAAAAAAAA",
-      "AQEBAQABAQEBAQEAAAAAAQEAAQAAAQABAQAAAAABAQEBAAAAAAAAAAEBAAAA",
-      "AQEBAAAAAAAAAAEBAAAAAAAAAQAAAAABAQEBAAABAQEBAAAAAAABAQEBAQEA",
-      "AQEBAAAAAQEAAAABAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAAAAAAEA",
-      "AAABAQEBAQEAAAAAAAAAAAABAAABAQEBAAAAAAABAQEBAQEBAQAAAAAAAAEA",
-      "AAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAABAQEA",
+      "AAAAAAAAAQEBAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAEBAQEBAQEBAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAA",
+      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEB",
+      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQAAAAAAAAAA",
+      "AAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAA",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAABAQEB",
       "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       null,
       "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -58,7 +57,11 @@
       "1": [
         {
           "X": 1,
-          "Y": 8
+          "Y": 1
+        },
+        {
+          "X": 1,
+          "Y": 18
         }
       ]
     },
@@ -91,9 +94,29 @@
           "SpawnPointIndex": 0
         },
         {
-          "Time": 8.0,
-          "UnitType": "Scout",
+          "Time": 0.0,
+          "UnitType": "Grunt",
           "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
         }
       ]
     },
@@ -107,24 +130,66 @@
       "TeamId": 2,
       "Placements": [
         {
-          "UnitType": "Pikeman",
+          "UnitType": "Archer",
           "Position": {
-            "X": 40,
-            "Y": 7
+            "X": 16,
+            "Y": 0
           }
         },
         {
-          "UnitType": "Pikeman",
+          "UnitType": "Archer",
           "Position": {
-            "X": 40,
-            "Y": 8
+            "X": 16,
+            "Y": 1
           }
         },
         {
-          "UnitType": "Pikeman",
+          "UnitType": "Archer",
           "Position": {
-            "X": 40,
-            "Y": 9
+            "X": 16,
+            "Y": 2
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 17,
+            "Y": 2
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 17,
+            "Y": 1
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 17,
+            "Y": 0
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 18,
+            "Y": 2
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 18,
+            "Y": 1
+          }
+        },
+        {
+          "UnitType": "Archer",
+          "Position": {
+            "X": 18,
+            "Y": 0
           }
         }
       ]
@@ -134,8 +199,19 @@
     {
       "Name": "*",
       "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 8,
-      "MinimumDistFromGoalPts": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
+      "MaximumResourceCost": 10000,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": false,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
       "MaximumResourceCost": 10000,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,

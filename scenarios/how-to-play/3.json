@@ -1,6 +1,7 @@
 {
   "BannerText": [
-    "Sometimes the enemies spawn at multiple locations."
+    "Archers { attack any enemies they see at long range.",
+    "Grunts T will try to avoid obviously dangerous areas."
   ],
   "Terrain": {
     "TileTypes": [
@@ -32,9 +33,9 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "AAAAAAAAAQEBAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAEBAQEBAQEBAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAA",
+      "AAAAAAABAQEAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAEBAQEBAQEBAAAA",
+      "AAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
+      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAA",
       "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEB",
       "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQAAAAAAAAAA",
       "AAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAA",
@@ -57,11 +58,7 @@
       "1": [
         {
           "X": 1,
-          "Y": 1
-        },
-        {
-          "X": 1,
-          "Y": 18
+          "Y": 8
         }
       ]
     },
@@ -87,36 +84,6 @@
           "Time": 0.0,
           "UnitType": "Grunt",
           "SpawnPointIndex": 0
-        },
-        {
-          "Time": 0.0,
-          "UnitType": "Grunt",
-          "SpawnPointIndex": 0
-        },
-        {
-          "Time": 0.0,
-          "UnitType": "Grunt",
-          "SpawnPointIndex": 0
-        },
-        {
-          "Time": 0.0,
-          "UnitType": "Grunt",
-          "SpawnPointIndex": 1
-        },
-        {
-          "Time": 0.0,
-          "UnitType": "Grunt",
-          "SpawnPointIndex": 1
-        },
-        {
-          "Time": 0.0,
-          "UnitType": "Grunt",
-          "SpawnPointIndex": 1
-        },
-        {
-          "Time": 0.0,
-          "UnitType": "Grunt",
-          "SpawnPointIndex": 1
         }
       ]
     },
@@ -132,64 +99,15 @@
         {
           "UnitType": "Archer",
           "Position": {
-            "X": 16,
-            "Y": 0
+            "X": 13,
+            "Y": 5
           }
         },
         {
           "UnitType": "Archer",
           "Position": {
-            "X": 16,
-            "Y": 1
-          }
-        },
-        {
-          "UnitType": "Archer",
-          "Position": {
-            "X": 16,
-            "Y": 2
-          }
-        },
-        {
-          "UnitType": "Archer",
-          "Position": {
-            "X": 17,
-            "Y": 2
-          }
-        },
-        {
-          "UnitType": "Archer",
-          "Position": {
-            "X": 17,
-            "Y": 1
-          }
-        },
-        {
-          "UnitType": "Archer",
-          "Position": {
-            "X": 17,
-            "Y": 0
-          }
-        },
-        {
-          "UnitType": "Archer",
-          "Position": {
-            "X": 18,
-            "Y": 2
-          }
-        },
-        {
-          "UnitType": "Archer",
-          "Position": {
-            "X": 18,
-            "Y": 1
-          }
-        },
-        {
-          "UnitType": "Archer",
-          "Position": {
-            "X": 18,
-            "Y": 0
+            "X": 13,
+            "Y": 4
           }
         }
       ]
@@ -199,8 +117,19 @@
     {
       "Name": "*",
       "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 8,
-      "MinimumDistFromGoalPts": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
+      "MaximumResourceCost": 10000,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": false,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
       "MaximumResourceCost": 10000,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,

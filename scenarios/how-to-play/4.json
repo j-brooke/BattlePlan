@@ -1,7 +1,7 @@
 {
   "BannerText": [
-    "Place defenders to stop the enemy from reaching its goal.",
-    "Press V to see how the battle plays out."
+    "Pikemen ^ have a strong 2-tile range attack.",
+    "Scouts i will always look for the safest path."
   ],
   "Terrain": {
     "TileTypes": [
@@ -33,13 +33,13 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "AAAAAAABAQEAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAEBAQEBAQEBAAAA",
-      "AAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEB",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQAAAAAAAAAA",
-      "AAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAABAQEB",
+      "AQEBAQAAAAEBAQEBAQEBAAAAAAABAQAAAAEAAAAAAAAAAAEBAQEBAQEBAAAA",
+      "AQEBAQABAAAAAAAAAAABAQEAAAABAQABAAAAAAABAQAAAAAAAAEBAAAAAAAA",
+      "AQEBAQABAQEBAQEAAAAAAQEAAQAAAQABAQAAAAABAQEBAAAAAAAAAAEBAAAA",
+      "AQEBAAAAAAAAAAEBAAAAAAAAAQAAAAABAQEBAAABAQEBAAAAAAABAQEBAQEA",
+      "AQEBAAAAAQEAAAABAQEBAQEBAQEBAQEBAQABAQEBAQEBAQEBAQEBAAAAAAEA",
+      "AAABAQEBAQEAAAAAAAAAAAABAAABAQEBAAAAAAABAQEBAQEBAQAAAAAAAAEA",
+      "AAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAABAQEA",
       "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
       null,
       "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -84,6 +84,16 @@
           "Time": 0.0,
           "UnitType": "Grunt",
           "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 8.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 0
         }
       ]
     },
@@ -97,23 +107,23 @@
       "TeamId": 2,
       "Placements": [
         {
-          "UnitType": "Barricade",
+          "UnitType": "Pikeman",
           "Position": {
-            "X": 41,
+            "X": 40,
             "Y": 7
           }
         },
         {
-          "UnitType": "Barricade",
+          "UnitType": "Pikeman",
           "Position": {
-            "X": 41,
+            "X": 40,
             "Y": 8
           }
         },
         {
-          "UnitType": "Barricade",
+          "UnitType": "Pikeman",
           "Position": {
-            "X": 41,
+            "X": 40,
             "Y": 9
           }
         }
@@ -124,8 +134,19 @@
     {
       "Name": "*",
       "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 8,
-      "MinimumDistFromGoalPts": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
+      "MaximumResourceCost": 10000,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": false,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
       "MaximumResourceCost": 10000,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,

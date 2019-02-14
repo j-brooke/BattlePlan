@@ -1,7 +1,7 @@
 {
   "BannerText": [
-    "Crossbowmen ] will attack at range while marching toward the goal.",
-    "Berserkers Y ignore the goal and charge enemies they see."
+    "Grunts T march toward their goals.  They will attack enemies in their way.",
+    "Barricades # can't attack, but enemies must destroy them to pass."
   ],
   "Terrain": {
     "TileTypes": [
@@ -77,22 +77,12 @@
       "Spawns": [
         {
           "Time": 0.0,
-          "UnitType": "Crossbowman",
+          "UnitType": "Grunt",
           "SpawnPointIndex": 0
         },
         {
           "Time": 0.0,
-          "UnitType": "Crossbowman",
-          "SpawnPointIndex": 0
-        },
-        {
-          "Time": 20.0,
-          "UnitType": "Berserker",
-          "SpawnPointIndex": 0
-        },
-        {
-          "Time": 20.0,
-          "UnitType": "Berserker",
+          "UnitType": "Grunt",
           "SpawnPointIndex": 0
         }
       ]
@@ -107,59 +97,24 @@
       "TeamId": 2,
       "Placements": [
         {
-          "UnitType": "Pikeman",
+          "UnitType": "Barricade",
           "Position": {
-            "X": 14,
-            "Y": 2
-          }
-        },
-        {
-          "UnitType": "Pikeman",
-          "Position": {
-            "X": 16,
-            "Y": 2
+            "X": 41,
+            "Y": 7
           }
         },
         {
           "UnitType": "Barricade",
           "Position": {
-            "X": 14,
-            "Y": 3
+            "X": 41,
+            "Y": 8
           }
         },
         {
           "UnitType": "Barricade",
           "Position": {
-            "X": 15,
-            "Y": 3
-          }
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": {
-            "X": 16,
-            "Y": 3
-          }
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": {
-            "X": 17,
-            "Y": 3
-          }
-        },
-        {
-          "UnitType": "Pikeman",
-          "Position": {
-            "X": 15,
-            "Y": 2
-          }
-        },
-        {
-          "UnitType": "Pikeman",
-          "Position": {
-            "X": 17,
-            "Y": 2
+            "X": 41,
+            "Y": 9
           }
         }
       ]
@@ -169,8 +124,19 @@
     {
       "Name": "*",
       "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 8,
-      "MinimumDistFromGoalPts": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
+      "MaximumResourceCost": 10000,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": false,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
       "MaximumResourceCost": 10000,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,

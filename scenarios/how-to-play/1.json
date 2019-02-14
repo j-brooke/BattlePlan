@@ -1,7 +1,7 @@
 {
   "BannerText": [
-    "Archers { attack any enemies they see at long range.",
-    "Grunts T will try to avoid obviously dangerous areas."
+    "Place defenders to stop the enemy from reaching its goal.",
+    "Press V to see how the battle plays out."
   ],
   "Terrain": {
     "TileTypes": [
@@ -95,30 +95,26 @@
   "DefensePlans": [
     {
       "TeamId": 2,
-      "Placements": [
-        {
-          "UnitType": "Archer",
-          "Position": {
-            "X": 13,
-            "Y": 5
-          }
-        },
-        {
-          "UnitType": "Archer",
-          "Position": {
-            "X": 13,
-            "Y": 4
-          }
-        }
-      ]
+      "Placements": []
     }
   ],
   "Challenges": [
     {
       "Name": "*",
       "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 8,
-      "MinimumDistFromGoalPts": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
+      "MaximumResourceCost": 10000,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": false,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
       "MaximumResourceCost": 10000,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,
