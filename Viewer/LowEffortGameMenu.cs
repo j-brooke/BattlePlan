@@ -108,7 +108,8 @@ namespace BattlePlan.Viewer
         private void ChooseScenario(string sectionPath)
         {
             // We assume any .json files here are scenarios.
-            var filesInSection = Directory.EnumerateFiles(sectionPath, "*.json");
+            var filesInSection = Directory.EnumerateFiles(sectionPath, "*.json").ToList();
+            filesInSection.Sort(FileSortComparison);
 
             Console.Clear();
             PrintBanner(false);
@@ -117,6 +118,7 @@ namespace BattlePlan.Viewer
             // level, and the date it was achieved.
             var tableFormat = "{0,-12}{1,-15}{2,-15}{3,-15}";
             Console.WriteLine(string.Format(tableFormat, "Scenario", "1-star", "2-star", "3-star"));
+
 
             foreach (var file in filesInSection)
             {
@@ -290,6 +292,14 @@ namespace BattlePlan.Viewer
                 return "---";
             else
                 return $"{entry.BestDate:d} ({entry.BestResourceCost})";
+        }
+
+        private int FileSortComparison(string pathA, string pathB)
+        {
+            // TODO: make this handle filenames that are numbers nicely.
+            var nameA = System.IO.Path.GetFileNameWithoutExtension(pathA).ToLower();
+            var nameB = System.IO.Path.GetFileNameWithoutExtension(pathB).ToLower();
+            return string.Compare(nameA, nameB);
         }
     }
 }
