@@ -116,7 +116,7 @@ namespace BattlePlan.Viewer
 
             // Show a table of the scenario name, and their best (lowest) resource score for each star challenge
             // level, and the date it was achieved.
-            var tableFormat = "{0,-12}{1,-15}{2,-15}{3,-15}";
+            var tableFormat = "{0,-12}{1,-18}{2,-18}{3,-18}";
             Console.WriteLine(string.Format(tableFormat, "Scenario", "1-star", "2-star", "3-star"));
 
 
