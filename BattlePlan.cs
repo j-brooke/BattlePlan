@@ -52,7 +52,7 @@ namespace BattlePlan
                     return;
                 }
 
-                string verb = "play";
+                string verb = "menu";
                 if (leftoverArgs.Count>0)
                     verb = leftoverArgs[0].ToLower();
 

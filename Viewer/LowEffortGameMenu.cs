@@ -47,7 +47,7 @@ namespace BattlePlan.Viewer
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static string[] _bannerText =
+        private static string[] _bigBannerText =
         {
             "*****      *    ******* ******* **      ******* *****   **         *    **    *",
             "**   *    ***     **      **    **      **      **   ** **        ***   ***   *",
@@ -61,14 +61,22 @@ namespace BattlePlan.Viewer
             "",
         };
 
+        private static string[] _smallBannerText =
+        {
+            "BattlePlan",
+            "A game of epic ASCII tactics",
+            "",
+        };
+
         private string _scenarioPath;
         private string _sectionPath;
         private List<UnitCharacteristics> _unitsList;
         private List<HighScoreEntry> _highScores;
 
-        private void PrintBanner()
+        private void PrintBanner(bool large)
         {
-            foreach (var line in _bannerText)
+            var strings = (large)? _bigBannerText : _smallBannerText;
+            foreach (var line in strings)
                 Console.WriteLine(line);
         }
 
@@ -77,7 +85,7 @@ namespace BattlePlan.Viewer
             var dirsInScenarios = Directory.EnumerateDirectories(this.ScenariosFolder).ToList();
 
             Console.Clear();
-            PrintBanner();
+            PrintBanner(true);
 
             for (int i=0; i<dirsInScenarios.Count; ++i)
             {
@@ -103,7 +111,7 @@ namespace BattlePlan.Viewer
             var filesInSection = Directory.EnumerateFiles(sectionPath, "*.json");
 
             Console.Clear();
-            PrintBanner();
+            PrintBanner(false);
 
             // Show a table of the scenario name, and their best (lowest) resource score for each star challenge
             // level, and the date it was achieved.
