@@ -423,6 +423,8 @@ namespace BattlePlan.Viewer
                 case -1: return ConsoleColor.Red;
                 case 1: return ConsoleColor.Yellow;
                 case 2: return ConsoleColor.Green;
+                case 3: return ConsoleColor.Cyan;
+                case 4: return ConsoleColor.DarkRed;
                 default: return ConsoleColor.White;
             }
         }

@@ -104,7 +104,7 @@ namespace BattlePlan.Viewer
                 return null;
         }
         private const int _minimumTeamId = 1;
-        private const int _maximumTeamId = 2;
+        private const int _maximumTeamId = 4;
         private const int _playerViewTeamId = 2;
 
         private const string _unitsFileName = "resources/units.json";
