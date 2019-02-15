@@ -448,8 +448,12 @@ namespace BattlePlan.Resolver
                 }
 
                 // If there are enemies in sight that we have straight paths to, charge one.
-                if (_plannedBerserkPath==null)
+                if (_plannedBerserkPath==null || _plannedBerserkPath.Count==0)
                 {
+                    this.BerserkTargetId = null;
+                    _plannedBerserkPath = null;
+                    _plannedPath = null;
+
                     var potentialTargets = ListBerserkerTargetsInRange(battleState, berserkerAggroRange).ToList();
                     if (potentialTargets.Count>0)
                     {
@@ -465,7 +469,6 @@ namespace BattlePlan.Resolver
                             var target = potentialTargets.Where( (targ) => targ.Position==pathEnd ).First();
                             this.BerserkTargetId = target.Id;
                             _plannedBerserkPath = new Queue<Vector2Di>(pathToTarget);
-                            _plannedPath = null;
                             _logger.Trace("{0} is planning a berserker charge on {1}, {2} steps away", this.Id, target.Id, pathToTarget.Count);
                         }
                     }
