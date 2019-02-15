@@ -166,6 +166,7 @@ namespace BattlePlan.Viewer
             _terrainOverlayTiles = null;
             _showDefenderLOS = false;
             _showForbiddenTiles = false;
+            _spawnTime = 0;
 
             if (this.PlayerView)
             {
@@ -174,8 +175,10 @@ namespace BattlePlan.Viewer
             }
             else
             {
-                _mode = EditorMode.Terrain;
-                _teamId = _minimumTeamId;
+                if (!Enum.IsDefined(typeof(EditorMode), _mode))
+                    _mode = EditorMode.Terrain;
+                if (_teamId < _minimumTeamId || _teamId>_maximumTeamId)
+                    _teamId = _minimumTeamId;
             }
 
             _topMapRow = _scenario.BannerText?.Count ?? 0;
