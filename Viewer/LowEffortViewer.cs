@@ -35,19 +35,18 @@ namespace BattlePlan.Viewer
         {
             _resolution = resolution;
 
+            // If the resolution had error messages, show those and exit.
+            if (_resolution.ErrorMessages!=null && _resolution.ErrorMessages.Count>0)
+            {
+                ShowErrorErrorMessages(resolution);
+                return;
+            }
+
             _topMapRow = resolution.BannerText.Count;
             _statusBarRow = _topMapRow + resolution.Terrain.Height;
 
             _canvas.Init(_statusBarRow+1);
             _canvas.UseColor = UseColor;
-
-            // If the resolution had error messages, show those and exit.
-            if (_resolution.ErrorMessages!=null && _resolution.ErrorMessages.Count>0)
-            {
-                ShowErrorErrorMessages(resolution);
-                _canvas.Shutdown();
-                return;
-            }
 
             _unitTypeMap = new Dictionary<string, UnitCharacteristics>();
             if (resolution.UnitTypes != null)

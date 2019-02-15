@@ -133,6 +133,31 @@ namespace BattlePlan.Resolver
             var hasBlockedDefs = allPlacements.Any( (dp) => terrain.GetTile(dp.Position).BlocksMovement );
             if (hasBlockedDefs)
                 yield return "Some defenders are placed on impassable terrain";
+
+            // Placing any unit on a spawn point will keep anything from spawning.  Kinda cheating.
+            var allPlacementLocs = allPlacements.Select( (placement) => placement.Position );
+            var allSpawnLocs = terrain.SpawnPointsMap.Values.SelectMany( (list) => list );
+            if (allPlacementLocs.Intersect(allSpawnLocs).Any())
+                yield return "Some defenders are placed on spawn points.";
+
+            // Placing an enemy on a goal is okay, since they can be killed.  But placing a friendly on a goal
+            // will forever keep the attackers out, so that's bad.
+            bool blockingSameTeamGoal = false;
+            foreach (var plan in defensePlans)
+            {
+                IList<Vector2Di> goalsForTeam = null;
+                if (terrain.GoalPointsMap != null && terrain.GoalPointsMap.TryGetValue(plan.TeamId, out goalsForTeam))
+                {
+                    var teamPlacementLocs = plan.Placements.Select( (placement) => placement.Position );
+                    if (goalsForTeam.Intersect(teamPlacementLocs).Any())
+                    {
+                        blockingSameTeamGoal = true;
+                        break;
+                    }
+                }
+            }
+            if (blockingSameTeamGoal)
+                yield return "Some defenders are placed on their own team's goals";
         }
 
         public static IEnumerable<string> GetChallengeDisqualifiers(Scenario scenario,
