@@ -1,0 +1,272 @@
+{
+  "BannerText": [],
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Stone"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 50,
+    "Height": 36,
+    "Tiles": [
+      "AQEBAQEBAQEBAQAAAAAAAAAAAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQE=",
+      "AQEBAQEBAQEBAQAAAAAAAAAAAQEBAQEBAQEAAAEBAAAAAAAAAAAAAAAAAQEBAQEBAQE=",
+      "AQEBAQEBAQEBAQAAAAAAAAAAAQEBAQEBAQEAAAEBAAAAAAAAAAAAAAAAAQEBAQEBAQE=",
+      "AQEBAQEBAQEBAQAAAAAAAAAAAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQE=",
+      "AQEBAQEBAQEBAQAAAQAAAAAAAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQE=",
+      "AQEBAQEBAQEBAQEBAQEAAAAAAQEBAQEBAQEAAAAAAwMDAAAAAAAAAAAAAQEBAQEBAQE=",
+      "AQEBAQEBAQEBAQEBAQEAAAAAAQEBAQEBAQEAAAMDAwMDAwMAAAAAAAADAwMDAwAAAAA=",
+      "AQEBAQEBAQEBAQEBAQEAAAAAAQEBAQEBAQEAAAMDAwMDAwMAAAMAAAADAwMDAwAAAAA=",
+      "AQEBAQEBAQEBAQAAAAAAAAAAAQEBAQEBAQEAAwMDAwMDAwMDAAAAAAADAwMDAwMDAAA=",
+      "AQEBAQEBAQAAAQAAAAAAAAAAAQEBAQEBAQEAAwMDAwMDAwMDAAAAAAAAAwMDAwMDAwA=",
+      "AQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDAwMDAwMDAAAAAAADAwMDAwMDAwM=",
+      "AQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDAwMDAwMAAAAAAAMDAwMDAwMDAwM=",
+      "AAAAAAAAAQAAAAAAAQAAAAAAAAAAAAAAAAAAAAMDAwMDAQEBAQEBAQEDAwMDAwMDAwM=",
+      "AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAADAwMDAQEBAQEBAQEDAwMDAwMDAwM=",
+      "AAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEDAwMDAwMDAwM=",
+      "AQEBAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEDAwMDAwMDAwM=",
+      "AAAAAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEDAwMDAwMDAwM=",
+      "AQEBAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEAAwMDAwMDAwA=",
+      "AQEBAQEBAQEBAQAAAAAAAAAAAAAAAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAMDAwMDAAA=",
+      "AQEBAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAAAAAAABAQEBAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAAEBAQEBAQEBAAAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAAAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAAAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEAAAAAAQEAAAEBAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAEBAQAAAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAAAAAAA=",
+      "AQEBAQEBAQEBAQEAAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAAAAAAABAQEBAQEBAQEBAQEBAQE=",
+      "AAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAAAAAQEBAQE="
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        {
+          "X": 14,
+          "Y": 2
+        },
+        {
+          "X": 2,
+          "Y": 21
+        },
+        {
+          "X": 5,
+          "Y": 34
+        }
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        {
+          "X": 45,
+          "Y": 13
+        }
+      ]
+    }
+  },
+  "AttackPlans": [
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Assassin",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Assassin",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        }
+      ]
+    },
+    {
+      "TeamId": 2,
+      "Spawns": []
+    }
+  ],
+  "DefensePlans": [],
+  "Challenges": [
+    {
+      "Name": "*",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1200,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1000,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "***",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 850,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    }
+  ]
+}

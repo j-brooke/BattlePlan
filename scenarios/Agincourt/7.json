@@ -1,0 +1,238 @@
+{
+  "BannerText": [],
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Stone"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 50,
+    "Height": 36,
+    "Tiles": [
+      "AAACAQECAgIBAQEBAQEAAAABAQEBAQEAAAAAAAAAAAAAAQEBAQEBAAICAgICAgAAAAA=",
+      "AgICAQECAgIBAQEBAQEAAAEBAQEBAQEBAQAAAAAAAAAAAAEBAQEBAgICAgICAgIAAAA=",
+      "AgICAQECAgIBAQEBAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAABAQEBAAICAgICAAAAAAA=",
+      "AAICAQECAgIBAQEBAAAAAAABAQEAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAAA=",
+      "AAICAQECAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAgICAAA=",
+      "AQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAgICAgA=",
+      "AQEBAQEBAQEAAAAAAAAAAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAgICAgICAgA=",
+      "AQEBAQEBAQEAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAICAgICAgICAAA=",
+      "AQEBAQAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAICAQEAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAAAAAAAAAAAAAAAAAQEBAQEBAQAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAQEBAQEBAQICAgI=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAAAAQEBAQEBAQICAgI=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgI=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      null,
+      "AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAQEBAQEAAAAAAQEBAQABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAQEBAQA=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQICAgAAAAAAAAAAAAAAAAAAAQEBAQE=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQICAgICAgIAAAAAAAAAAAAAAQEBAQE=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQECAgICAgICAgICAgICAAAAAAAAAAAAAQEBAQE=",
+      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAgICAgICAgIAAAAAAAAAAAAAAQEBAQE=",
+      "AAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAICAgICAgICAAAAAAAAAAAAAAAAAQEBAQE=",
+      "AgICAAACAgAAAAAAAQEBAQEAAAAAAAAAAgICAgIAAAAAAAEBAQEBAQAAAAABAQEBAQE=",
+      "AgICAgICAgICAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQAAAAABAQEBAAA=",
+      "AgICAgICAgIAAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAABAQEBAQEBAAAAAAAAAAEAAAA=",
+      "AgICAgICAgEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAQEBAAEBAQEBAQEBAQAAAAAAAAAAAAA=",
+      "AQEBAQEBAQEBAQEBAQEBAQEBAgICAAAAAAAAAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAA=",
+      "AAEBAQEBAQABAAAAAQEBAQEBAgICAgICAAAAAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAABAQAAAAAAAQEBAQEBAQICAgICAgAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAABAQEBAQEBAQICAgICAgAAAAAAAAAAAAABAQEBAQAAAAAAAAAAAAA=",
+      "AAAAAAAAAAAAAAAAAQEBAQEBAQICAgICAgAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAA="
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        {
+          "X": 27,
+          "Y": 34
+        },
+        {
+          "X": 28,
+          "Y": 1
+        }
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        {
+          "X": 45,
+          "Y": 16
+        },
+        {
+          "X": 3,
+          "Y": 17
+        }
+      ]
+    }
+  },
+  "AttackPlans": [
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 8.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 8.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 8.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 8.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 8.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 8.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 8.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 16.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 16.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 16.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 16.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 16.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 16.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        }
+      ]
+    }
+  ],
+  "DefensePlans": [],
+  "Challenges": [
+    {
+      "Name": "*",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1200,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 900,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "***",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 750,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    }
+  ]
+}
