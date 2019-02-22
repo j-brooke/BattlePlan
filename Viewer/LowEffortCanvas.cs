@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
-using BattlePlan.Common;
+using BattlePlan.Model;
 
 namespace BattlePlan.Viewer
 {

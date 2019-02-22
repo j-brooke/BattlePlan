@@ -1,6 +1,6 @@
 using System;
 
-namespace BattlePlan.Common
+namespace BattlePlan.Dto.V1
 {
     public enum UnitBehavior
     {

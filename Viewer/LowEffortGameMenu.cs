@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using BattlePlan.Common;
+using BattlePlan.Model;
 using BattlePlan.Resolver;
-using Newtonsoft.Json;
 
 namespace BattlePlan.Viewer
 {
@@ -18,7 +17,8 @@ namespace BattlePlan.Viewer
         public LowEffortGameMenu()
         {
             var unitsFileContents = File.ReadAllText(_unitsFileName);
-            _unitsList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(unitsFileContents);
+            _loader = new FileLoader();
+            _unitsList = _loader.LoadUnits();
         }
 
         public void Run()
@@ -72,6 +72,7 @@ namespace BattlePlan.Viewer
         private string _sectionPath;
         private List<UnitCharacteristics> _unitsList;
         private List<HighScoreEntry> _highScores;
+        private FileLoader _loader;
 
         private void PrintBanner(bool large)
         {
@@ -206,14 +207,13 @@ namespace BattlePlan.Viewer
             {
                 try
                 {
-                    var fileContentsAsString = File.ReadAllText(_highScoreFileName);
-                    _highScores = JsonConvert.DeserializeObject<List<HighScoreEntry>>(fileContentsAsString);
+                    _highScores = _loader.LoadHighScores(_highScoreFileName);
                 }
                 catch (IOException ex)
                 {
                     _logger.Error("Can't load high score file", ex);
                 }
-                catch (JsonException ex)
+                catch (Newtonsoft.Json.JsonException ex)
                 {
                     _logger.Error("Can't load high score file", ex);
                 }
@@ -224,14 +224,13 @@ namespace BattlePlan.Viewer
         {
             try
             {
-                var fileContentsAsString = JsonConvert.SerializeObject(_highScores);
-                File.WriteAllText(_highScoreFileName, fileContentsAsString);
+                _loader.SaveHighScores(_highScoreFileName, _highScores);
             }
             catch (IOException ex)
             {
                 _logger.Error("Can't save high score file", ex);
             }
-            catch (JsonException ex)
+            catch (Newtonsoft.Json.JsonException ex)
             {
                 _logger.Error("Can't save high score file", ex);
             }

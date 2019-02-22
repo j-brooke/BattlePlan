@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
-using BattlePlan.Common;
+using BattlePlan.Model;
 using BattlePlan.Path;
 
 namespace BattlePlan.Resolver

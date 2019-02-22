@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BattlePlan.Common;
+using BattlePlan.Model;
 using BattlePlan.Resolver;
 
 namespace BattlePlan.MapGeneration

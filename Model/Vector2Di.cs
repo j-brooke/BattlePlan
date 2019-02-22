@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
-namespace BattlePlan.Common
+namespace BattlePlan.Model
 {
     public struct Vector2Di : IEquatable<Vector2Di>
     {
@@ -15,9 +14,6 @@ namespace BattlePlan.Common
             this.Y = y;
         }
 
-        // TODO: create a converter class for reading/writing, instead of cluttering up this
-        // struct with references to libraries.
-        [JsonConstructor]
         public Vector2Di(double x, double y)
         {
             this.X = (short)Math.Round(x);

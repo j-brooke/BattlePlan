@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BattlePlan.Common
+namespace BattlePlan.Model
 {
     public class DefensePlan
     {

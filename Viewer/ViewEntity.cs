@@ -1,5 +1,5 @@
 using System;
-using BattlePlan.Common;
+using BattlePlan.Model;
 
 
 namespace BattlePlan.Viewer

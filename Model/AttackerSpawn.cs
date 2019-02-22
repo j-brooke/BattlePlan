@@ -1,6 +1,6 @@
 using System;
 
-namespace BattlePlan.Common
+namespace BattlePlan.Model
 {
     public class AttackerSpawn
     {

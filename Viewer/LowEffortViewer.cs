@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
-using Newtonsoft.Json;
-using BattlePlan.Common;
+using BattlePlan.Model;
 using BattlePlan.MapGeneration;
 
 namespace BattlePlan.Viewer

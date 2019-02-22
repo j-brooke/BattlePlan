@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BattlePlan.Common
+namespace BattlePlan.Dto.V1
 {
     public class Scenario
     {

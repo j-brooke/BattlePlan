@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.IO;
-using Newtonsoft.Json;
-using BattlePlan.Common;
+using BattlePlan.Model;
 using BattlePlan.MapGeneration;
 using BattlePlan.Resolver;
 
@@ -25,8 +24,9 @@ namespace BattlePlan.Viewer
 
         public LowEffortEditor()
         {
+            _loader = new FileLoader();
             LoadOrCreateGeneratorOptions();
-            _unitTypes = LoadUnitsFile();
+            _unitTypes = _loader.LoadUnits();
         }
 
         /// <summary>
@@ -37,8 +37,7 @@ namespace BattlePlan.Viewer
         {
             if (!String.IsNullOrWhiteSpace(filename))
             {
-                var fileContentsAsString = File.ReadAllText(filename);
-                var newScenario = JsonConvert.DeserializeObject<Scenario>(fileContentsAsString);
+                var newScenario = _loader.LoadScenario(filename);
 
                 _lastScenarioFilename = filename;
                 return EditScenario(newScenario);
@@ -113,13 +112,6 @@ namespace BattlePlan.Viewer
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
-        // Write stuff as nicely-formatted JSON.
-        // TODO: Make this optional?
-        private static JsonSerializerSettings _jsonOpts = new JsonSerializerSettings()
-        {
-            Formatting = Formatting.Indented,
-        };
-
         private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
         private GeneratorOptions _mapGenOptions;
         private Scenario _scenario;
@@ -151,6 +143,7 @@ namespace BattlePlan.Viewer
         private IList<UnitCharacteristics> _unitTypes;
         private int _topMapRow;
         private int _statusBarRow;
+        private FileLoader _loader;
 
 
         /// <summary>
@@ -223,13 +216,6 @@ namespace BattlePlan.Viewer
             RecalculateResourceCost();
         }
 
-        private IList<UnitCharacteristics> LoadUnitsFile()
-        {
-            var fileContentsAsString = File.ReadAllText(_unitsFileName);
-            var unitsList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(fileContentsAsString);
-            return unitsList;
-        }
-
         private void GenerateTerrain()
         {
             var mapGenerator = new Generator(_mapGenOptions);
@@ -253,16 +239,13 @@ namespace BattlePlan.Viewer
             try
             {
                 if (File.Exists(_optionsFile))
-                {
-                    var fileContentsAsString = File.ReadAllText(_optionsFile);
-                    _mapGenOptions = JsonConvert.DeserializeObject<GeneratorOptions>(fileContentsAsString);
-                }
+                    _mapGenOptions = _loader.LoadGeneratorOptions(_optionsFile);
             }
             catch (IOException ioe)
             {
                 _logger.Warn(ioe, "Error loading GeneratorOptions file");
             }
-            catch (JsonException je)
+            catch (Newtonsoft.Json.JsonException je)
             {
                 _logger.Warn(je, "Error loading GeneratorOptions file");
             }
@@ -280,15 +263,14 @@ namespace BattlePlan.Viewer
 
             try
             {
-                var fileContentsAsString = JsonConvert.SerializeObject(_mapGenOptions, _jsonOpts);
-                File.WriteAllText(_optionsFile, fileContentsAsString);
+                _loader.SaveGeneratorOptions(_optionsFile, _mapGenOptions);
             }
             catch (IOException ioe)
             {
                 _logger.Warn(ioe, "Error loading GeneratorOptions file");
                 _statusMsg = ioe.Message;
             }
-            catch (JsonException je)
+            catch (Newtonsoft.Json.JsonException je)
             {
                 _logger.Warn(je, "Error loading GeneratorOptions file");
                 _statusMsg = je.Message;
@@ -324,8 +306,7 @@ namespace BattlePlan.Viewer
             try
             {
                 var filename = String.IsNullOrEmpty(input)? _lastScenarioFilename : input;
-                var fileContentsAsString = File.ReadAllText(filename);
-                var newScenario = JsonConvert.DeserializeObject<Scenario>(fileContentsAsString);
+                var newScenario = _loader.LoadScenario(filename);
 
                 // TODO: validate new scenario?
                 _scenario = newScenario;
@@ -338,7 +319,7 @@ namespace BattlePlan.Viewer
             {
                 _statusMsg = ioe.Message;
             }
-            catch (JsonException)
+            catch (Newtonsoft.Json.JsonException)
             {
                 _statusMsg = "File is not a valid scenario";
             }
@@ -354,8 +335,7 @@ namespace BattlePlan.Viewer
             try
             {
                 var filename = String.IsNullOrEmpty(input)? _lastScenarioFilename : input;
-                var fileContentsAsString = JsonConvert.SerializeObject(_scenario, _jsonOpts);
-                File.WriteAllText(filename, fileContentsAsString);
+                _loader.SaveScenario(filename, _scenario);
 
                 _lastScenarioFilename = filename;
             }

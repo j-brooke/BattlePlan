@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Newtonsoft.Json;
-using BattlePlan.Common;
+using System.Linq;
+using BattlePlan;
 using BattlePlan.Resolver;
 using BattlePlan.MapGeneration;
 using Mono.Options;
@@ -91,10 +91,9 @@ namespace BattlePlan
 
         private const string _appName = "BattlePlan.dll";
 
-        private const string _unitsFileName = "resources/units.json";
-
         private static OptionSet _cmdOptions;
         private static bool _monochrome = false;
+        private static Viewer.FileLoader _loader = new Viewer.FileLoader();
 
         private static void ResolveAndShow(string filename)
         {
@@ -104,11 +103,8 @@ namespace BattlePlan
                 return;
             }
 
-            var scenarioFileContents = File.ReadAllText(filename);
-            var scenario = JsonConvert.DeserializeObject<Scenario>(scenarioFileContents);
-
-            var unitsFileContents = File.ReadAllText(_unitsFileName);
-            var unitsList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(unitsFileContents);
+            var scenario = _loader.LoadScenario(filename);
+            var unitsList = _loader.LoadUnits();
 
             var resolver = new BattleState();
             var result = resolver.Resolve(scenario, unitsList);
@@ -127,24 +123,21 @@ namespace BattlePlan
                 return;
             }
 
-            List<UnitCharacteristics> unitsList = null;
+            List<Model.UnitCharacteristics> unitsList = null;
             var editor = new Viewer.LowEffortEditor()
             {
                 UseColor = !_monochrome,
                 PlayerView = playerView,
             };
 
-            Scenario scenarioToPlay = editor.EditScenario(filename);
+            Model.Scenario scenarioToPlay = editor.EditScenario(filename);
 
             while (scenarioToPlay != null)
             {
                 Console.WriteLine("Please wait - resolving battle");
 
                 if (unitsList==null)
-                {
-                    var unitsFileContents = File.ReadAllText(_unitsFileName);
-                    unitsList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(unitsFileContents);
-                }
+                    unitsList = _loader.LoadUnits();
 
                 var resolver = new BattleState();
                 var result = resolver.Resolve(scenarioToPlay, unitsList);
@@ -165,24 +158,6 @@ namespace BattlePlan
             Console.WriteLine($"  dotnet {_appName} play <filename>");
 
             _cmdOptions.WriteOptionDescriptions(Console.Out);
-        }
-
-        private static JsonSerializerSettings _serialOpts = new JsonSerializerSettings()
-        {
-            Formatting = Formatting.Indented,
-            Converters = { new Newtonsoft.Json.Converters.StringEnumConverter() },
-        };
-        private static JsonSerializerSettings _serialOptsNoIndent = new JsonSerializerSettings()
-        {
-            Formatting = Formatting.None,
-            Converters = { new Newtonsoft.Json.Converters.StringEnumConverter() },
-        };
-
-        private static List<UnitCharacteristics> LoadUnits(string filename)
-        {
-            var fileContentsAsString = File.ReadAllText(filename);
-            var unitList = JsonConvert.DeserializeObject<List<UnitCharacteristics>>(fileContentsAsString);
-            return unitList;
         }
 
         private static void GameMenu()

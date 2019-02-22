@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using BattlePlan.Common;
+using BattlePlan.Model;
 
 namespace BattlePlan.MapGeneration
 {

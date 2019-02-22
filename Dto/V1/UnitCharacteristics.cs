@@ -1,7 +1,7 @@
 using System;
-using BattlePlan.Common;
+using BattlePlan.Model;
 
-namespace BattlePlan.Common
+namespace BattlePlan.Dto.V1
 {
     public class UnitCharacteristics
     {
