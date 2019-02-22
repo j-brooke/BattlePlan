@@ -350,17 +350,17 @@ namespace BattlePlan.Translator
         {
             return new Model.BattleResolution()
             {
-                BannerText = dto.BannerText.ToList(),
+                BannerText = dto.BannerText?.ToList(),
                 Terrain = ToModel(dto.Terrain),
                 UnitTypes = dto.UnitTypes.Select( (item) => ToModel(item) ).ToList(),
-                Events = dto.Events.Select( (item) => ToModel(item) ).ToList(),
+                Events = dto.Events?.Select( (item) => ToModel(item) ).ToList(),
                 AttackerBreachCounts = new Dictionary<int,int>(dto.AttackerBreachCounts),
                 DefenderCasualtyCounts = new Dictionary<int,int>(dto.DefenderCasualtyCounts),
-                ChallengesAchieved = dto.ChallengesAchieved.Select( (item) => ToModel(item) ).ToList(),
-                ChallengesFailed = dto.ChallengesFailed.Select( (item) => ToModel(item) ).ToList(),
+                ChallengesAchieved = dto.ChallengesAchieved?.Select( (item) => ToModel(item) ).ToList(),
+                ChallengesFailed = dto.ChallengesFailed?.Select( (item) => ToModel(item) ).ToList(),
                 AttackerResourceTotals = new Dictionary<int,int>(dto.AttackerResourceTotals),
                 DefenderResourceTotals = new Dictionary<int,int>(dto.DefenderResourceTotals),
-                ErrorMessages = dto.ErrorMessages.ToList(),
+                ErrorMessages = dto.ErrorMessages?.ToList(),
             };
         }
 
@@ -368,17 +368,17 @@ namespace BattlePlan.Translator
         {
             return new Dto.V1.BattleResolution()
             {
-                BannerText = model.BannerText.ToList(),
+                BannerText = model.BannerText?.ToList(),
                 Terrain = ToDto(model.Terrain),
-                UnitTypes = model.UnitTypes.Select( (item) => ToDto(item) ).ToList(),
-                Events = model.Events.Select( (item) => ToDto(item) ).ToList(),
+                UnitTypes = model.UnitTypes?.Select( (item) => ToDto(item) ).ToList(),
+                Events = model.Events?.Select( (item) => ToDto(item) ).ToList(),
                 AttackerBreachCounts = new Dictionary<int,int>(model.AttackerBreachCounts),
                 DefenderCasualtyCounts = new Dictionary<int,int>(model.DefenderCasualtyCounts),
-                ChallengesAchieved = model.ChallengesAchieved.Select( (item) => ToDto(item) ).ToList(),
-                ChallengesFailed = model.ChallengesFailed.Select( (item) => ToDto(item) ).ToList(),
+                ChallengesAchieved = model.ChallengesAchieved?.Select( (item) => ToDto(item) ).ToList(),
+                ChallengesFailed = model.ChallengesFailed?.Select( (item) => ToDto(item) ).ToList(),
                 AttackerResourceTotals = new Dictionary<int,int>(model.AttackerResourceTotals),
                 DefenderResourceTotals = new Dictionary<int,int>(model.DefenderResourceTotals),
-                ErrorMessages = model.ErrorMessages.ToList(),
+                ErrorMessages = model.ErrorMessages?.ToList(),
             };
         }
 

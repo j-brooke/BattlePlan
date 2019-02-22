@@ -64,14 +64,37 @@ namespace BattlePlan.Viewer
             File.WriteAllText(filename, fileContentsAsString);
         }
 
+        public Model.BattleResolution LoadBattleResolution(string filename)
+        {
+            var fileContents = File.ReadAllText(filename);
+            var resolutionDto = JsonConvert.DeserializeObject<Dto.V1.BattleResolution>(fileContents);
+            var resolutionModel = Translator.V1Translator.ToModel(resolutionDto);
+            return resolutionModel;
+
+        }
+
+        public void SaveBattleResolution(string filename, Model.BattleResolution resolution)
+        {
+            var dtoResolution = Translator.V1Translator.ToDto(resolution);
+            var fileContentsAsString = JsonConvert.SerializeObject(dtoResolution, GetJsonOpts());
+            File.WriteAllText(filename, fileContentsAsString);
+        }
+
         private const string _unitsFileName = "resources/units.json";
 
         private JsonSerializerSettings GetJsonOpts()
         {
             var opts = new JsonSerializerSettings()
             {
-                Formatting = (this.WritePrettyJson)?  Formatting.Indented : Formatting.None,
+                NullValueHandling = NullValueHandling.Ignore,
+                Converters = new List<JsonConverter>(),
             };
+
+            if (this.WritePrettyJson)
+            {
+                opts.Formatting = Formatting.Indented;
+                opts.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+            }
 
             return opts;
         }
