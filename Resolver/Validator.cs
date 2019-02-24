@@ -28,14 +28,6 @@ namespace BattlePlan.Resolver
             if (terrain.Width<0 || terrain.Width>_maxSaneWidth || terrain.Height<0 || terrain.Height>_maxSaneHeight)
                 yield break;
 
-            var tileVals = terrain.Tiles?.SelectMany( (row) => row ?? Array.Empty<byte>() ) ?? Enumerable.Empty<byte>();
-            var hasTileOutOfBounds = tileVals.Any( (val) => val<0 || val>terrain.TileTypes.Count );
-            if (hasTileOutOfBounds)
-            {
-                yield return "Some tile values are undefined";
-                yield break;
-            }
-
             var allSpawns = terrain.SpawnPointsMap?.Values.SelectMany( (ptsForTeam) => ptsForTeam ) ?? Enumerable.Empty<Vector2Di>();
             var noSpawnPoints = !allSpawns.Any();
             if (noSpawnPoints)

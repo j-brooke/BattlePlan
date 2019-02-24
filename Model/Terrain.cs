@@ -6,10 +6,9 @@ namespace BattlePlan.Model
 {
     public class Terrain
     {
-        public IList<TileCharacteristics> TileTypes { get; set; }
-        public int Width { get; set; }
-        public int Height { get; set; }
-        public byte[][] Tiles { get { return _tiles; } set { _tiles = value; } }
+        public IList<TileCharacteristics> TileTypes { get; }
+        public int Width { get; }
+        public int Height { get; }
 
         /// <summary>
         /// Dictionary where the key is a TeamID and the value is a list of spawn points
@@ -23,28 +22,44 @@ namespace BattlePlan.Model
         /// </summary>
         public IDictionary<int,IList<Vector2Di>> GoalPointsMap { get; set; } = new Dictionary<int,IList<Vector2Di>>();
 
-        public static Terrain NewDefault()
+        public Terrain()
+            : this(50, 22, null)
+        { }
+
+        public Terrain(int width, int height, IList<TileCharacteristics> tileTypes)
         {
-            return new Terrain()
+            if (width<0 || width>_maxSaneSize)
+                throw new ArgumentException("Bad terrain width", "width");
+            if (height<0 || height>_maxSaneSize)
+                throw new ArgumentException("Bad terrain height", "height");
+
+            this.Width = width;
+            this.Height = height;
+
+            if (tileTypes != null)
+            {
+                if (tileTypes.Count<2)
+                    throw new ArgumentException("Too few entries in tileTypes list");
+
+                this.TileTypes = tileTypes.ToList().AsReadOnly();
+            }
+            else
+            {
+                this.TileTypes = new List<TileCharacteristics>()
                 {
-                    Width = 50,
-                    Height = 22,
-                    TileTypes = new List<TileCharacteristics>()
-                {
-                    new TileCharacteristics() { BlocksMovement=false, BlocksVision=false, Appearance=" ", Name="Open" },
-                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=true, Appearance=":", Name="Stone" },
-                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=false, Appearance="~", Name="Water" },
-                    new TileCharacteristics() { BlocksMovement=false, BlocksVision=true, Appearance="@", Name="Fog" },
-                },
-            };
+                    new TileCharacteristics() { BlocksMovement=false, BlocksVision=false, Appearance=' ', Name="Open" },
+                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=true, Appearance=':', Name="Stone" },
+                    new TileCharacteristics() { BlocksMovement=true, BlocksVision=false, Appearance='~', Name="Water" },
+                    new TileCharacteristics() { BlocksMovement=false, BlocksVision=true, Appearance='@', Name="Fog" },
+                }.AsReadOnly();
+            }
+
+            _tiles = new byte[width, height];
         }
 
         public TileCharacteristics GetTile(int x, int y)
         {
             var typeIndex = GetTileValue(x, y);
-            if (TileTypes==null || typeIndex<0 || typeIndex>=TileTypes.Count)
-                throw new ArgumentOutOfRangeException("Tile index out of range");
-
             return TileTypes[typeIndex];
         }
 
@@ -60,15 +75,7 @@ namespace BattlePlan.Model
             if (y<0 || y>=Height)
                 throw new ArgumentOutOfRangeException("y");
 
-            byte typeIndex = 0;
-            if (Tiles!=null && Tiles.Length > y)
-            {
-                var row = Tiles[y];
-                if (row!=null && row.Length > x)
-                    typeIndex = row[x];
-            }
-
-            return typeIndex;
+            return _tiles[x, y];
         }
 
         public byte GetTileValue(Vector2Di pos)
@@ -82,18 +89,10 @@ namespace BattlePlan.Model
                 throw new ArgumentOutOfRangeException("x");
             if (y<0 || y>=this.Height)
                 throw new ArgumentOutOfRangeException("y");
+            if (val<0 || val>=this.TileTypes.Count)
+                throw new ArgumentOutOfRangeException("val");
 
-            if (_tiles==null)
-                _tiles = new byte[this.Height][];
-            else if (_tiles.Length!=this.Height)
-                Array.Resize(ref _tiles, this.Height);
-
-            if (_tiles[y]==null)
-                _tiles[y] = new byte[this.Width];
-            else if (_tiles[y].Length!=this.Width)
-                Array.Resize(ref _tiles[y], this.Width);
-
-            _tiles[y][x] = val;
+            _tiles[x, y] = val;
         }
 
         public void SetTileValue(Vector2Di pos, byte val)
@@ -101,6 +100,10 @@ namespace BattlePlan.Model
             SetTileValue(pos.X, pos.Y, val);
         }
 
+        public void ClearAllTiles()
+        {
+            _tiles = new byte[this.Width, this.Height];
+        }
 
         /// <summary>
         /// Tests whether one tile can see to another: that is, whether there are any tiles
@@ -213,6 +216,7 @@ namespace BattlePlan.Model
             }
         }
 
-        private byte[][] _tiles;
+        private const int _maxSaneSize = 250;
+        private byte[,] _tiles;
     }
 }

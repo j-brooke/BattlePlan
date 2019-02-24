@@ -84,10 +84,7 @@ namespace BattlePlan.MapGeneration
 
         private void InitTerrain()
         {
-            _terrain = Terrain.NewDefault();
-            _terrain.Height = _options.Height;
-            _terrain.Width = _options.Width;
-
+            _terrain = new Terrain(_options.Width, _options.Height, null);
             _terrain.SpawnPointsMap = new Dictionary<int,IList<Vector2Di>>() { { _attackerTeamId, new List<Vector2Di>() } };
             _terrain.GoalPointsMap = new Dictionary<int,IList<Vector2Di>>() { { _attackerTeamId, new List<Vector2Di>() } };
         }

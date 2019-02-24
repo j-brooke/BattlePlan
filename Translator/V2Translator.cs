@@ -79,7 +79,7 @@ namespace BattlePlan.Translator
             {
                 BlocksMovement = dto.BlocksMovement,
                 BlocksVision = dto.BlocksVision,
-                Appearance = dto.Appearance.ToString(),
+                Appearance = dto.Appearance,
                 Name = dto.Name,
             };
         }
@@ -89,7 +89,7 @@ namespace BattlePlan.Translator
             {
                 BlocksMovement = model.BlocksMovement,
                 BlocksVision = model.BlocksVision,
-                Appearance = (string.IsNullOrEmpty(model.Appearance))? ' ' : model.Appearance[0],
+                Appearance = model.Appearance,
                 Name = model.Name,
             };
         }
@@ -246,11 +246,8 @@ namespace BattlePlan.Translator
                     goals[teamId] = dto.GoalPointsMap[teamId].Select( (item) => ToVectorModel(item) ).ToList();
 
             var modelTileTypes = dto.TileTypes.Select( (item) => ToModel(item) ).ToList();
-            var modelTerrain = new Model.Terrain()
+            var modelTerrain = new Model.Terrain(dto.Width, dto.Height, modelTileTypes)
             {
-                TileTypes = modelTileTypes,
-                Width = dto.Width,
-                Height = dto.Height,
                 SpawnPointsMap = spawns,
                 GoalPointsMap = goals,
             };
@@ -298,7 +295,7 @@ namespace BattlePlan.Translator
             {
                 var rowChars = new char[model.Width];
                 for (var col=0; col<model.Width; ++col)
-                    rowChars[col] = model.GetTile(col, row).Appearance[0];
+                    rowChars[col] = model.GetTile(col, row).Appearance;
                 dtoTiles[row] = new string(rowChars);
             }
 

@@ -149,7 +149,7 @@ namespace BattlePlan.Viewer
 
                     var x = col+canvasOffsetX;
                     var y = row+canvasOffsetY;
-                    _symbolBackBuffer[y][x] = tileChars.Appearance[0];
+                    _symbolBackBuffer[y][x] = tileChars.Appearance;
                     _fgBackBuffer[y][x] = fgColor;
                     _bgBackBuffer[y][x] = bgColor;
                 }
@@ -178,7 +178,7 @@ namespace BattlePlan.Viewer
                     entity.Position.Y,
                     entity.Symbol,
                     GetTeamColor(entity.TeamId),
-                    GetTerrainBGColor(" "),
+                    GetTerrainBGColor(' '),
                     canvasOffsetX,
                     canvasOffsetY);
             }
@@ -187,7 +187,7 @@ namespace BattlePlan.Viewer
         public void PaintSpawnPoints(Terrain terrain, int canvasOffsetX, int canvasOffsetY)
         {
             const char spawnPointSymbol = 'O';
-            var bgColor = GetTerrainBGColor(" ");
+            var bgColor = GetTerrainBGColor(' ');
             if (terrain?.SpawnPointsMap != null)
             {
                 foreach (var keyValuePair in terrain.SpawnPointsMap)
@@ -221,7 +221,7 @@ namespace BattlePlan.Viewer
                     evt.TargetLocation.Value.Y,
                     dmgSymbol,
                     GetDamageColor(),
-                    GetTerrainBGColor(" "),
+                    GetTerrainBGColor(' '),
                     canvasOffsetX,
                     canvasOffsetY);
             }
@@ -230,7 +230,7 @@ namespace BattlePlan.Viewer
         public void PaintGoalPoints(Terrain terrain, int canvasOffsetX, int canvasOffsetY)
         {
             const char goalPointSymbol = 'X';
-            var bgColor = GetTerrainBGColor(" ");
+            var bgColor = GetTerrainBGColor(' ');
             if (terrain?.SpawnPointsMap != null)
             {
                 foreach (var keyValuePair in terrain.GoalPointsMap)
@@ -360,7 +360,7 @@ namespace BattlePlan.Viewer
         public void PaintDefensePlan(DefensePlan plan, IList<UnitCharacteristics> unitChars, int canvasOffsetX, int canvasOffsetY)
         {
             var teamColor = GetTeamColor(plan.TeamId);
-            var bgColor = GetTerrainBGColor(" ");
+            var bgColor = GetTerrainBGColor(' ');
             foreach (var placement in plan.Placements)
             {
                 var unitClass = unitChars.FirstOrDefault( (cls) => cls.Name==placement.UnitType );
@@ -393,25 +393,25 @@ namespace BattlePlan.Viewer
 
 
         // TODO: Color values should probably come from a config file.
-        private ConsoleColor GetTerrainFGColor(string tileSymbol)
+        private ConsoleColor GetTerrainFGColor(char tileSymbol)
         {
             switch (tileSymbol)
             {
-                case ":": return ConsoleColor.White;
-                case " ": return ConsoleColor.DarkGray;
-                case "~": return ConsoleColor.Blue;
-                case "@": return ConsoleColor.White;
+                case ':': return ConsoleColor.White;
+                case ' ': return ConsoleColor.DarkGray;
+                case '~': return ConsoleColor.Blue;
+                case '@': return ConsoleColor.White;
                 default: return ConsoleColor.Black;
             }
         }
-        private ConsoleColor GetTerrainBGColor(string tileSymbol)
+        private ConsoleColor GetTerrainBGColor(char tileSymbol)
         {
             switch (tileSymbol)
             {
-                case ":": return ConsoleColor.Gray;
-                case " ": return ConsoleColor.DarkGray;
-                case "~": return ConsoleColor.DarkBlue;
-                case "@": return ConsoleColor.DarkGray;
+                case ':': return ConsoleColor.Gray;
+                case ' ': return ConsoleColor.DarkGray;
+                case '~': return ConsoleColor.DarkBlue;
+                case '@': return ConsoleColor.DarkGray;
                 default: return ConsoleColor.White;
             }
         }

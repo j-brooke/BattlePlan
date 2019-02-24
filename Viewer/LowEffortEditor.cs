@@ -58,7 +58,7 @@ namespace BattlePlan.Viewer
             if (_scenario == null)
                 _scenario = new Scenario();
             if (_scenario.Terrain == null)
-                _scenario.Terrain = Terrain.NewDefault();
+                _scenario.Terrain = new Terrain();
             InitFromScenario();
 
             if (!TestScreenSize(_scenario.Terrain))
@@ -293,7 +293,7 @@ namespace BattlePlan.Viewer
 
         private void ClearAllTiles()
         {
-            _scenario.Terrain.Tiles = null;
+            _scenario.Terrain.ClearAllTiles();
         }
 
         private void PromptAndLoadScenario()
