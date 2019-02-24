@@ -33,41 +33,41 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "AAAAAAABAQEAAAAAAAAAAAACAAAAAAABAQEAAAAAAAAAAAEBAQEBAQEBAAAA",
-      "AAAAAAEBAQEBAQEAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAACAgAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAACAgAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEB",
-      "AQEBAQEBAQEBAAAAAAAAAAACAgAAAAAAAAABAQEBAQEBAQEBAQAAAAAAAAAA",
-      "AAABAQEBAQEAAAAAAAAAAAACAgIAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAgIAAAAAAAAAAAAAAwAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDAwMDAwAAAAAAAAADAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDAwMDAwAAAAAAAAMDAwMA",
-      "AAAAAAAAAAAAAAEAAAAAAAAAAgICAgAAAAADAwMDAwMDAwMDAAAAAwMBAQEB",
-      "AAEAAAAAAAAAAQEBAQEAAAAAAAICAgAAAAADAwMDAQEDAwMAAAADAwMDAwMD",
-      "AQEBAQAAAAABAQEBAQEAAAAAAAICAgABAQEBAwMDAwMDAwMAAAMDAwMDAwMD",
-      "AQEBAQEAAAAAAQEBAQAAAAAAAAACAgIAAQEAAAADAwMDAAAAAAAAAwMDAwMD",
-      "AQEBAQEBAAAAAAAAAAAAAQEBAAACAgIAAAAAAAAAAwMDAAAAAAAAAQEAAAMD",
-      "AQEBAQEBAAAAAAAAAAAAAAEAAAICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAEBAAAAAAAAAAAAAAAAAAAAAAICAgAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAQAAAAAAAAAAAgICAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAABAQEBAAAAAAAAAAICAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAAAAQEAAAAAAAAAAAICAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB"
+      "     :::         ~     :::        ::::::::   ",
+      "    :::::::      ~                   ::::    ",
+      ":::::::::::      ~~                   ::::   ",
+      ":::::::::::      ~~                   :::::::",
+      ":::::::::        ~~       :::::::::::        ",
+      "  ::::::         ~~~         ::::::::        ",
+      "                  ~~                     ::::",
+      "                  ~~          @              ",
+      "                            @@@@@@       @   ",
+      "                           @@@@@@@      @@@@ ",
+      "          :       ~~~~    @@@@@@@@@@   @@::::",
+      " :       :::::     ~~~    @@@@::@@@   @@@@@@@",
+      "::::    ::::::     ~~~ ::::@@@@@@@@  @@@@@@@@",
+      ":::::    ::::       ~~~ ::   @@@@      @@@@@@",
+      "::::::         :::  ~~~       @@@      ::  @@",
+      "::::::          :  ~~~                       ",
+      " ::                ~~~                    :::",
+      "         :        ~~~                   :::::",
+      "        ::::       ~~                   :::::",
+      "         ::        ~~                   :::::"
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 1,
-          "Y": 8
-        }
+        [
+          1,
+          8
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 43,
-          "Y": 8
-        }
+        [
+          43,
+          8
+        ]
       ]
     }
   },
@@ -103,10 +103,10 @@
       "Placements": [
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 22,
-            "Y": 6
-          }
+          "Position": [
+            22,
+            6
+          ]
         }
       ]
     }

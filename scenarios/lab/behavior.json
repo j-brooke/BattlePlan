@@ -1,4 +1,5 @@
 {
+  "BannerText": [],
   "Terrain": {
     "TileTypes": [
       {
@@ -29,101 +30,100 @@
     "Width": 50,
     "Height": 36,
     "Tiles": [
-      null,
-      null,
-      null,
-      null,
-      null,
-      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      null,
-      null,
-      null,
-      null,
-      null
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "::::::::::::::::::::::::::::::::::::::::::::::::::",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "::::::::::::::::::::::::::::::::::::::::::::::::::",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "::::::::::::::::::::::::::::::::::::::::::::::::::",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "::::::::::::::::::::::::::::::::::::::::::::::::::",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "::::::::::::::::::::::::::::::::::::::::::::::::::",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  "
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 1,
-          "Y": 1
-        },
-        {
-          "X": 1,
-          "Y": 7
-        },
-        {
-          "X": 1,
-          "Y": 13
-        },
-        {
-          "X": 1,
-          "Y": 19
-        },
-        {
-          "X": 1,
-          "Y": 25
-        },
-        {
-          "X": 1,
-          "Y": 31
-        }
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          7
+        ],
+        [
+          1,
+          13
+        ],
+        [
+          1,
+          19
+        ],
+        [
+          1,
+          25
+        ],
+        [
+          1,
+          31
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 48,
-          "Y": 1
-        },
-        {
-          "X": 48,
-          "Y": 7
-        },
-        {
-          "X": 48,
-          "Y": 13
-        },
-        {
-          "X": 48,
-          "Y": 19
-        },
-        {
-          "X": 48,
-          "Y": 25
-        },
-        {
-          "X": 48,
-          "Y": 31
-        }
+        [
+          48,
+          1
+        ],
+        [
+          48,
+          7
+        ],
+        [
+          48,
+          13
+        ],
+        [
+          48,
+          19
+        ],
+        [
+          48,
+          25
+        ],
+        [
+          48,
+          31
+        ]
       ]
     }
   },
-
   "AttackPlans": [
     {
       "TeamId": 1,
@@ -166,306 +166,307 @@
       "Placements": [
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 24,
-            "Y": 4
-          }
+          "Position": [
+            24,
+            4
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 4
-          }
+          "Position": [
+            23,
+            4
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 3
-          }
+          "Position": [
+            23,
+            3
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 24,
-            "Y": 3
-          }
+          "Position": [
+            24,
+            3
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 3
-          }
+          "Position": [
+            25,
+            3
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 4
-          }
+          "Position": [
+            25,
+            4
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 24,
-            "Y": 10
-          }
+          "Position": [
+            24,
+            10
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 10
-          }
+          "Position": [
+            23,
+            10
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 9
-          }
+          "Position": [
+            23,
+            9
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 24,
-            "Y": 9
-          }
+          "Position": [
+            24,
+            9
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 9
-          }
+          "Position": [
+            25,
+            9
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 10
-          }
+          "Position": [
+            25,
+            10
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 24,
-            "Y": 16
-          }
+          "Position": [
+            24,
+            16
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 16
-          }
+          "Position": [
+            23,
+            16
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 15
-          }
+          "Position": [
+            23,
+            15
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 24,
-            "Y": 15
-          }
+          "Position": [
+            24,
+            15
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 15
-          }
+          "Position": [
+            25,
+            15
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 16
-          }
+          "Position": [
+            25,
+            16
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 24,
-            "Y": 22
-          }
+          "Position": [
+            24,
+            22
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 22
-          }
+          "Position": [
+            23,
+            22
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 21
-          }
+          "Position": [
+            23,
+            21
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 24,
-            "Y": 21
-          }
+          "Position": [
+            24,
+            21
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 21
-          }
+          "Position": [
+            25,
+            21
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 22
-          }
+          "Position": [
+            25,
+            22
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 24,
-            "Y": 35
-          }
+          "Position": [
+            24,
+            35
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 35
-          }
+          "Position": [
+            23,
+            35
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 23,
-            "Y": 34
-          }
+          "Position": [
+            23,
+            34
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 24,
-            "Y": 34
-          }
+          "Position": [
+            24,
+            34
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 34
-          }
+          "Position": [
+            25,
+            34
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 25,
-            "Y": 35
-          }
+          "Position": [
+            25,
+            35
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 18,
-            "Y": 6
-          }
+          "Position": [
+            18,
+            6
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 17,
-            "Y": 6
-          }
+          "Position": [
+            17,
+            6
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 17,
-            "Y": 7
-          }
+          "Position": [
+            17,
+            7
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 18,
-            "Y": 7
-          }
+          "Position": [
+            18,
+            7
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 19,
-            "Y": 7
-          }
+          "Position": [
+            19,
+            7
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 19,
-            "Y": 6
-          }
+          "Position": [
+            19,
+            6
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 30,
-            "Y": 7
-          }
+          "Position": [
+            30,
+            7
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 29,
-            "Y": 6
-          }
+          "Position": [
+            29,
+            6
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 29,
-            "Y": 7
-          }
+          "Position": [
+            29,
+            7
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 29,
-            "Y": 8
-          }
+          "Position": [
+            29,
+            8
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 29,
-            "Y": 9
-          }
+          "Position": [
+            29,
+            9
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 29,
-            "Y": 10
-          }
+          "Position": [
+            29,
+            10
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 24,
-            "Y": 28
-          }
+          "Position": [
+            24,
+            28
+          ]
         }
       ]
     }
-  ]
+  ],
+  "Challenges": []
 }

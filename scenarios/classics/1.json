@@ -1,4 +1,5 @@
 {
+  "BannerText": [],
   "Terrain": {
     "TileTypes": [
       {
@@ -29,57 +30,57 @@
     "Width": 50,
     "Height": 36,
     "Tiles": [
-      "AQEBAQEBAQAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAABAQEBAAEBAAAAAAAAAQE=",
-      "AQEBAQEBAQAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAABAQEBAAEBAAAAAAAAAQE=",
-      "AQEBAQEBAQAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAQE=",
-      "AQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAQEBAAAAAQE=",
-      "AQEBAQEBAQAAAAAAAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAABAQEBAAAAAQEBAAAAAQE=",
-      "AQEBAQEAAAAAAAAAAAAAAAEBAQEBAQEBAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAQEBAQEBAQEBAQEBAQEBAQAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAE=",
-      "AQEBAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAQE=",
-      "AQEBAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQE=",
-      "AQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEAAAAAAAAAAQE=",
-      "AQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=",
-      "AAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAQEBAAAAAAA=",
-      "AAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAQEBAAAAAAA=",
-      "AAAAAAAAAAEBAQEAAAABAQEBAQAAAAAAAAAAAAAAAQEBAQEBAQEBAAAAAAAAAAAAAAA=",
-      "AQEBAAAAAAAAAAAAAAABAQEBAQAAAAAAAAAAAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAAAAAAAAAAAAAAABAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAA=",
-      "AQEBAAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAA=",
-      "AQEAAAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      null,
-      "AQEAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQE=",
-      "AAAAAAEBAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAEBAQE=",
-      "AAAAAAEBAAAAAQEBAQEAAAAAAAEAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAEBAQE=",
-      "AAAAAAEBAAAAAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAEBAQE=",
-      "AQEBAQEBAQEAAQEBAQEBAAABAQEBAQAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEAAAAAAQEBAAABAQEBAQAAAAEBAQEBAQAAAAAAAAAAAAAAAAAAAAABAQE=",
-      "AQEBAQEBAQEBAQEBAAAAAAABAQEBAQAAAAEBAQEBAQAAAAAAAAAAAAAAAAAAAAABAQE=",
-      "AQEBAQEBAQEBAQEBAAAAAAABAQEBAQAAAAEBAQEBAQAAAAAAAAAAAAAAAAAAAAABAQE=",
-      "AQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAQEAAAABAQEBAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+      ":::::::           ::               :::: ::      ::",
+      ":::::::           ::               :::: ::      ::",
+      ":::::::           ::               ::::         ::",
+      ":::::::                            ::::   :::   ::",
+      ":::::::              :::           ::::   :::   ::",
+      ":::::           ::::::::           ::::           ",
+      "                ::::::   :::::::                  ",
+      "                ::::::   :::::::                  ",
+      "      ::::::::::::::::   :::::::                 :",
+      "::::::::::::::::::       :::::::                ::",
+      "::::::::::::::::::                              ::",
+      "::::::::::::::                      :::::       ::",
+      "::::::::::::::                                  : ",
+      "       ::::                      ::::::   :::     ",
+      "       ::::                      ::::::   :::     ",
+      "       ::::   :::::           :::::::::           ",
+      ":::           :::::           :::::               ",
+      ":::           :::::                     ::::      ",
+      ":::              ::::::                 ::::      ",
+      "                 ::::::                 ::::      ",
+      "::               ::::::                 ::::      ",
+      "              ::::::                              ",
+      "                                                  ",
+      "::              ::                                ",
+      "                ::                                ",
+      "                ::                          ::::::",
+      "    ::   :::::                   :            ::::",
+      "    ::   :::::     :             :            ::::",
+      "    ::   ::::::                  :            ::::",
+      ":::::::: ::::::  :::::     ::::                   ",
+      "::::::::    :::  :::::   ::::::                :::",
+      "::::::::::::     :::::   ::::::                :::",
+      "::::::::::::     :::::   ::::::                :::",
+      ":::::::                                           ",
+      ":::::::::::   ::::     ::::                       ",
+      ":::::::::::            ::::                       "
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 1,
-          "Y": 25
-        }
+        [
+          1,
+          25
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 49,
-          "Y": 6
-        }
+        [
+          49,
+          6
+        ]
       ]
     }
   },

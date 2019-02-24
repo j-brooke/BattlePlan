@@ -30,61 +30,61 @@
     "Width": 50,
     "Height": 36,
     "Tiles": [
-      "AAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAAAAEBAAAAAAABAQEBAQEAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAABAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEAAAAAAAAAAAAAAAA=",
-      "AQEAAAEBAQEBAAABAQEAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAEBAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAA=",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQAAAAA=",
-      "AQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQA=",
-      "AAAAAAEBAQEBAQAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQA=",
-      "AAABAQEBAQEBAQAAAAAAAQEBAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAABAQEBAQEBAQAAAAEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAA=",
-      "AAAAAQEBAQEBAAAAAAEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAEBAQEAAAA=",
-      "AAAAAQEBAQEAAAAAAAAAAQEBAAEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAABAQEAAAA=",
-      "AAEBAQEBAQEBAQEAAAAAAAAAAAAAAAEAAAEBAQEAAAAAAAAAAAAAAAAAAAEBAQEBAAA=",
-      "AAEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQA=",
-      "AAEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAABAQEBAQEBAQA=",
-      "AAAAAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAQEBAQAAAAA=",
-      "AAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=",
-      "AAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAQEBAQEBAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAABAQEBAAAAAAAAAAAAAAA="
+      "             :::                                  ",
+      "          :::::::::                 ::::          ",
+      "          :::::::::::             ::::::          ",
+      "           ::::::::         ::     ::::::         ",
+      "           :::::::                    ::::        ",
+      "                                       :          ",
+      "                                                  ",
+      "             ::                                   ",
+      "                                  :::::           ",
+      "                              :::::::::           ",
+      "::::::::                      ::::::::            ",
+      ":::::::::                      :::::::            ",
+      "::  :::::  :::                  ::::              ",
+      "       ::           :             :               ",
+      "                   ::::                           ",
+      "    :               :                             ",
+      ":::::::::                                         ",
+      " :::::::                                ::::      ",
+      ":::::::::                          :::::::::::    ",
+      "::::::::                       :::::::::::::::    ",
+      "                       :       :::::::::::::::::  ",
+      "                                  ::::::::::::::: ",
+      "                                        ::::::::: ",
+      "    ::::::     :::                             :: ",
+      "  ::::::::     ::::  :                            ",
+      "  ::::::::   ::::::::::::                  :::    ",
+      "   ::::::    ::::::::::::::::              ::::   ",
+      "   :::::       ::: ::::::::::               :::   ",
+      " ::::::::::           :  ::::              :::::  ",
+      " ::::::::::                               ::::::: ",
+      " :::::::::                       :       :::::::: ",
+      "   :::::::::                   ::::       ::::    ",
+      "    ::::                              :           ",
+      "    ::                               ::::         ",
+      "                           ::::::   ::::::        ",
+      "                            ::::   ::::           "
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 4,
-          "Y": 2
-        },
-        {
-          "X": 9,
-          "Y": 34
-        }
+        [
+          4,
+          2
+        ],
+        [
+          9,
+          34
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 46,
-          "Y": 9
-        }
+        [
+          46,
+          9
+        ]
       ]
     }
   },
@@ -260,24 +260,24 @@
       "Placements": [
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 49,
-            "Y": 9
-          }
+          "Position": [
+            49,
+            9
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 49,
-            "Y": 8
-          }
+          "Position": [
+            49,
+            8
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 49,
-            "Y": 10
-          }
+          "Position": [
+            49,
+            10
+          ]
         }
       ]
     }

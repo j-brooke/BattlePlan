@@ -1,4 +1,5 @@
 {
+  "BannerText": [],
   "Terrain": {
     "TileTypes": [
       {
@@ -29,89 +30,89 @@
     "Width": 120,
     "Height": 52,
     "Tiles": [
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAABAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAABAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQECAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQIBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQAAAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgEAAAABAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQECAgEAAAABAQEBAQEBAQEAAAAAAAEBAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEAAAABAQEBAQEBAQEBAQEBAQEBAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAgICAgIBAQEBAQEBAAABAQEBAQEBAQEBAQECAgICAgEBAQAAAAAAAAAAAAABAQEBAQEBAQAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQIBAQEBAQEBAAABAQEBAQEBAQEBAQEBAgEBAQEBAQAAAAAAAAAAAAABAQEBAQEBAQAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAEBAQAAAAAAAAAAAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAABAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAABAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEBAQEAAAAAAAAAAAEBAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAABAQEAAAAAAAEBAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAABAQEAAAAAAAEBAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAABAQEAAAAAAAEBAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQAAAAABAQEBAQEBAQEBAQEBAQEBAQEBAQEA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAgIBAQIBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAAAAAQICAgIBAQEBAQECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAgEBAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAAAAAAEBAgEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      "                                                                         :::: :::~                                      ",
+      "                                                                         :::: :::~                                      ",
+      "                                                                         :::: ::::                                      ",
+      "                                                                         :::: ::::                                      ",
+      "                                                                                                                        ",
+      "                                                                         :::: ::::                                      ",
+      "                                                                            : ::::                                      ",
+      "                                                                              ::::                                      ",
+      "                                                                              ::::                                      ",
+      "                                                                                 :                                      ",
+      "                              :                               :                  :                              ::::    ",
+      "                                                          :::::                  :                                      ",
+      "                                                          :::::::::              ::         ~             ::            ",
+      "                                                          :::::::::              :                        ::            ",
+      "                                                          :::::::::         ::::::                        ::        ::::",
+      "                                                                 :::::::::::::::::                        ::        ::::",
+      "                                                                 :::::::::::::::~~                        :::  :::::::::",
+      "                                                          :::::::::::::::~::::::::                        :::  :::::::::",
+      "                                                          ::::::::::::::::::::::::                 ::::::::::  :::::::::",
+      "                          ~~:   :::::::                   ::::::::::::::::::::::::                                   :::",
+      "                  ::::::::~~:   :::::::::     ::  ::::::::::::::::::::::::::::::::::::::  :                          :::",
+      "      :::::::::::::::::::::::   ::::::::::::::::  ::::::::::::::::::::::::::::::::::::::  :                          :::",
+      "                                ::::~~~~~:::::::  ::::::::::::~~~~~:::          ::::::::  :::                        :::",
+      "                                ::::::::~:::::::  :::::::::::::~::::::          ::::::::  :::                        :::",
+      "                                ::::::::::::::::::::::::::::::::::::::          ::::::                               :::",
+      "                                ::::::::::::::::::::::::::::::::::::::          ::::::                               :::",
+      "                                ::::::::::::::::::::::::::::::::                ::::::                               :::",
+      "                                :::::::::::::::::::::::      :::        ::::::::::::::                        ::::::::::",
+      "                               :                   ::::      ::::            :::::::::                        ::::::::::",
+      "                                                   ::::      ::::            :::::::::                        ::::::::::",
+      "                                                   ::::      ::::            :::::::::            ::::::::::::          ",
+      "                                                   ::::      ::::            :::::::::            :         ::::::::::::",
+      "                                                    :::      ::::            :::::::::            :         ::::::::::::",
+      "                                                   ::::      ::::            :::::::::            :         ::::::::::::",
+      "                                                   ::::      ::::                         ::::    :         ::::::::::::",
+      "                                                   ::::      ::::        ::                  :    :::     ::::::::::::::",
+      "                                                   ::::      :                            ::::    :::     ::::::::::::::",
+      "                                                   :::::::::::                            ::::    :::     ::::::::::::::",
+      "                                               :::::::::::::::                            ::::    ::::::::::::::::::::: ",
+      "                                               :::                                                          ::::::::::: ",
+      "                                    ::::::::::::::                       ::::::::::::                               ::: ",
+      "                                    ::::::::::::::                       ::::::::::::                               ::: ",
+      "                         :::::      ~~::~:::::::                         ::::::::::::                               ::: ",
+      "                        ::::::      :~~~~::::::~                         ::::::::::::::::::                         ::: ",
+      "                        ~~~~::      :                                    :::::                              ::::::::::: ",
+      "                          ::::                                           :::::                              ::::::::::::",
+      "                                                                         :::::                   :::::::::::::::::::::::",
+      "                          ::::::                                         :::::                   :::::::::::::::::::::::",
+      "                                                          ::::::::::::::::::::                                    ::::::",
+      "                                                          ::::::::::::::::::::                                         :",
+      "                                                          :::::::::::::::::::::::::::::::::                             ",
+      "                                        ::::::            ::~::::::::::::::::::::::::::::::                             "
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 16,
-          "Y": 8
-        },
-        {
-          "X": 18,
-          "Y": 30
-        },
-        {
-          "X": 20,
-          "Y": 49
-        }
+        [
+          16,
+          8
+        ],
+        [
+          18,
+          30
+        ],
+        [
+          20,
+          49
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 96,
-          "Y": 16
-        },
-        {
-          "X": 110,
-          "Y": 25
-        },
-        {
-          "X": 119,
-          "Y": 51
-        }
+        [
+          96,
+          16
+        ],
+        [
+          110,
+          25
+        ],
+        [
+          119,
+          51
+        ]
       ]
     }
   },
@@ -368,278 +369,279 @@
       "Placements": [
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 79,
-            "Y": 4
-          }
+          "Position": [
+            79,
+            4
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 80,
-            "Y": 4
-          }
+          "Position": [
+            80,
+            4
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 81,
-            "Y": 4
-          }
+          "Position": [
+            81,
+            4
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 82,
-            "Y": 4
-          }
+          "Position": [
+            82,
+            4
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 83,
-            "Y": 4
-          }
+          "Position": [
+            83,
+            4
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 84,
-            "Y": 4
-          }
+          "Position": [
+            84,
+            4
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 85,
-            "Y": 4
-          }
+          "Position": [
+            85,
+            4
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 82,
-            "Y": 34
-          }
+          "Position": [
+            82,
+            34
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 82,
-            "Y": 35
-          }
+          "Position": [
+            82,
+            35
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 82,
-            "Y": 36
-          }
+          "Position": [
+            82,
+            36
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 82,
-            "Y": 37
-          }
+          "Position": [
+            82,
+            37
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 82,
-            "Y": 38
-          }
+          "Position": [
+            82,
+            38
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 82,
-            "Y": 39
-          }
+          "Position": [
+            82,
+            39
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 83,
-            "Y": 39
-          }
+          "Position": [
+            83,
+            39
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 83,
-            "Y": 38
-          }
+          "Position": [
+            83,
+            38
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 83,
-            "Y": 37
-          }
+          "Position": [
+            83,
+            37
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 83,
-            "Y": 36
-          }
+          "Position": [
+            83,
+            36
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 83,
-            "Y": 35
-          }
+          "Position": [
+            83,
+            35
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 83,
-            "Y": 34
-          }
+          "Position": [
+            83,
+            34
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 85,
-            "Y": 34
-          }
+          "Position": [
+            85,
+            34
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 85,
-            "Y": 37
-          }
+          "Position": [
+            85,
+            37
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 85,
-            "Y": 39
-          }
+          "Position": [
+            85,
+            39
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 84,
-            "Y": 34
-          }
+          "Position": [
+            84,
+            34
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 84,
-            "Y": 35
-          }
+          "Position": [
+            84,
+            35
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 84,
-            "Y": 37
-          }
+          "Position": [
+            84,
+            37
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 84,
-            "Y": 36
-          }
+          "Position": [
+            84,
+            36
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 84,
-            "Y": 38
-          }
+          "Position": [
+            84,
+            38
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 84,
-            "Y": 39
-          }
+          "Position": [
+            84,
+            39
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 77,
-            "Y": 3
-          }
+          "Position": [
+            77,
+            3
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 77,
-            "Y": 2
-          }
+          "Position": [
+            77,
+            2
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 77,
-            "Y": 5
-          }
+          "Position": [
+            77,
+            5
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 77,
-            "Y": 6
-          }
+          "Position": [
+            77,
+            6
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 77,
-            "Y": 4
-          }
+          "Position": [
+            77,
+            4
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 76,
-            "Y": 4
-          }
+          "Position": [
+            76,
+            4
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 78,
-            "Y": 4
-          }
+          "Position": [
+            78,
+            4
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 74,
-            "Y": 4
-          }
+          "Position": [
+            74,
+            4
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 75,
-            "Y": 4
-          }
+          "Position": [
+            75,
+            4
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 73,
-            "Y": 4
-          }
+          "Position": [
+            73,
+            4
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 86,
-            "Y": 4
-          }
+          "Position": [
+            86,
+            4
+          ]
         }
       ]
     }
-  ]
+  ],
+  "Challenges": []
 }

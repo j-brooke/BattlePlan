@@ -33,41 +33,41 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "AAAAAAABAQEAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAEBAQEBAQEBAAAA",
-      "AAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEB",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQAAAAAAAAAA",
-      "AAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAABAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      null,
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEB",
-      "AAEAAAAAAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAA",
-      "AQEBAQAAAAABAQEBAQEAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AQEBAQEAAAAAAQEBAQAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AQEBAQEBAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAA",
-      "AQEBAQEBAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB"
+      "     :::               :::        ::::::::   ",
+      "    :::::::                          ::::    ",
+      ":::::::::::                           ::::   ",
+      ":::::::::::                           :::::::",
+      ":::::::::                 :::::::::::        ",
+      "  ::::::                     ::::::::        ",
+      "                            :::          ::::",
+      "                                             ",
+      "                                             ",
+      "                                             ",
+      "          :                              ::::",
+      " :       :::::                ::             ",
+      "::::    ::::::         ::::                  ",
+      ":::::    ::::           ::                   ",
+      "::::::         :::                     ::    ",
+      "::::::          :                            ",
+      " ::                                       :::",
+      "         :                              :::::",
+      "        ::::                            :::::",
+      "         ::                             :::::"
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 1,
-          "Y": 8
-        }
+        [
+          1,
+          8
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 43,
-          "Y": 8
-        }
+        [
+          43,
+          8
+        ]
       ]
     }
   },
@@ -98,24 +98,24 @@
       "Placements": [
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 41,
-            "Y": 7
-          }
+          "Position": [
+            41,
+            7
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 41,
-            "Y": 8
-          }
+          "Position": [
+            41,
+            8
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 41,
-            "Y": 9
-          }
+          "Position": [
+            41,
+            9
+          ]
         }
       ]
     }

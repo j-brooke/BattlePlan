@@ -1,4 +1,5 @@
 {
+  "BannerText": [],
   "Terrain": {
     "TileTypes": [
       {
@@ -29,61 +30,61 @@
     "Width": 50,
     "Height": 36,
     "Tiles": [
-      "AQEBAQEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEBAAAAAAEBAQEAAAAAAAAAAAABAQE=",
-      "AQEBAQEBAQEAAAAAAAAAAAAAAAABAQEBAQEBAQEBAwMDAwEBAQEAAAAAAAEBAQEBAQE=",
-      "AQEBAQEBAQEAAQEBAQEAAAAAAAABAQEBAQEBAQEBAwMDAwEBAQAAAAAAAAEBAQEBAQE=",
-      "AQEBAQEBAQEAAQEBAQEAAAAAAAABAQEBAQEDAwMDAwMDAwMDAwMBAQEAAAABAQEBAQE=",
-      "AAAAAAAAAAAAAQEBAQEAAAAAAAABAQEBAQEDAwMDAwMDAwMDAwMBAQEAAAABAQEBAQE=",
-      "AAAAAAAAAAAAAQEBAQEAAAAAAAABAQEDAwMDAwEBAQEBAQMDAwMDAwMDAwMDAwEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAABAQEDAwMBAwEBAQEBAQMDAwMDAwMDAwMDAwEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAwMDAwMBAwEBAQEBAQMDAwMDAwMDAwMDAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMDAwMBAwEBAQEDAwMDAwMDAwMDAwMDAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAQEBAQAAAAAAAwMBAwEBAQEDAwMDAwMDAwMDAwMDAQEBAQE=",
-      "AQEBAQEBAQEBAQEBAAAAAQEBAQAAAAAAAAAAAAABAAAAAwMDAwMDAwMDAwMAAAAAAAA=",
-      "AQEBAQEBAQEBAQEBAAAAAQEBAQAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAABAQE=",
-      "AQEBAQEBAQEBAQEBAQAAAQEBAQAAAAAAAQEAAAAAAAAAAAEBAQAAAAAAAAAAAAABAQE=",
-      "AQEBAQEBAQEBAQEBAQAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQE=",
-      "AAAAAAAAAAEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAEAAAAAAAAAAAAAAAABAQE=",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAEAAAAAAAAAAAAAAAABAQE=",
-      "AQEBAQEBAQEBAAAAAAABAQEBAQAAAAAAAAEBAQEBAQAAAAEAAAAAAAAAAAAAAAABAQE=",
-      "AQEBAQEBAQEBAAAAAAABAQEBAQAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAQAAAAAAAAA=",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAQAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAQAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      null,
-      "AQEBAQAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAAAAAAABAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAA=",
-      "AQEBAQEBAAAAAAABAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AQEBAQEBAAEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEAAAABAQEBAQA=",
-      "AAAAAAAAAAEBAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAEBAQEBAQEBAQEAAAABAQEBAQA=",
-      "AQEBAQEBAQEBAAAAAAAAAQEBAQEBAQEAAAAAAAAAAAEBAQEBAAAAAAAAAAABAQEBAQE=",
-      "AQEBAQEBAQEBAAAAAAAAAQEBAQEBAQEAAAAAAAAAAAEBAQEBAAAAAAAAAAABAQEBAQE=",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQE=",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAAAAAAAAAQEBAQE="
+      "::::::::            ::::::::::    ::::         :::",
+      "::::::::            ::::::::::@@@@::::     :::::::",
+      ":::::::: :::::      ::::::::::@@@@:::      :::::::",
+      ":::::::: :::::      ::::::@@@@@@@@@@@@:::   ::::::",
+      "         :::::      ::::::@@@@@@@@@@@@:::   ::::::",
+      "         :::::      :::@@@@@::::::@@@@@@@@@@@@::::",
+      "                    :::@@@:@::::::@@@@@@@@@@@@::::",
+      "                     @@@@@:@::::::@@@@@@@@@@@:::::",
+      "                      @@@@:@::::@@@@@@@@@@@@@:::::",
+      "               ::::     @@:@::::@@@@@@@@@@@@@:::::",
+      "::::::::::::   ::::          :   @@@@@@@@@@@      ",
+      "::::::::::::   ::::          :                 :::",
+      ":::::::::::::  ::::     ::        :::          :::",
+      ":::::::::::::           ::                     :::",
+      "       ::::::                          ::         ",
+      "                                     :          ::",
+      "                                               :::",
+      "                         ::::::   :            :::",
+      ":::::::::                ::::::   :            :::",
+      ":::::::::     :::::      ::::::   :            :::",
+      ":::::::::     :::::            :::        :       ",
+      ":::::::::         :            :::        :       ",
+      "                  :            :::        :       ",
+      "                  :                               ",
+      "                                                  ",
+      "::::                 :                            ",
+      "::::                 :                            ",
+      "                     :                            ",
+      "::::::     :::::::                     ::         ",
+      "::::::     :::::::                                ",
+      ":::::: :::::::::::                  :::::   ::::: ",
+      "       ::::::::::::::          ::::::::::   ::::: ",
+      ":::::::::      ::::::::        :::::        ::::::",
+      ":::::::::      ::::::::        :::::        ::::::",
+      ":::::::::                                   ::::::",
+      ":::::::::                        ::::::      :::::"
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 2,
-          "Y": 16
-        },
-        {
-          "X": 38,
-          "Y": 33
-        }
+        [
+          2,
+          16
+        ],
+        [
+          38,
+          33
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 40,
-          "Y": 1
-        }
+        [
+          40,
+          1
+        ]
       ]
     }
   },

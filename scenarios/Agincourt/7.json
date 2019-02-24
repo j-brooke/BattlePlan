@@ -30,65 +30,65 @@
     "Width": 50,
     "Height": 36,
     "Tiles": [
-      "AAACAQECAgIBAQEBAQEAAAABAQEBAQEAAAAAAAAAAAAAAQEBAQEBAAICAgICAgAAAAA=",
-      "AgICAQECAgIBAQEBAQEAAAEBAQEBAQEBAQAAAAAAAAAAAAEBAQEBAgICAgICAgIAAAA=",
-      "AgICAQECAgIBAQEBAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAABAQEBAAICAgICAAAAAAA=",
-      "AAICAQECAgIBAQEBAAAAAAABAQEAAAAAAAAAAAAAAAAAAAEBAQEBAQAAAAAAAAAAAAA=",
-      "AAICAQECAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAAAAAAAAAAAAgICAAA=",
-      "AQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAgICAgA=",
-      "AQEBAQEBAQEAAAAAAAAAAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAgICAgICAgA=",
-      "AQEBAQEBAQEAAAAAAAAAAAABAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAICAgICAgICAAA=",
-      "AQEBAQAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQAAAAAAAAAAAAAAAAICAQEAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAAAAAAAAAAAAAAAAAQEBAQEBAQAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAQEBAQEBAQICAgI=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQAAAAAAAAAAAAAAAQEBAQEBAQICAgI=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgI=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      null,
-      "AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAQEBAQEAAAAAAQEBAQABAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAQEBAQA=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQICAgAAAAAAAAAAAAAAAAAAAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQICAgICAgIAAAAAAAAAAAAAAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAQECAgICAgICAgICAgICAAAAAAAAAAAAAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgICAgICAgICAgIAAAAAAAAAAAAAAQEBAQE=",
-      "AAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAICAgICAgICAAAAAAAAAAAAAAAAAQEBAQE=",
-      "AgICAAACAgAAAAAAAQEBAQEAAAAAAAAAAgICAgIAAAAAAAEBAQEBAQAAAAABAQEBAQE=",
-      "AgICAgICAgICAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQAAAAABAQEBAAA=",
-      "AgICAgICAgIAAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAABAQEBAQEBAAAAAAAAAAEAAAA=",
-      "AgICAgICAgEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAQEBAQEBAQEBAQAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAQEBAQEBAQEAAAAAAAAAAAAAAQEBAAEBAQEBAQEBAQAAAAAAAAAAAAA=",
-      "AQEBAQEBAQEBAQEBAQEBAQEBAgICAAAAAAAAAQEBAQEBAQEBAQEBAAAAAAAAAAAAAAA=",
-      "AAEBAQEBAQABAAAAAQEBAQEBAgICAgICAAAAAQEBAQEBAQEBAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAABAQAAAAAAAQEBAQEBAQICAgICAgAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAABAQEBAQEBAQICAgICAgAAAAAAAAAAAAABAQEBAQAAAAAAAAAAAAA=",
-      "AAAAAAAAAAAAAAAAAQEBAQEBAQICAgICAgAAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAA="
+      "  ~::~~~::::::   ::::::          :::::: ~~~~~~    ",
+      "~~~::~~~::::::  :::::::::         :::::~~~~~~~~   ",
+      "~~~::~~~::::    :::::::::          :::: ~~~~~     ",
+      " ~~::~~~::::     :::              ::::::          ",
+      " ~~::~:::                         ::         ~~~  ",
+      "::::::::                                  ~~~~~~~ ",
+      "::::::::          :::::                   ~~~~~~~ ",
+      "::::::::         :::::::::              ~~~~~~~~  ",
+      "::::              ::::::::::            ~~::      ",
+      "                   ::::::::            :::::::    ",
+      "                   :::::::             :::::::~~~~",
+      "                   :::::::::           :::::::~~~~",
+      "                  :::::::::                     ~~",
+      "                  :::::::::                       ",
+      "                    ::::::::                      ",
+      "                       :::                        ",
+      "                                                  ",
+      "               :                                  ",
+      "            :::::                                 ",
+      "            :::::    :::: :::                     ",
+      "                  ::::::::::::               :::: ",
+      "                  ::::::::::~~~              :::::",
+      "                   :::::::::~~~~~~~          :::::",
+      "                     ::~~~~~~~~~~~~~         :::::",
+      "                        ~~~~~~~~~~~          :::::",
+      "               ::        ~~~~~~~~            :::::",
+      "~~~  ~~     :::::       ~~~~~     ::::::    ::::::",
+      "~~~~~~~~~::::::::                  :::::    ::::  ",
+      "~~~~~~~~ ::::::::               :::::::       :   ",
+      "~~~~~~~::::::::::             ::::::::::          ",
+      ":::::::::::::::::          ::: :::::::::          ",
+      "::::::::::::::::::~~~      ::::::::::::           ",
+      " :::::: :   ::::::~~~~~~   :::::::::              ",
+      "     ::     :::::::~~~~~~     :::                 ",
+      "           ::::::::~~~~~~          :::::          ",
+      "            :::::::~~~~~~          ::::           "
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 27,
-          "Y": 34
-        },
-        {
-          "X": 28,
-          "Y": 1
-        }
+        [
+          27,
+          34
+        ],
+        [
+          28,
+          1
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 45,
-          "Y": 16
-        },
-        {
-          "X": 3,
-          "Y": 17
-        }
+        [
+          45,
+          16
+        ],
+        [
+          3,
+          17
+        ]
       ]
     }
   },

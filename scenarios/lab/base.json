@@ -1,6 +1,5 @@
 {
-  "BannerText": [
-  ],
+  "BannerText": [],
   "Terrain": {
     "TileTypes": [
       {
@@ -31,41 +30,41 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "AAAAAAABAQEAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAEBAQEBAQEBAAAA",
-      "AAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEB",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQAAAAAAAAAA",
-      "AAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAABAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      null,
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEB",
-      "AAEAAAAAAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAA",
-      "AQEBAQAAAAABAQEBAQEAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AQEBAQEAAAAAAQEBAQAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AQEBAQEBAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAA",
-      "AQEBAQEBAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB"
+      "     :::               :::        ::::::::   ",
+      "    :::::::                          ::::    ",
+      ":::::::::::                           ::::   ",
+      ":::::::::::                           :::::::",
+      ":::::::::                 :::::::::::        ",
+      "  ::::::                     ::::::::        ",
+      "                            :::          ::::",
+      "                                             ",
+      "                                             ",
+      "                                             ",
+      "          :                              ::::",
+      " :       :::::                ::             ",
+      "::::    ::::::         ::::                  ",
+      ":::::    ::::           ::                   ",
+      "::::::         :::                     ::    ",
+      "::::::          :                            ",
+      " ::                                       :::",
+      "         :                              :::::",
+      "        ::::                            :::::",
+      "         ::                             :::::"
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 1,
-          "Y": 8
-        }
+        [
+          1,
+          8
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 43,
-          "Y": 8
-        }
+        [
+          43,
+          8
+        ]
       ]
     }
   },

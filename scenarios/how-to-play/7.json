@@ -32,45 +32,45 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "AAAAAAAAAQEBAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAEBAQEBAQEBAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEB",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQAAAAAAAAAA",
-      "AAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAABAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      null,
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEB",
-      "AAEAAAAAAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAA",
-      "AQEBAQAAAAABAQEBAQEAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AQEBAQEAAAAAAQEBAQAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AQEBAQEBAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAA",
-      "AQEBAQEBAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB"
+      "      :::              :::        ::::::::   ",
+      "                                     ::::    ",
+      "                                      ::::   ",
+      ":::::::::::                           :::::::",
+      ":::::::::                 :::::::::::        ",
+      "  ::::::                     ::::::::        ",
+      "                            :::          ::::",
+      "                                             ",
+      "                                             ",
+      "                                             ",
+      "          :                              ::::",
+      " :       :::::                ::             ",
+      "::::    ::::::         ::::                  ",
+      ":::::    ::::           ::                   ",
+      "::::::         :::                     ::    ",
+      "::::::          :                            ",
+      " ::                                       :::",
+      "         :                              :::::",
+      "        ::::                            :::::",
+      "         ::                             :::::"
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 1,
-          "Y": 1
-        },
-        {
-          "X": 1,
-          "Y": 18
-        }
+        [
+          1,
+          1
+        ],
+        [
+          1,
+          18
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 43,
-          "Y": 8
-        }
+        [
+          43,
+          8
+        ]
       ]
     }
   },
@@ -131,66 +131,66 @@
       "Placements": [
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 16,
-            "Y": 0
-          }
+          "Position": [
+            16,
+            0
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 16,
-            "Y": 1
-          }
+          "Position": [
+            16,
+            1
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 16,
-            "Y": 2
-          }
+          "Position": [
+            16,
+            2
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 17,
-            "Y": 2
-          }
+          "Position": [
+            17,
+            2
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 17,
-            "Y": 1
-          }
+          "Position": [
+            17,
+            1
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 17,
-            "Y": 0
-          }
+          "Position": [
+            17,
+            0
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 18,
-            "Y": 2
-          }
+          "Position": [
+            18,
+            2
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 18,
-            "Y": 1
-          }
+          "Position": [
+            18,
+            1
+          ]
         },
         {
           "UnitType": "Archer",
-          "Position": {
-            "X": 18,
-            "Y": 0
-          }
+          "Position": [
+            18,
+            0
+          ]
         }
       ]
     }

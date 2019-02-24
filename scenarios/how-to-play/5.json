@@ -33,41 +33,41 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "AAAAAAABAQEAAAAAAAAAAAAAAAAAAAABAQEAAAAAAAAAAAEBAQEBAQEBAAAA",
-      "AAAAAAEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEAAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAAAA",
-      "AQEBAQEBAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEB",
-      "AQEBAQEBAQEBAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQEBAQAAAAAAAAAA",
-      "AAABAQEBAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEBAQEBAQAAAAAAAAAA",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQAAAAAAAAAAAAABAQEB",
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      null,
-      "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQEB",
-      "AAEAAAAAAAAAAQEBAQEAAAAAAAAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAA",
-      "AQEBAQAAAAABAQEBAQEAAAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AQEBAQEAAAAAAQEBAQAAAAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AQEBAQEBAAAAAAAAAAAAAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEAAAAA",
-      "AQEBAQEBAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-      "AAEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQEB",
-      "AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAABAQEBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB",
-      "AAAAAAAAAAAAAQEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEB"
+      "     :::               :::        ::::::::   ",
+      "    :::::::                          ::::    ",
+      ":::::::::::                           ::::   ",
+      ":::::::::::                           :::::::",
+      ":::::::::                 :::::::::::        ",
+      "  ::::::                     ::::::::        ",
+      "                            :::          ::::",
+      "                                             ",
+      "                                             ",
+      "                                             ",
+      "          :                              ::::",
+      " :       :::::                ::             ",
+      "::::    ::::::         ::::                  ",
+      ":::::    ::::           ::                   ",
+      "::::::         :::                     ::    ",
+      "::::::          :                            ",
+      " ::                                       :::",
+      "         :                              :::::",
+      "        ::::                            :::::",
+      "         ::                             :::::"
     ],
     "SpawnPointsMap": {
       "1": [
-        {
-          "X": 1,
-          "Y": 8
-        }
+        [
+          1,
+          8
+        ]
       ]
     },
     "GoalPointsMap": {
       "1": [
-        {
-          "X": 43,
-          "Y": 8
-        }
+        [
+          43,
+          8
+        ]
       ]
     }
   },
@@ -108,59 +108,59 @@
       "Placements": [
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 14,
-            "Y": 2
-          }
+          "Position": [
+            14,
+            2
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 16,
-            "Y": 2
-          }
+          "Position": [
+            16,
+            2
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 14,
-            "Y": 3
-          }
+          "Position": [
+            14,
+            3
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 15,
-            "Y": 3
-          }
+          "Position": [
+            15,
+            3
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 16,
-            "Y": 3
-          }
+          "Position": [
+            16,
+            3
+          ]
         },
         {
           "UnitType": "Barricade",
-          "Position": {
-            "X": 17,
-            "Y": 3
-          }
+          "Position": [
+            17,
+            3
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 15,
-            "Y": 2
-          }
+          "Position": [
+            15,
+            2
+          ]
         },
         {
           "UnitType": "Pikeman",
-          "Position": {
-            "X": 17,
-            "Y": 2
-          }
+          "Position": [
+            17,
+            2
+          ]
         }
       ]
     }

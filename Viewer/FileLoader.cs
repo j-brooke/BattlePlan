@@ -18,22 +18,22 @@ namespace BattlePlan.Viewer
         public List<Model.UnitCharacteristics> LoadUnits()
         {
             var fileContentsAsString = File.ReadAllText(_unitsFileName);
-            var unitList = JsonConvert.DeserializeObject<List<Dto.V1.UnitCharacteristics>>(fileContentsAsString);
-            var domainUnitList = unitList.Select( (item) => Translator.V1Translator.ToModel(item) ).ToList();
+            var unitList = JsonConvert.DeserializeObject<List<Dto.V2.UnitCharacteristics>>(fileContentsAsString);
+            var domainUnitList = unitList.Select( (item) => Translator.V2Translator.ToModel(item) ).ToList();
             return domainUnitList;
         }
 
         public Model.Scenario LoadScenario(string filename)
         {
             var scenarioFileContents = File.ReadAllText(filename);
-            var scenario = JsonConvert.DeserializeObject<Dto.V1.Scenario>(scenarioFileContents);
-            var domainScenario = Translator.V1Translator.ToModel(scenario);
+            var scenario = JsonConvert.DeserializeObject<Dto.V2.Scenario>(scenarioFileContents);
+            var domainScenario = Translator.V2Translator.ToModel(scenario);
             return domainScenario;
         }
 
         public void SaveScenario(string filename, Model.Scenario scenario)
         {
-            var dtoScenario = Translator.V1Translator.ToDto(scenario);
+            var dtoScenario = Translator.V2Translator.ToDto(scenario);
             var fileContentsAsString = JsonConvert.SerializeObject(dtoScenario, GetJsonOpts());
             File.WriteAllText(filename, fileContentsAsString);
         }
@@ -67,15 +67,15 @@ namespace BattlePlan.Viewer
         public Model.BattleResolution LoadBattleResolution(string filename)
         {
             var fileContents = File.ReadAllText(filename);
-            var resolutionDto = JsonConvert.DeserializeObject<Dto.V1.BattleResolution>(fileContents);
-            var resolutionModel = Translator.V1Translator.ToModel(resolutionDto);
+            var resolutionDto = JsonConvert.DeserializeObject<Dto.V2.BattleResolution>(fileContents);
+            var resolutionModel = Translator.V2Translator.ToModel(resolutionDto);
             return resolutionModel;
 
         }
 
         public void SaveBattleResolution(string filename, Model.BattleResolution resolution)
         {
-            var dtoResolution = Translator.V1Translator.ToDto(resolution);
+            var dtoResolution = Translator.V2Translator.ToDto(resolution);
             var fileContentsAsString = JsonConvert.SerializeObject(dtoResolution, GetJsonOpts());
             File.WriteAllText(filename, fileContentsAsString);
         }
