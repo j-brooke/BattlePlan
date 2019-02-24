@@ -102,7 +102,7 @@ namespace BattlePlan.Model
 
         public void ClearAllTiles()
         {
-            _tiles = new byte[this.Width, this.Height];
+            Array.Clear(_tiles, 0, _tiles.Length);
         }
 
         /// <summary>
@@ -217,6 +217,6 @@ namespace BattlePlan.Model
         }
 
         private const int _maxSaneSize = 250;
-        private byte[,] _tiles;
+        private readonly byte[,] _tiles;
     }
 }
