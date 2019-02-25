@@ -12,7 +12,6 @@ namespace BattlePlan.Resolver
     /// </summary>
     public sealed class BattleState
     {
-        public Terrain Terrain => _terrain;
         public BattleResolution Resolve(Scenario scenario, IList<UnitCharacteristics> unitTypes)
         {
             _terrain = scenario.Terrain;
@@ -162,7 +161,9 @@ namespace BattlePlan.Resolver
             return resolution;
         }
 
+        internal Terrain Terrain => _terrain;
         internal HurtMap HurtMap => _hurtMap;
+        internal BattlePathGraph PathGraph => _pathGraph;
 
         internal BattleEntity GetEntityAt(Vector2Di position)
         {
@@ -192,18 +193,6 @@ namespace BattlePlan.Resolver
         internal IList<Vector2Di> GetGoalTiles(int teamId)
         {
             return this._terrain.GoalPointsMap[teamId];
-        }
-
-        internal IList<Vector2Di> FindPathToGoal(BattleEntity entity)
-        {
-            var path = _pathGraph.FindPathToGoal(this, entity);
-            return path;
-        }
-
-        internal IList<Vector2Di> FindPathToSomewhere(BattleEntity entity, IEnumerable<Vector2Di> destinations)
-        {
-            var path = _pathGraph.FindPathToSomewhere(this, entity, destinations);
-            return path;
         }
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();

@@ -462,7 +462,7 @@ namespace BattlePlan.Resolver
                         // to choose a path that tries to go around friendly units, as needed.  Berserkers are much more interesting
                         // when the behave like a hoard rather than a line at the DMV.
                         var potentialTargetLocs = potentialTargets.Select( (targ) => targ.Position );
-                        var pathToTarget = battleState.FindPathToSomewhere(this, potentialTargetLocs);
+                        var pathToTarget = battleState.PathGraph.FindPathToSomewhere(this, potentialTargetLocs);
                         if (pathToTarget!=null)
                         {
                             var pathEnd = pathToTarget[pathToTarget.Count-1];
@@ -502,7 +502,7 @@ namespace BattlePlan.Resolver
 
         private void ChoosePathToGoal(BattleState battleState)
         {
-            var path = battleState.FindPathToGoal(this);
+            var path = battleState.PathGraph.FindPathToGoal(this);
             _plannedPath = new Queue<Vector2Di>(path);
         }
 

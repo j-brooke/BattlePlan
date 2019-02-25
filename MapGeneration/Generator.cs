@@ -179,7 +179,6 @@ namespace BattlePlan.MapGeneration
                 return false;
 
             // Make a set of all points reachable from one of the spawn/goal points.
-            var graph = new BattlePathGraph(_terrain);
             var connectedPoints = MovementModel.FindReachableLocations(_terrain, allPoints.First());
 
             // Test whether that set contains them all.

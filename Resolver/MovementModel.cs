@@ -68,5 +68,18 @@ namespace BattlePlan.Resolver
 
             return visited;
         }
+
+        /// <summary>
+        /// Distance between two points assuming you can move in 8 directions (axis-aligned and 45 degree angles).
+        /// </summary>
+        public static double DiagonalDistance(Vector2Di fromNode, Vector2Di toNode)
+        {
+            var deltaX = Math.Abs(fromNode.X - toNode.X);
+            var deltaY = Math.Abs(fromNode.Y - toNode.Y);
+
+            return (deltaX + deltaY) - (2-_sqrt2) * Math.Min(deltaX, deltaY);
+        }
+
+        private static double _sqrt2 = Math.Sqrt(2.0);
     }
 }

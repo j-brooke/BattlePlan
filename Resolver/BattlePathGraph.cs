@@ -10,28 +10,24 @@ namespace BattlePlan.Resolver
     /// <summary>
     /// Class that provides graph-theory type answers to the pathfinding algorithm based on the 2D tile map
     /// used by the game.
-    ///
-    /// TODO: Given how coupled this is with BattleState, maybe it shouldn't be a separate class.
     /// </summary>
+    /// <remarks>
+    /// This class is very highly coupled with BattleState.  It's tempting to consolidate this into that class,
+    /// but doing so would necessitate exposing the IPathGraph publicly from BattleState, and those really shouldn't
+    /// be visible to anyone else.
+    /// </remarks>
     internal class BattlePathGraph : IPathGraph<Vector2Di, BattleEntity>
     {
         public BattlePathGraph(BattleState battleState)
         {
             _battleState = battleState;
-            _terrain = battleState.Terrain;
 
             // Set up a reusable PathSolver.
-            var spawns = _terrain.SpawnPointsMap.SelectMany( (kvp) => kvp.Value );
-            var goals = _terrain.SpawnPointsMap.SelectMany( (kvp) => kvp.Value );
+            var spawns = _battleState.Terrain.SpawnPointsMap.SelectMany( (kvp) => kvp.Value );
+            var goals = _battleState.Terrain.SpawnPointsMap.SelectMany( (kvp) => kvp.Value );
             var spawnsAndGoals = spawns.Concat(goals);
             _pathSolver = new PathSolver<Vector2Di, BattleEntity>(this);
             _pathSolver.BuildAdjacencyGraph(spawnsAndGoals);
-        }
-
-        public BattlePathGraph(Terrain terrain)
-        {
-            _battleState = null;
-            _terrain = terrain;
         }
 
         /// <summary>
@@ -54,37 +50,36 @@ namespace BattlePlan.Resolver
 
             double penalty = 0.0;
 
+            Debug.Assert(_battleState != null && entity != null);
+
             // Possibly add penalties for things in the way.  We want units to look for routes around things
             // if it's not too much of a hassle, but wait or attack other times.
-            if (_battleState != null && entity != null)
+            var blockingEnt = _battleState.GetEntityAt(toNode);
+            if (blockingEnt != null)
             {
-                var blockingEnt = _battleState.GetEntityAt(toNode);
-                if (blockingEnt != null)
+                if (blockingEnt.TeamId == entity.TeamId)
                 {
-                    if (blockingEnt.TeamId == entity.TeamId)
+                    if (blockingEnt.SpeedTilesPerSec<=0.0)
                     {
-                        if (blockingEnt.SpeedTilesPerSec<=0.0)
-                        {
-                            // If the blocking entity can't move, strongly incentivise this one to go around.
-                            penalty = _blockedByFriendlyImmobileCost;
-                        }
-                        else
-                        {
-                            // If the blocking entity is mobile, make a penalty based on its speed and how far away
-                            // it is.  We don't want to worry too much about distant obstacles.
-                            if (entity.Position.DistanceTo(blockingEnt.Position)<crowdAversionRange)
-                                penalty = entity.Class.CrowdAversionBias/blockingEnt.SpeedTilesPerSec;
-                        }
+                        // If the blocking entity can't move, strongly incentivise this one to go around.
+                        penalty = _blockedByFriendlyImmobileCost;
                     }
                     else
                     {
-                        // Make a penalty based on how long it'll take us to kill the thing in the way.  (This is
-                        // an approximation using continuous math instead of discrete whacks, and it doesn't consider
-                        // that our friends might be attacking too.)
-                        if (entity.Class.WeaponDamage>0)
-                            penalty = (blockingEnt.HitPoints / entity.Class.WeaponDamage)
-                                * (entity.Class.WeaponUseTime + entity.Class.WeaponReloadTime);
+                        // If the blocking entity is mobile, make a penalty based on its speed and how far away
+                        // it is.  We don't want to worry too much about distant obstacles.
+                        if (entity.Position.DistanceTo(blockingEnt.Position)<crowdAversionRange)
+                            penalty = entity.Class.CrowdAversionBias/blockingEnt.SpeedTilesPerSec;
                     }
+                }
+                else
+                {
+                    // Make a penalty based on how long it'll take us to kill the thing in the way.  (This is
+                    // an approximation using continuous math instead of discrete whacks, and it doesn't consider
+                    // that our friends might be attacking too.)
+                    if (entity.Class.WeaponDamage>0)
+                        penalty = (blockingEnt.HitPoints / entity.Class.WeaponDamage)
+                            * (entity.Class.WeaponUseTime + entity.Class.WeaponReloadTime);
                 }
             }
 
@@ -109,23 +104,23 @@ namespace BattlePlan.Resolver
             // calculations and producing slightly suboptimal paths.
             const double fudgeFactor = 0.999;
 
-            var dist = DiagonalDistance(fromNode, toNode);
+            var dist = MovementModel.DiagonalDistance(fromNode, toNode);
             var time = fudgeFactor * dist/entity.SpeedTilesPerSec;
             return time;
         }
 
         public IEnumerable<Vector2Di> Neighbors(Vector2Di fromNode)
         {
-            return MovementModel.ValidMovesFrom(_terrain, fromNode);
+            return MovementModel.ValidMovesFrom(_battleState.Terrain, fromNode);
         }
 
-        public IList<Vector2Di> FindPathToGoal(BattleState battleState, BattleEntity entity)
+        internal IList<Vector2Di> FindPathToGoal(BattleEntity entity)
         {
             // If, somehow, we're asked to find the path for an immobile object, return null.
             if (entity.SpeedTilesPerSec <= 0.0)
                 return null;
 
-            var goals = _terrain.GoalPointsMap[entity.TeamId];
+            var goals = _battleState.Terrain.GoalPointsMap[entity.TeamId];
             var result = _pathSolver.FindPath(entity.Position, goals, entity);
 
             if (_logger.IsTraceEnabled)
@@ -134,7 +129,7 @@ namespace BattlePlan.Resolver
             return result.Path;
         }
 
-        public IList<Vector2Di> FindPathToSomewhere(BattleState battleState, BattleEntity entity, IEnumerable<Vector2Di> destinations)
+        internal IList<Vector2Di> FindPathToSomewhere(BattleEntity entity, IEnumerable<Vector2Di> destinations)
         {
             // If, somehow, we're asked to find the path for an immobile object, return null.
             if (entity.SpeedTilesPerSec <= 0.0)
@@ -148,7 +143,10 @@ namespace BattlePlan.Resolver
             return result.Path;
         }
 
-        public string DebugInfo()
+        /// <summary>
+        /// Returns a string with summary cumulative pathfinding performance data.
+        /// </summary>
+        internal string DebugInfo()
         {
             double pctGraphUsed = 100.0 * _pathSolver.LifetimeNodesTouchedCount / (_pathSolver.GraphSize * _pathSolver.PathSolvedCount);
             double pctReprocessed = 100.0 * _pathSolver.LifetimeNodesReprocessedCount / (_pathSolver.GraphSize * _pathSolver.PathSolvedCount);
@@ -166,18 +164,7 @@ namespace BattlePlan.Resolver
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static double _sqrt2 = Math.Sqrt(2.0);
         private readonly BattleState _battleState;
-        private readonly Terrain _terrain;
         private readonly PathSolver<Vector2Di,BattleEntity> _pathSolver;
 
-        /// <summary>
-        /// Distance between two points assuming you can move in 8 directions (axis-aligned and 45 degree angles).
-        /// </summary>
-        private static double DiagonalDistance(Vector2Di fromNode, Vector2Di toNode)
-        {
-            var deltaX = Math.Abs(fromNode.X - toNode.X);
-            var deltaY = Math.Abs(fromNode.Y - toNode.Y);
-
-            return (deltaX + deltaY) - (2-_sqrt2) * Math.Min(deltaX, deltaY);
-        }
     }
 }
