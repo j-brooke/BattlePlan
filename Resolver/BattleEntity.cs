@@ -37,6 +37,8 @@ namespace BattlePlan.Resolver
             this.TeamId = teamId;
             this.WeaponReloadElapsedTime = 0.0;
 
+            _elapsedSecondsDoingNothing = 0.0;
+
             // Only attackers are allowed to move.
             this.SpeedTilesPerSec = (isAttacker)? clsChar.SpeedTilesPerSec : 0.0;
         }
@@ -94,9 +96,15 @@ namespace BattlePlan.Resolver
             return this.Id.GetHashCode();
         }
 
+        /// <summary>
+        /// Magic number that influences how long a unit is willing to wait when blocked by friendlies before
+        /// re-calculating its path.
+        /// </summary>
+        private const double _repathAfterIdleFactor = 0.99;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-        public Queue<Vector2Di> _plannedPath;
-        public Queue<Vector2Di> _plannedBerserkPath;
+        private Queue<Vector2Di> _plannedPath;
+        private Queue<Vector2Di> _plannedBerserkPath;
+        private double _elapsedSecondsDoingNothing;
 
         private BattleEvent UpdateNone(BattleState battleState, double time, double deltaSeconds)
         {
@@ -230,7 +238,7 @@ namespace BattlePlan.Resolver
                 return null;
 
             this.CurrentAction = Action.Attack;
-            this.CurrentActionElapsedTime = 0.0;
+            this.CurrentActionElapsedTime = deltaSeconds;
             this.AttackTargetId = target.Id;
 
             var evt = new BattleEvent()
@@ -281,10 +289,19 @@ namespace BattlePlan.Resolver
                 if (this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime && this.SpeedTilesPerSec>0)
                 {
                     // If we could neither move nor attack, and yet our weapon is ready, there must be
-                    // a friendly unit in the way.  Replot path next time around.
-                    _plannedPath = null;
-                    _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                    // a friendly unit in the way.  If this happens too many times in a row, recalculate
+                    // our path on the next cycle.  How long we wait is largely determined by CrowdAversionBias.
+                    _elapsedSecondsDoingNothing += deltaSeconds;
+                    if (this.Class.CrowdAversionBias>0 && _elapsedSecondsDoingNothing >= _repathAfterIdleFactor/this.Class.CrowdAversionBias)
+                    {
+                        _plannedPath = null;
+                        _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                    }
                 }
+            }
+            else
+            {
+                _elapsedSecondsDoingNothing = 0.0;
             }
 
             return actionEvent;
@@ -313,10 +330,19 @@ namespace BattlePlan.Resolver
                 if (this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime && this.SpeedTilesPerSec>0)
                 {
                     // If we could neither move nor attack, and yet our weapon is ready, there must be
-                    // a friendly unit in the way.  Replot path next time around.
-                    _plannedPath = null;
-                    _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                    // a friendly unit in the way.  If this happens too many times in a row, recalculate
+                    // our path on the next cycle.  How long we wait is largely determined by CrowdAversionBias.
+                    _elapsedSecondsDoingNothing += deltaSeconds;
+                    if (this.Class.CrowdAversionBias>0 && _elapsedSecondsDoingNothing >= _repathAfterIdleFactor/this.Class.CrowdAversionBias)
+                    {
+                        _plannedPath = null;
+                        _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                    }
                 }
+            }
+            else
+            {
+                _elapsedSecondsDoingNothing = 0.0;
             }
 
             return actionEvent;
@@ -340,15 +366,26 @@ namespace BattlePlan.Resolver
             if (actionEvent==null && _plannedBerserkPath==null)
                 actionEvent = ChooseActionMoveIfPossible(battleState, time, deltaSeconds);
 
-            if (actionEvent==null && _plannedBerserkPath==null)
+            if (actionEvent==null)
             {
                 if (this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime && this.SpeedTilesPerSec>0)
                 {
                     // If we could neither move nor attack, and yet our weapon is ready, there must be
-                    // a friendly unit in the way.  Replot path next time around.
-                    _plannedPath = null;
-                    _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                    // a friendly unit in the way.  If this happens too many times in a row, recalculate
+                    // our path on the next cycle.  How long we wait is largely determined by CrowdAversionBias.
+                    _elapsedSecondsDoingNothing += deltaSeconds;
+                    if (this.Class.CrowdAversionBias>0 && _elapsedSecondsDoingNothing >= _repathAfterIdleFactor/this.Class.CrowdAversionBias)
+                    {
+                        _plannedPath = null;
+                        _plannedBerserkPath = null;
+                        this.BerserkTargetId = null;
+                        _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
+                    }
                 }
+            }
+            else
+            {
+                _elapsedSecondsDoingNothing = 0.0;
             }
 
             return actionEvent;
@@ -374,7 +411,6 @@ namespace BattlePlan.Resolver
 
                         if (_logger.IsDebugEnabled && actionEvent!=null)
                             _logger.Trace("{0} is attacking {1} because it's in their path", this.Id, entityInNextPos.Id);
-
                     }
                 }
 
