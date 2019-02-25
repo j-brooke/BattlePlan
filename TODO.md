@@ -1,4 +1,3 @@
-* Editor: support for 4 teams?
 * Units: tuning, including resource cost
 * Units: maybe new units?
     * Firespitter (S) - creates patches of DoT fire for any that move through it.
@@ -9,7 +8,6 @@
     * facing?
     * damage reduction from some directions?
 * Map generator: generator seed string?
-* Refactor to simplify teamId limits.
 * Units behavior:
     * Crossbow hold still while enemy in sight?
     * Crossbow only attack enemy combatants (unless path is blocked)?
