@@ -8,7 +8,8 @@ namespace BattlePlan.Path
     /// Class for finding the shortest path between arbitrary nodes in a directed graph
     /// using the A* algorithm.
     /// </summary>
-    /// <typeparam name="T">Type that identifies distinct nodes or locations.  (For example, Vector2D, string, etc.)</typeparam>
+    /// <typeparam name="TNode">Type that identifies distinct nodes or locations.  (For example, Vector2D, string, etc.)</typeparam>
+    /// <typeparam name="TPassthrough">Type of data passed through from PathSolver.FindPath to the IPathGraph.Cost and EstimatedCost.)</typeparam>
     /// <remarks>
     /// <para>This class is designed for calculating many paths using the same adjacency graph each time, from a single thread.
     /// If your terrain frequently changes or which nodes are considered adjacent to others varies from one case to another,
@@ -20,7 +21,7 @@ namespace BattlePlan.Path
     /// <para>Before calling FindPath, you'll need to call BuildAdjacencyGraph.  This builds internal data structures
     /// that will be used on all future FindPath calls.</para>
     /// </remarks>
-    public class PathSolver<T>
+    public class PathSolver<TNode, TPassthrough>
     {
         public int PathSolvedCount => _seqNum;
         public int LifetimeSolutionTimeMS => (int)_lifetimeTimer.ElapsedMilliseconds;
@@ -29,10 +30,10 @@ namespace BattlePlan.Path
         public int LifetimeMaxQueueSize => _lifetimeMaxQueueSize;
         public int GraphSize => _infoGraph.Count;
 
-        public PathSolver(IPathGraph<T> worldGraph)
+        public PathSolver(IPathGraph<TNode, TPassthrough> worldGraph)
         {
             _worldGraph = worldGraph;
-            _infoGraph = new Dictionary<T, NodeInfo>();
+            _infoGraph = new Dictionary<TNode, NodeInfo>();
             _seqNum = 0;
             _lifetimeTimer = new System.Diagnostics.Stopwatch();
         }
@@ -41,13 +42,13 @@ namespace BattlePlan.Path
         /// Prepares the PathSolver by building a graph of which nodes are connected directly to each other.
         /// Call this before calling FindPath, or if the shape of your world changes.
         /// </summary>
-        public void BuildAdjacencyGraph(IEnumerable<T> seedNodeIds)
+        public void BuildAdjacencyGraph(IEnumerable<TNode> seedNodeIds)
         {
             _lifetimeTimer.Start();
             _infoGraph.Clear();
 
             // Create a NodeInfo for every reachable NodeId from the given start ones.
-            var queue = new Queue<T>(seedNodeIds);
+            var queue = new Queue<TNode>(seedNodeIds);
             while (queue.Count>0)
             {
                 var nodeId = queue.Dequeue();
@@ -92,7 +93,7 @@ namespace BattlePlan.Path
         /// (If your IPathGraph.EstimatedCost can overestimate the cost, then this won't always
         /// strictly be the shortest path.)
         /// </summary>
-        public PathResult<T> FindPath(T startNodeId, IEnumerable<T> endNodeIdList)
+        public PathResult<TNode> FindPath(TNode startNodeId, IEnumerable<TNode> endNodeIdList, TPassthrough callerData)
         {
             // Initialize some performance data.
             var timerStartValue = _lifetimeTimer.ElapsedMilliseconds;
@@ -129,7 +130,7 @@ namespace BattlePlan.Path
             startInfo.LastVisitedSeqNum = _seqNum;
             startInfo.BestCostFromStart = 0;
             startInfo.BestPreviousNode = null;
-            startInfo.EstimatedRemainingCost = EstimateRemainingCostToAny(startNodeId, endNodeIdList);
+            startInfo.EstimatedRemainingCost = EstimateRemainingCostToAny(startNodeId, endNodeIdList, callerData);
             startInfo.IsOpen = true;
             openQueue.Enqueue(startInfo);
             nodesTouchedCount += 1;
@@ -151,7 +152,7 @@ namespace BattlePlan.Path
 
                 foreach (var neighborInfo in currentInfo.Neighbors)
                 {
-                    double costToNeighbor = currentInfo.BestCostFromStart + _worldGraph.Cost(currentInfo.NodeId, neighborInfo.NodeId);
+                    double costToNeighbor = currentInfo.BestCostFromStart + _worldGraph.Cost(currentInfo.NodeId, neighborInfo.NodeId, callerData);
 
                     // If the neighbor node hasn't been touched on this FindPath call, re-initialize it and put it
                     // in openQueue for later consideration.
@@ -160,7 +161,7 @@ namespace BattlePlan.Path
                         neighborInfo.LastVisitedSeqNum = _seqNum;
                         neighborInfo.BestCostFromStart = costToNeighbor;
                         neighborInfo.BestPreviousNode = currentInfo;
-                        neighborInfo.EstimatedRemainingCost = EstimateRemainingCostToAny(neighborInfo.NodeId, endNodeIdList);
+                        neighborInfo.EstimatedRemainingCost = EstimateRemainingCostToAny(neighborInfo.NodeId, endNodeIdList, callerData);
                         neighborInfo.IsOpen = true;
 
                         openQueue.Enqueue(neighborInfo);
@@ -190,10 +191,10 @@ namespace BattlePlan.Path
             }
 
             // If we reached a destination, put together a list of the NodeIds that make up the path we found.
-            List<T> path = null;
+            List<TNode> path = null;
             if (arrivalInfo != null)
             {
-                path = new List<T>();
+                path = new List<TNode>();
                 NodeInfo iter = arrivalInfo;
                 while (iter.BestPreviousNode != null)
                 {
@@ -212,7 +213,7 @@ namespace BattlePlan.Path
             _lifetimeReprocessedCount += nodesReprocessedCount;
             _lifetimeMaxQueueSize = Math.Max(_lifetimeMaxQueueSize, maxQueueSize);
 
-            return new PathResult<T>()
+            return new PathResult<TNode>()
             {
                 Path = path,
                 StartingNode = startNodeId,
@@ -227,8 +228,8 @@ namespace BattlePlan.Path
 
         private readonly System.Diagnostics.Stopwatch _lifetimeTimer;
 
-        private readonly IPathGraph<T> _worldGraph;
-        private readonly Dictionary<T,NodeInfo> _infoGraph;
+        private readonly IPathGraph<TNode,TPassthrough> _worldGraph;
+        private readonly Dictionary<TNode,NodeInfo> _infoGraph;
 
         // Each time we run FindPath we use a new _seqNum.  This helps us keep track of which NodeInfo
         // instances we've touched this call, and which ones have stale data from previous calls.
@@ -240,10 +241,10 @@ namespace BattlePlan.Path
         /// <summary>
         /// Returns the smallest of the estimated costs to the given end points.
         /// </summary>
-        private double EstimateRemainingCostToAny(T startNodeId, IEnumerable<T> endNodeIdList)
+        private double EstimateRemainingCostToAny(TNode startNodeId, IEnumerable<TNode> endNodeIdList, TPassthrough callerData)
         {
             return endNodeIdList
-                .Select( (endNodeId) => _worldGraph.EstimatedCost(startNodeId,endNodeId) )
+                .Select( (endNodeId) => _worldGraph.EstimatedCost(startNodeId, endNodeId, callerData) )
                 .Min();
         }
 
@@ -258,7 +259,7 @@ namespace BattlePlan.Path
         private class NodeInfo : IndexedQueueItem
         {
             /// <summary>Identifier for a node.  Could be a string, Vector2D, etc.</summary>
-            public T NodeId { get; }
+            public TNode NodeId { get; }
 
             /// <summary>Link to all NodeInfos reachable from here in one step.</summary>
             public NodeInfo[] Neighbors { get; set; }
@@ -286,7 +287,7 @@ namespace BattlePlan.Path
             /// </summary>
             public int LastVisitedSeqNum { get; set; }
 
-            public NodeInfo(T nodeId)
+            public NodeInfo(TNode nodeId)
             {
                 this.NodeId = nodeId;
                 this.QueueIndex = -1;
