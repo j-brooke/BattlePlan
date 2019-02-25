@@ -66,7 +66,7 @@ namespace BattlePlan.Resolver
                         if (blockingEnt.SpeedTilesPerSec<=0.0)
                         {
                             // If the blocking entity can't move, strongly incentivise this one to go around.
-                            penalty = double.PositiveInfinity;
+                            penalty = _blockedByFriendlyImmobileCost;
                         }
                         else
                         {
@@ -168,6 +168,7 @@ namespace BattlePlan.Resolver
             return msg;
         }
 
+        private const double _blockedByFriendlyImmobileCost = 1E+09;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static double _sqrt2 = Math.Sqrt(2.0);
         private BattleEntity _searchForEntity = null;
