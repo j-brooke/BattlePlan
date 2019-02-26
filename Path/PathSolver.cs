@@ -143,6 +143,13 @@ namespace BattlePlan.Path
                 var currentInfo = openQueue.Dequeue();
                 currentInfo.IsOpen = false;
 
+                // If we start pulling infinities from the queue we'll assume that there are no non-infitite paths.
+                // (Technically, there could be nodes where BestCostFromStart is finite and EstimatedRemainingCost is
+                // infinite, but that doesn't seem like a useful case to worry about.)  Exit early and treat it
+                // as a no-path-found situation.
+                if (currentInfo.BestCostFromStart==double.PositiveInfinity)
+                    break;
+
                 // If this node is our goal, stop the loop.
                 if (currentInfo.IsDestinationForSeqNum==_seqNum)
                 {
