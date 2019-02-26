@@ -188,24 +188,30 @@ namespace BattlePlan.Resolver
                     unitTypeCounts.TryGetValue(placement.UnitType, out unitCount);
                     unitTypeCounts[placement.UnitType] = unitCount + 1;
 
-                    if (allEnemySpawns.Any( (pt) => pt.DistanceTo(placement.Position) < challenge.MinimumDistFromSpawnPts ))
-                        tooCloseToSpawns = true;
+                    if (challenge.MinimumDistFromSpawnPts.HasValue)
+                    {
+                        if (allEnemySpawns.Any( (pt) => pt.DistanceTo(placement.Position) < challenge.MinimumDistFromSpawnPts.Value ))
+                            tooCloseToSpawns = true;
+                    }
 
-                    if (allEnemyGoals.Any( (pt) => pt.DistanceTo(placement.Position) < challenge.MinimumDistFromGoalPts ))
-                        tooCloseToGoals = true;
+                    if (challenge.MinimumDistFromGoalPts.HasValue)
+                    {
+                        if (allEnemyGoals.Any( (pt) => pt.DistanceTo(placement.Position) < challenge.MinimumDistFromGoalPts.Value ))
+                            tooCloseToGoals = true;
+                    }
                 }
             }
 
             if (tooCloseToSpawns)
-                yield return $"Some defenders are closer than {challenge.MinimumDistFromSpawnPts} tiles from enemy spawn points.";
+                yield return $"Some defenders are closer than {challenge.MinimumDistFromSpawnPts.Value} tiles from enemy spawn points.";
             if (tooCloseToGoals)
-                yield return $"Some defenders are closer than {challenge.MinimumDistFromGoalPts} tiles from enemy goals.";
+                yield return $"Some defenders are closer than {challenge.MinimumDistFromGoalPts.Value} tiles from enemy goals.";
 
-            if (challenge.MaximumTotalUnitCount>0 && totalUnitCount>challenge.MaximumTotalUnitCount)
-                yield return $"More than {challenge.MaximumTotalUnitCount} defenders placed.";
+            if (challenge.MaximumTotalUnitCount.HasValue && totalUnitCount>challenge.MaximumTotalUnitCount.Value)
+                yield return $"More than {challenge.MaximumTotalUnitCount.Value} defenders placed.";
 
-            if (challenge.MaximumResourceCost>0 && totalResourceCost>challenge.MaximumResourceCost)
-                yield return $"More than {challenge.MaximumResourceCost} resource points spent.";
+            if (challenge.MaximumResourceCost.HasValue && totalResourceCost>challenge.MaximumResourceCost.Value)
+                yield return $"More than {challenge.MaximumResourceCost.Value} resource points spent.";
 
             var maxUnitTypeCountList = challenge.MaximumUnitTypeCount ?? Enumerable.Empty<KeyValuePair<string,int>>();
             foreach (var kvp in maxUnitTypeCountList)
@@ -231,8 +237,28 @@ namespace BattlePlan.Resolver
             int defenderCasualties = 0;
             if (resolution?.DefenderCasualtyCounts.ContainsKey(challenge.PlayerTeamId) ?? false)
                 defenderCasualties = resolution.DefenderCasualtyCounts[challenge.PlayerTeamId];
-            if (defenderCasualties > challenge.MaximumDefendersLostCount)
-                yield return $"More than {challenge.MaximumDefendersLostCount} defenders died.";
+            if (challenge.MaximumDefendersLostCount.HasValue && defenderCasualties > challenge.MaximumDefendersLostCount)
+                yield return $"More than {challenge.MaximumDefendersLostCount.Value} defenders died.";
+        }
+
+        public static IEnumerable<string> GetChallengeRequirements(DefenderChallenge challenge)
+        {
+            if (challenge.AttackersMustNotReachGoal)
+                yield return "No attackers reach their goals.";
+            if (challenge.MinimumDistFromSpawnPts.HasValue)
+                yield return $"No defenders closer than {challenge.MinimumDistFromSpawnPts.Value} tiles from enemy spawn points.";
+            if (challenge.MinimumDistFromGoalPts.HasValue)
+                yield return $"No defenders closer than {challenge.MinimumDistFromGoalPts.Value} tiles from enemy goals.";
+            if (challenge.MaximumResourceCost.HasValue)
+                yield return $"No more than {challenge.MaximumResourceCost.Value} resource points spent.";
+            if (challenge.MaximumTotalUnitCount.HasValue)
+                yield return $"No more than {challenge.MaximumTotalUnitCount.Value} defenders placed.";
+            if (challenge.MaximumDefendersLostCount.HasValue)
+                yield return $"No more than {challenge.MaximumDefendersLostCount.Value} defenders may die.";
+
+            var unitTypes = challenge.MaximumUnitTypeCount.Keys.OrderBy( (str) => str );
+            foreach (var unit in unitTypes)
+                yield return $"No more than {challenge.MaximumUnitTypeCount[unit]} defenders of type {unit} placed.";
         }
 
         private const int _maxSaneWidth = 1000;

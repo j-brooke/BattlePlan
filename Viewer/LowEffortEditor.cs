@@ -592,15 +592,23 @@ namespace BattlePlan.Viewer
             var allGoals = _scenario.Terrain.GoalPointsMap.Values.SelectMany( (list) => list );
 
             const int forbiddenTeamColor = -1;
-            foreach (var spawnPt in allSpawns)
+
+            if (minSpawnDist.HasValue)
             {
-                foreach (var pt in TilesInCircleAround(spawnPt, minSpawnDist))
-                    _terrainOverlayTiles[pt.X, pt.Y] = forbiddenTeamColor;
+                foreach (var spawnPt in allSpawns)
+                {
+                    foreach (var pt in TilesInCircleAround(spawnPt, minSpawnDist.Value))
+                        _terrainOverlayTiles[pt.X, pt.Y] = forbiddenTeamColor;
+                }
             }
-            foreach (var spawnPt in allGoals)
+
+            if (minGoalDist.HasValue)
             {
-                foreach (var pt in TilesInCircleAround(spawnPt, minGoalDist))
-                    _terrainOverlayTiles[pt.X, pt.Y] = forbiddenTeamColor;
+                foreach (var spawnPt in allGoals)
+                {
+                    foreach (var pt in TilesInCircleAround(spawnPt, minGoalDist.Value))
+                        _terrainOverlayTiles[pt.X, pt.Y] = forbiddenTeamColor;
+                }
             }
         }
 
@@ -675,17 +683,33 @@ namespace BattlePlan.Viewer
             var props = obj.GetType().GetProperties();
             foreach (var prop in props)
             {
-                if (!typeof(IConvertible).IsAssignableFrom(prop.PropertyType))
-                    continue;
-
-                var curVal = Convert.ToString(prop.GetValue(obj));
-                var prompt = $"  {prop.Name} (enter for {curVal}):";
-                var input = _canvas.PromptForInput(0, row++, prompt);
-
-                if (!String.IsNullOrWhiteSpace(input))
+                if (typeof(IConvertible).IsAssignableFrom(prop.PropertyType))
                 {
-                    var newVal = Convert.ChangeType(input, prop.PropertyType);
-                    prop.SetValue(obj, newVal);
+                    var curVal = Convert.ToString(prop.GetValue(obj));
+                    var prompt = $"  {prop.Name} (enter for {curVal}):";
+                    var input = _canvas.PromptForInput(0, row++, prompt);
+
+                    if (!String.IsNullOrWhiteSpace(input))
+                    {
+                        var newVal = Convert.ChangeType(input, prop.PropertyType);
+                        prop.SetValue(obj, newVal);
+                    }
+                }
+                else if (typeof(Nullable<int>).IsAssignableFrom(prop.PropertyType))
+                {
+                    var curVal = prop.GetValue(obj) as Nullable<int>;
+                    var curValString = curVal?.ToString() ?? "no value";
+                    var prompt = $"  {prop.Name} (enter for {curValString}, 'x' for no value): ";
+                    var input = _canvas.PromptForInput(0, row++, prompt);
+
+                    if (!string.IsNullOrWhiteSpace(input))
+                    {
+                        int newVal = 0;
+                        if (int.TryParse(input, out newVal))
+                            prop.SetValue(obj, newVal);
+                        else
+                            prop.SetValue(obj, null);
+                    }
                 }
             }
 
@@ -785,7 +809,7 @@ namespace BattlePlan.Viewer
 
             var doChallengeErrorsExist = challengeErrors.SelectMany( (chList) => chList ).Any();
 
-            if (!(doTerrainErrorsExist | doAttackerErrorsExist | doDefenderErrorsExist | doChallengeErrorsExist))
+            if (!(doTerrainErrorsExist | doAttackerErrorsExist | doDefenderErrorsExist) && _scenario.Challenges.Count==0)
             {
                 // If nothing's wrong, just say so on the status bar.
                 _statusMsg = "No errors";
@@ -827,6 +851,22 @@ namespace BattlePlan.Viewer
                     _canvas.WriteTextDirect($"Challenge {_scenario.Challenges[i].Name} Disqualifiers:", 0, row++);
                     foreach (var errMsg in challengeErrors[i])
                         _canvas.WriteTextDirect("  * " + errMsg, 0, row++);
+                    row += 1;
+                }
+            }
+
+            // If there are no actual errors or disqualifiers, but challenges exist, list the rules for them.
+            if (!doTerrainErrorsExist && !doAttackerErrorsExist && !doDefenderErrorsExist && !doChallengeErrorsExist)
+            {
+                foreach (var challenge in _scenario.Challenges)
+                {
+                    var rules = Validator.GetChallengeRequirements(challenge);
+                    if (!rules.Any())
+                        continue;
+
+                    _canvas.WriteTextDirect($"Challenge {challenge.Name} Requirements:", 0, row++);
+                    foreach (var ruleMsg in rules)
+                        _canvas.WriteTextDirect("  * " + ruleMsg, 0, row++);
                     row += 1;
                 }
             }
@@ -1154,7 +1194,7 @@ namespace BattlePlan.Viewer
             _canvas.WriteText("(Tab) toggle forbidden", col, row++, 0);
             _canvas.WriteText("(L) load scenario", col, row++, 0);
             _canvas.WriteText("(S) save scenario", col, row++, 0);
-            _canvas.WriteText("(C) check for errors", col, row++, 0);
+            _canvas.WriteText("(C) challenges/errors", col, row++, 0);
             _canvas.WriteText("(V) view resolution", col, row++, 0);
             _canvas.WriteText("(ESC) exit", col, row++, 0);
         }
@@ -1456,7 +1496,7 @@ namespace BattlePlan.Viewer
             _canvas.WriteText("(Tab) toggle forbidden", col, row++, 0);
             _canvas.WriteText("(L) load game", col, row++, 0);
             _canvas.WriteText("(S) save game", col, row++, 0);
-            _canvas.WriteText("(C) check for errors", col, row++, 0);
+            _canvas.WriteText("(C) challenges/errors", col, row++, 0);
             _canvas.WriteText("(V) view resolution", col, row++, 0);
             _canvas.WriteText("(ESC) exit", col, row++, 0);
         }

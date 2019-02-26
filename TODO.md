@@ -8,7 +8,4 @@
     * facing?
     * damage reduction from some directions?
     * limited movement for defenders?  Tethered at placed location.
-* Units behavior:
-    * Crossbow hold still while enemy in sight?
-    * Crossbow only attack enemy combatants (unless path is blocked)?
 

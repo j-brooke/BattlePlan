@@ -163,8 +163,6 @@
       "MinimumDistFromSpawnPts": 12,
       "MinimumDistFromGoalPts": 2,
       "MaximumResourceCost": 1400,
-      "MaximumTotalUnitCount": 100,
-      "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     },
@@ -174,8 +172,6 @@
       "MinimumDistFromSpawnPts": 12,
       "MinimumDistFromGoalPts": 2,
       "MaximumResourceCost": 1000,
-      "MaximumTotalUnitCount": 100,
-      "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     },
@@ -185,10 +181,18 @@
       "MinimumDistFromSpawnPts": 12,
       "MinimumDistFromGoalPts": 2,
       "MaximumResourceCost": 750,
-      "MaximumTotalUnitCount": 100,
-      "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "!",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 12,
+      "MinimumDistFromGoalPts": 2,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {
+        "Pikeman": 0
+      }
     }
   ]
 }
