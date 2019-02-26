@@ -97,7 +97,7 @@ namespace BattlePlan.Resolver
                     if (hasBadSpawnTimes)
                         yield return "Spawn time too large";
 
-                    var hasInvalidType = plan.Spawns.Any( (aSp) => !unitTypeMap.ContainsKey(aSp.UnitType) || !unitTypeMap[aSp.UnitType].CanAttack );
+                    var hasInvalidType = plan.Spawns.Any( (aSp) => !unitTypeMap.ContainsKey(aSp.UnitType) || !unitTypeMap[aSp.UnitType].CanBeAttacker );
                     if (hasInvalidType)
                         yield return "Some attacker unit types are invalid";
                 }
@@ -114,7 +114,7 @@ namespace BattlePlan.Resolver
 
             var allPlacements = defensePlans?.SelectMany( (plan) => plan.Placements ) ?? Enumerable.Empty<DefenderPlacement>();
 
-            var hasInvalidType = allPlacements.Any( (dp) => !unitTypeMap.ContainsKey(dp.UnitType) || !unitTypeMap[dp.UnitType].CanDefend );
+            var hasInvalidType = allPlacements.Any( (dp) => !unitTypeMap.ContainsKey(dp.UnitType) || !unitTypeMap[dp.UnitType].CanBeDefender );
             if (hasInvalidType)
                 yield return "Some defender unit types are invalid";
 

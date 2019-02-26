@@ -152,8 +152,8 @@ namespace BattlePlan.Viewer
         private void InitFromScenario()
         {
             // Make lists of which units can attack or defend, for spawn/placement menus.
-            _attackerClasses = _unitTypes.Where( (uc) => uc.CanAttack ).ToList();
-            _defenderClasses = _unitTypes.Where( (uc) => uc.CanDefend ).ToList();
+            _attackerClasses = _unitTypes.Where( (uc) => uc.CanBeAttacker ).ToList();
+            _defenderClasses = _unitTypes.Where( (uc) => uc.CanBeDefender ).ToList();
 
             _paintEnabled = false;
             _terrainOverlayTiles = null;
