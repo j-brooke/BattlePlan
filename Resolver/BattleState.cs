@@ -165,7 +165,7 @@ namespace BattlePlan.Resolver
         internal HurtMap HurtMap => _hurtMap;
         internal BattlePathGraph PathGraph => _pathGraph;
 
-        internal BattleEntity GetEntityAt(Vector2Di position)
+        internal BattleEntity GetEntityBlockingTile(Vector2Di position)
         {
             return _blockedPositions[position.X, position.Y];
         }
@@ -180,12 +180,12 @@ namespace BattlePlan.Resolver
             return _entities;
         }
 
-        internal void SetEntityAt(Vector2Di position, BattleEntity entity)
+        internal void SetEntityBlockingTile(Vector2Di position, BattleEntity entity)
         {
             _blockedPositions[position.X, position.Y] = entity;
         }
 
-        internal void ClearEntityAt(Vector2Di position)
+        internal void ClearEntityBlockingTile(Vector2Di position)
         {
             _blockedPositions[position.X, position.Y] = null;
         }
@@ -248,7 +248,7 @@ namespace BattlePlan.Resolver
             if (nextSpawnCommand != null && nextSpawnCommand.Time<=time)
             {
                 var spawnPos = _terrain.SpawnPointsMap[plan.TeamId][nextSpawnCommand.SpawnPointIndex];
-                var isBlocked = GetEntityAt(spawnPos) != null;
+                var isBlocked = GetEntityBlockingTile(spawnPos) != null;
                 if (!isBlocked)
                 {
                     var id = GenerateId(time, nextSpawnCommand.UnitType);
@@ -277,7 +277,7 @@ namespace BattlePlan.Resolver
                     var pos = spawnsPtsForTeam[spawnPtIdx];
 
                     // Skip this spawn point for now if there's something already on that tile.
-                    if (GetEntityAt(pos) != null)
+                    if (GetEntityBlockingTile(pos) != null)
                         continue;
 
                     // Get the next spawn command for this team and spawnPoint, if any, as long as its

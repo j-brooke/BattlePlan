@@ -63,14 +63,18 @@ namespace BattlePlan.Resolver
         public void Spawn(BattleState battleState, Vector2Di pos)
         {
             this.Position = pos;
-            battleState.SetEntityAt(pos, this);
+            if (this.Class.BlocksTile)
+                battleState.SetEntityBlockingTile(pos, this);
         }
 
         public void PrepareToDespawn(BattleState battleState)
         {
-            battleState.ClearEntityAt(this.Position);
-            if (this.MovingToPosition.HasValue)
-                battleState.ClearEntityAt(this.MovingToPosition.Value);
+            if (this.Class.BlocksTile)
+            {
+                battleState.ClearEntityBlockingTile(this.Position);
+                if (this.MovingToPosition.HasValue)
+                    battleState.ClearEntityBlockingTile(this.MovingToPosition.Value);
+            }
             this.Position = new Vector2Di(short.MinValue, short.MinValue);
             this.MovingToPosition = null;
         }
@@ -126,15 +130,17 @@ namespace BattlePlan.Resolver
             Debug.Assert(this.CurrentAction==Action.Move);
             Debug.Assert(this.MovingToPosition.HasValue);
             Debug.Assert(this.SpeedTilesPerSec > 0);
-            Debug.Assert(battleState.GetEntityAt(this.MovingToPosition.Value).Id==this.Id);
+            Debug.Assert(battleState.GetEntityBlockingTile(this.MovingToPosition.Value).Id==this.Id);
 
             var timeToMove = 1.0/this.SpeedTilesPerSec;
             this.CurrentActionElapsedTime += deltaSeconds;
             if (this.CurrentActionElapsedTime >= timeToMove)
             {
                 // Clear our lock on our old position.
-                Debug.Assert(battleState.GetEntityAt(this.Position).Id==this.Id);
-                battleState.ClearEntityAt(this.Position);
+                Debug.Assert(battleState.GetEntityBlockingTile(this.Position).Id==this.Id);
+
+                if (this.Class.BlocksTile)
+                    battleState.ClearEntityBlockingTile(this.Position);
 
                 var evt = new BattleEvent()
                 {
@@ -162,36 +168,47 @@ namespace BattlePlan.Resolver
             this.CurrentActionElapsedTime += deltaSeconds;
             if (this.CurrentActionElapsedTime >= this.Class.WeaponUseTime)
             {
-                // Decrease the target's hitpoints (assuming it still exists).  Some day we might need to expand this
-                // with damage types, facing, debufs, etc.
-                var target = battleState.GetEntityById(this.AttackTargetId);
-                if (target!=null)
+                switch (this.Class.WeaponType)
                 {
-                    target.HitPoints -= this.Class.WeaponDamage;
+                    case WeaponType.Physical:
+                        return FinishAttackPhysical(battleState, time, deltaSeconds);
+                    default:
+                        throw new NotImplementedException();
                 }
-
-                // Create an event.  If the target doesn't exist, we still create the event.
-                var evt = new BattleEvent()
-                {
-                    Time = time,
-                    Type = BattleEventType.EndAttack,
-                    SourceEntity = this.Id,
-                    SourceLocation = this.Position,
-                    SourceTeamId = this.TeamId,
-                    TargetEntity = target?.Id,
-                    TargetLocation = target?.Position,
-                    TargetTeamId = target?.TeamId ?? 0,
-                    DamageAmount = this.Class.WeaponDamage,
-                };
-
-                this.CurrentAction = Action.None;
-                this.CurrentActionElapsedTime = deltaSeconds;
-                this.WeaponReloadElapsedTime = 0.0;
-
-                return evt;
             }
 
             return null;
+        }
+
+        private BattleEvent FinishAttackPhysical(BattleState battleState, double time, double deltaSeconds)
+        {
+            // Decrease the target's hitpoints (assuming it still exists).  Some day we might need to expand this
+            // with damage types, facing, debufs, etc.
+            var target = battleState.GetEntityById(this.AttackTargetId);
+            if (target!=null)
+            {
+                target.HitPoints -= this.Class.WeaponDamage;
+            }
+
+            // Create an event.  If the target doesn't exist, we still create the event.
+            var evt = new BattleEvent()
+            {
+                Time = time,
+                Type = BattleEventType.EndAttack,
+                SourceEntity = this.Id,
+                SourceLocation = this.Position,
+                SourceTeamId = this.TeamId,
+                TargetEntity = target?.Id,
+                TargetLocation = target?.Position,
+                TargetTeamId = target?.TeamId ?? 0,
+                DamageAmount = this.Class.WeaponDamage,
+            };
+
+            this.CurrentAction = Action.None;
+            this.CurrentActionElapsedTime = deltaSeconds;
+            this.WeaponReloadElapsedTime = 0.0;
+
+            return evt;
         }
 
         private BattleEvent TryBeginMove(BattleState battleState, double time, double deltaSeconds, Vector2Di toPos)
@@ -201,7 +218,7 @@ namespace BattlePlan.Resolver
                 return null;
 
             // If the target tile is blocked, we can't move.
-            if (battleState.GetEntityAt(toPos) != null)
+            if (battleState.GetEntityBlockingTile(toPos) != null)
                 return null;
 
             this.CurrentAction = Action.Move;
@@ -209,7 +226,8 @@ namespace BattlePlan.Resolver
             this.MovingToPosition = toPos;
 
             // Reserve the tile we're moving into as well as the one we're in.
-            battleState.SetEntityAt(toPos, this);
+            if (this.Class.BlocksTile)
+                battleState.SetEntityBlockingTile(toPos, this);
 
             var evt = new BattleEvent()
             {
@@ -222,10 +240,14 @@ namespace BattlePlan.Resolver
             return evt;
         }
 
-        private BattleEvent TryBeginAttack(BattleState battleState, double time, double deltaSeconds, BattleEntity target)
+        private BattleEvent TryBeginPhysicalAttack(BattleState battleState, double time, double deltaSeconds, BattleEntity target)
         {
-            // Don't attack if we can't actually do damage.
-            if (this.Class.WeaponDamage<=0 || this.Class.WeaponRangeTiles<=1.0)
+            // Don't attack if the entity is immune to attacks.
+            if (!target.Class.Attackable)
+                return null;
+
+            // We're only concerned with physical attacks here.
+            if (this.Class.WeaponType!=WeaponType.Physical)
                 return null;
 
             // Don't attack if the weapon isn't ready.
@@ -409,10 +431,17 @@ namespace BattlePlan.Resolver
                 // to reduce the time attackers might block a bottleneck.
                 if (_plannedPath!=null && _plannedPath.Count>0)
                 {
-                    var entityInNextPos = battleState.GetEntityAt(_plannedPath.Peek());
-                    if (entityInNextPos!=null && entityInNextPos.TeamId!=this.TeamId)
+                    var entityInNextPos = battleState.GetEntityBlockingTile(_plannedPath.Peek());
+                    if (entityInNextPos!=null && entityInNextPos.TeamId!=this.TeamId && entityInNextPos.Class.Attackable)
                     {
-                        actionEvent = TryBeginAttack(battleState, time, deltaSeconds, entityInNextPos);
+                        switch (this.Class.WeaponType)
+                        {
+                            case WeaponType.Physical:
+                                actionEvent = TryBeginPhysicalAttack(battleState, time, deltaSeconds, entityInNextPos);
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
 
                         if (_logger.IsDebugEnabled && actionEvent!=null)
                             _logger.Trace("{0} is attacking {1} because it's in their path", this.Id, entityInNextPos.Id);
@@ -427,7 +456,16 @@ namespace BattlePlan.Resolver
                         .OrderBy( (ent) => this.Position.DistanceTo(ent.Position) )
                         .FirstOrDefault();
                     if (closestEnemy != null)
-                        actionEvent = TryBeginAttack(battleState, time, deltaSeconds, closestEnemy);
+                    {
+                        switch (this.Class.WeaponType)
+                        {
+                            case WeaponType.Physical:
+                                actionEvent = TryBeginPhysicalAttack(battleState, time, deltaSeconds, closestEnemy);
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
+                    }
 
                     if (_logger.IsDebugEnabled && actionEvent!=null)
                         _logger.Trace("{0} is attacking {1} because it's in range", this.Id, closestEnemy.Id);
@@ -505,7 +543,7 @@ namespace BattlePlan.Resolver
                 // This should be an adjacent tile.
                 Debug.Assert(this.Position.DistanceTo(nextPos)<=1.5);
 
-                var entityInNextPos = battleState.GetEntityAt(nextPos);
+                var entityInNextPos = battleState.GetEntityBlockingTile(nextPos);
 
                 if (entityInNextPos==null)
                 {
@@ -529,11 +567,13 @@ namespace BattlePlan.Resolver
 
         private IEnumerable<BattleEntity> ListEnemiesInRange(BattleState battleState)
         {
+            Func<BattleEntity,bool> isAttackable = (ent) => ent.Class.Attackable;
             Func<BattleEntity,bool> isEnemy = (ent) => ent.TeamId != this.TeamId;
             Func<BattleEntity,bool> inRange = (ent) => this.Position.DistanceTo(ent.Position)<=this.Class.WeaponRangeTiles;
             Func<BattleEntity,bool> visible = (ent) => battleState.Terrain.HasLineOfSight(this.Position, ent.Position);
 
             return battleState.GetAllEntities()
+                .Where(isAttackable)
                 .Where(isEnemy)
                 .Where(inRange)
                 .Where(visible);
@@ -541,12 +581,14 @@ namespace BattlePlan.Resolver
 
         private IEnumerable<BattleEntity> ListBerserkerTargetsInRange(BattleState battleState, double range)
         {
+            Func<BattleEntity,bool> isAttackable = (ent) => ent.Class.Attackable;
             Func<BattleEntity,bool> isEnemy = (ent) => ent.TeamId != this.TeamId;
-            Func<BattleEntity,bool> canFight = (ent) => ent.Class.WeaponDamage>0 && ent.Class.WeaponRangeTiles>0;
+            Func<BattleEntity,bool> canFight = (ent) => ent.Class.WeaponType != WeaponType.None;
             Func<BattleEntity,bool> inRange = (ent) => this.Position.DistanceTo(ent.Position)<=range;
             Func<BattleEntity,bool> reachable = (ent) => battleState.Terrain.StraightWalkablePath(this.Position, ent.Position)!=null;
 
             return battleState.GetAllEntities()
+                .Where(isAttackable)
                 .Where(isEnemy)
                 .Where(canFight)
                 .Where(inRange)

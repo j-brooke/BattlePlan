@@ -54,7 +54,7 @@ namespace BattlePlan.Resolver
 
             // Possibly add penalties for things in the way.  We want units to look for routes around things
             // if it's not too much of a hassle, but wait or attack other times.
-            var blockingEnt = _battleState.GetEntityAt(toNode);
+            var blockingEnt = _battleState.GetEntityBlockingTile(toNode);
             if (blockingEnt != null)
             {
                 if (blockingEnt.TeamId == entity.TeamId)

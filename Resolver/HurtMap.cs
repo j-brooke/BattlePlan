@@ -74,7 +74,7 @@ namespace BattlePlan.Resolver
         private void UpdateForTeam(IEnumerable<BattleEntity> entities, int teamId)
         {
             var teamDefenders = entities
-                .Where( (ent) => ent.TeamId==teamId && !ent.IsAttacker && ent.Class.WeaponDamage>0 && ent.Class.WeaponRangeTiles>0);
+                .Where( (ent) => ent.TeamId==teamId && !ent.IsAttacker && ent.Class.WeaponType==WeaponType.Physical);
             var layer = new double[_terrain.Width, _terrain.Height];
 
             _logger.Debug("Rebuilding HurtMap for team {0} from {1} units", teamId, teamDefenders.Count());
