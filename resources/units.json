@@ -114,6 +114,25 @@
     "ResourceCost": 75
   },
   {
+    "Name": "Fire-Serpent",
+    "Symbol": "S",
+    "Behavior": "Marcher",
+    "CanBeAttacker": false,
+    "CanBeDefender": true,
+    "Attackable": true,
+    "BlocksTile": true,
+    "SpeedTilesPerSec": 1.5,
+    "InitialHitPoints": 90,
+    "WeaponType": "SpawnFire",
+    "WeaponUseTime": 1.0,
+    "WeaponReloadTime": 5.0,
+    "WeaponRangeTiles": 7.5,
+    "WeaponDamage": 400,
+    "CrowdAversionBias": 2.0,
+    "HurtAversionBias": 2.0,
+    "ResourceCost": 300
+  },
+  {
     "Name": "Barricade",
     "Symbol": "#",
     "Behavior": "None",
@@ -131,5 +150,24 @@
     "CrowdAversionBias": 0,
     "HurtAversionBias": 0,
     "ResourceCost": 25
+  },
+  {
+    "Name": "Fire",
+    "Symbol": "w",
+    "Behavior": "Marcher",
+    "CanBeAttacker": false,
+    "CanBeDefender": false,
+    "Attackable": false,
+    "BlocksTile": false,
+    "WeaponType": "Physical",
+    "SpeedTilesPerSec": 0.0,
+    "InitialHitPoints": 100,
+    "WeaponUseTime": 0.0,
+    "WeaponReloadTime": 0.24,
+    "WeaponRangeTiles": 0.0,
+    "WeaponDamage": 20,
+    "CrowdAversionBias": 0,
+    "HurtAversionBias": 0,
+    "ResourceCost": 100
   }
 ]

@@ -57,6 +57,11 @@ namespace BattlePlan.Model
             _tiles = new byte[width, height];
         }
 
+        public bool IsInBounds(Vector2Di pos)
+        {
+            return pos.X>=0 && pos.Y>=0 && pos.X<this.Width && pos.Y<this.Height;
+        }
+
         public TileCharacteristics GetTile(int x, int y)
         {
             var typeIndex = GetTileValue(x, y);
@@ -171,13 +176,17 @@ namespace BattlePlan.Model
         /// Returns a sequence of positions representing a straight ray-cast line between them.
         /// fromPos is not included in the results but toPos is.  (Or, empty collection if they're
         /// the same.)  This is just math - it doesn't look at the underlying tile characteristics.
+        /// If minDistance is greater than the natural distance between the two, the line continues.
         /// </summary>
-        public IEnumerable<Vector2Di> StraightLinePath(Vector2Di fromPos, Vector2Di toPos)
+        public IEnumerable<Vector2Di> StraightLinePath(Vector2Di fromPos, Vector2Di toPos, double minDistance = 0.0)
         {
             var dX = toPos.X - fromPos.X;
             var dY = toPos.Y - fromPos.Y;
             var absDX = Math.Abs(dX);
             var absDY = Math.Abs(dY);
+            var minDistSquared = minDistance * minDistance;
+            double distSquared;
+            bool hitToPos = false;
 
             if (fromPos==toPos)
                 yield break;
@@ -195,9 +204,11 @@ namespace BattlePlan.Model
                     lineX += incX;
                     double lineYfloat = (lineX-fromPos.X)*slope + fromPos.Y;
                     short lineY = (short)Math.Round(lineYfloat);
+                    distSquared = (fromPos.X - lineX)*(fromPos.X - lineX) + (fromPos.Y - lineY)*(fromPos.Y - lineY);
+                    hitToPos |= lineX == toPos.X;
                     yield return new Vector2Di(lineX, lineY);
                 }
-                while (lineX != toPos.X);
+                while (!hitToPos || distSquared<minDistSquared);
             }
             else
             {
@@ -210,9 +221,11 @@ namespace BattlePlan.Model
                     lineY += incY;
                     double lineXfloat = (lineY-fromPos.Y)*slope + fromPos.X;
                     short lineX = (short)Math.Round(lineXfloat);
+                    distSquared = (fromPos.X - lineX)*(fromPos.X - lineX) + (fromPos.Y - lineY)*(fromPos.Y - lineY);
+                    hitToPos |= lineY == toPos.Y;
                     yield return new Vector2Di(lineX, lineY);
                 }
-                while (lineY != toPos.Y);
+                while (!hitToPos || distSquared<minDistSquared);
             }
         }
 

@@ -623,7 +623,7 @@ namespace BattlePlan.Viewer
                 {
                     var unitClass = _unitTypes.FirstOrDefault( (ut) => ut.Name==defPlacement.UnitType);
                     var range = unitClass.WeaponRangeTiles;
-                    if (unitClass != null && unitClass.WeaponDamage>0 && range>0)
+                    if (unitClass != null && unitClass.WeaponDamage>0)
                     {
                         var minX = Math.Max(0, (int)Math.Round(defPlacement.Position.X - range));
                         var minY = Math.Max(0, (int)Math.Round(defPlacement.Position.Y - range));

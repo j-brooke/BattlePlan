@@ -21,8 +21,11 @@ namespace BattlePlan.Resolver
         public Action CurrentAction { get; private set; }
         public double CurrentActionElapsedTime { get; private set; }
         public string AttackTargetId { get; private set; }
+        public Vector2Di? AttackTargetInitialPosition { get; private set; }
         public int TeamId { get; }
         public double WeaponReloadElapsedTime { get; private set; }
+
+        public double TimeToLive { get; set; } = double.PositiveInfinity;
 
         public BattleEntity(string id, UnitCharacteristics clsChar, int teamId, bool isAttacker)
         {
@@ -46,6 +49,9 @@ namespace BattlePlan.Resolver
         {
             // Weapon cooldown advances regardless of whatever else the entity is doing this timeslice.
             this.WeaponReloadElapsedTime += deltaSeconds;
+
+            // Decrease the lifetime timer.
+            this.TimeToLive -= deltaSeconds;
 
             switch (this.CurrentAction)
             {
@@ -97,6 +103,13 @@ namespace BattlePlan.Resolver
         public override int GetHashCode()
         {
             return this.Id.GetHashCode();
+        }
+
+        public void ForceRepath()
+        {
+            _plannedPath = null;
+            _berserkTargetId = null;
+            _logger.Trace("{0} is rethinking their path because BattleState said to", this.Id);
         }
 
         /// <summary>
@@ -165,19 +178,30 @@ namespace BattlePlan.Resolver
         {
             Debug.Assert(this.CurrentAction==Action.Attack);
 
+            BattleEvent evt = null;
             this.CurrentActionElapsedTime += deltaSeconds;
             if (this.CurrentActionElapsedTime >= this.Class.WeaponUseTime)
             {
                 switch (this.Class.WeaponType)
                 {
                     case WeaponType.Physical:
-                        return FinishAttackPhysical(battleState, time, deltaSeconds);
+                        evt = FinishAttackPhysical(battleState, time, deltaSeconds);
+                        break;
+                    case WeaponType.SpawnFire:
+                        evt = FinishAttackSpawnFire(battleState, time, deltaSeconds);
+                        break;
                     default:
                         throw new NotImplementedException();
                 }
+
+                this.CurrentAction = Action.None;
+                this.CurrentActionElapsedTime = deltaSeconds;
+                this.WeaponReloadElapsedTime = 0.0;
+                this.AttackTargetId = null;
+                this.AttackTargetInitialPosition = null;
             }
 
-            return null;
+            return evt;
         }
 
         private BattleEvent FinishAttackPhysical(BattleState battleState, double time, double deltaSeconds)
@@ -204,9 +228,58 @@ namespace BattlePlan.Resolver
                 DamageAmount = this.Class.WeaponDamage,
             };
 
-            this.CurrentAction = Action.None;
-            this.CurrentActionElapsedTime = deltaSeconds;
-            this.WeaponReloadElapsedTime = 0.0;
+            return evt;
+        }
+
+        private BattleEvent FinishAttackSpawnFire(BattleState battleState, double time, double deltaSeconds)
+        {
+            const string fireClassName = "Fire";
+            const double lineFadeOutTimeSeconds = 1.0;
+
+            Debug.Assert(this.AttackTargetInitialPosition.HasValue);
+
+            // If our target still exists and is in range, use its current location.  Otherwise use
+            // whereever it was when we started the attack.
+            var targetPos = this.AttackTargetInitialPosition.Value;
+            var target = battleState.GetEntityById(this.AttackTargetId);
+            if (target!=null && target.Position.DistanceTo(this.Position)<=this.Class.WeaponRangeTiles)
+                targetPos = target.Position;
+
+            var tilesInLine = battleState.Terrain.StraightLinePath(this.Position, targetPos, this.Class.WeaponRangeTiles);
+            double timeToLive = this.Class.WeaponDamage / 100.0;
+            foreach (var pos in tilesInLine)
+            {
+                // Stop the line of fire if we hit the edge of the world or something wall-like.
+                if (!battleState.Terrain.IsInBounds(pos) || battleState.Terrain.GetTile(pos).BlocksMovement)
+                    break;
+
+                // Magically miss tiles with friendly units in them.  (This isn't perfect - there's a delay
+                // between processing this entity and spawning the new fire in which a mobile friendly unit
+                // could move into the square.)
+                var entityInTile = battleState.GetEntityBlockingTile(pos);
+                if (entityInTile!=null && entityInTile.TeamId==this.TeamId)
+                    continue;
+
+                battleState.RequestSpawn(fireClassName, 0, false, pos, timeToLive);
+                timeToLive += lineFadeOutTimeSeconds / this.Class.WeaponRangeTiles;
+            }
+
+            var evt = new BattleEvent()
+            {
+                Time = time,
+                Type = BattleEventType.EndAttack,
+                SourceEntity = this.Id,
+                SourceLocation = this.Position,
+                SourceTeamId = this.TeamId,
+                TargetEntity = target?.Id,
+                TargetLocation = target?.Position,
+                TargetTeamId = target?.TeamId ?? 0,
+                DamageAmount = 0,
+            };
+
+            // Perhaps this needs refinement, but c'mon!  A giant swath of fire just cut through your ranks!  If that
+            // doesn't make you think about where you want to be, what does?
+            battleState.ForceRepathAll();
 
             return evt;
         }
@@ -261,6 +334,7 @@ namespace BattlePlan.Resolver
             this.CurrentAction = Action.Attack;
             this.CurrentActionElapsedTime = deltaSeconds;
             this.AttackTargetId = target.Id;
+            this.AttackTargetInitialPosition = target.Position;
 
             var evt = new BattleEvent()
             {
@@ -420,10 +494,22 @@ namespace BattlePlan.Resolver
 
         private BattleEvent ChooseActionAttackIfPossible(BattleState battleState, double time, double deltaSeconds)
         {
+            switch (this.Class.WeaponType)
+            {
+                case WeaponType.Physical:
+                    return AttackIfPossiblePhysical(battleState, time, deltaSeconds);
+                case WeaponType.SpawnFire:
+                    return AttackIfPossibleSpawnFire(battleState, time, deltaSeconds);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+
+        private BattleEvent AttackIfPossiblePhysical(BattleState battleState, double time, double deltaSeconds)
+        {
             BattleEvent actionEvent = null;
 
             bool weaponReady = this.Class.WeaponDamage>0
-                && this.Class.WeaponRangeTiles>0
                 && this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime;
             if (weaponReady)
             {
@@ -434,14 +520,7 @@ namespace BattlePlan.Resolver
                     var entityInNextPos = battleState.GetEntityBlockingTile(_plannedPath.Peek());
                     if (entityInNextPos!=null && entityInNextPos.TeamId!=this.TeamId && entityInNextPos.Class.Attackable)
                     {
-                        switch (this.Class.WeaponType)
-                        {
-                            case WeaponType.Physical:
-                                actionEvent = TryBeginPhysicalAttack(battleState, time, deltaSeconds, entityInNextPos);
-                                break;
-                            default:
-                                throw new NotImplementedException();
-                        }
+                        actionEvent = TryBeginPhysicalAttack(battleState, time, deltaSeconds, entityInNextPos);
 
                         if (_logger.IsDebugEnabled && actionEvent!=null)
                             _logger.Trace("{0} is attacking {1} because it's in their path", this.Id, entityInNextPos.Id);
@@ -457,20 +536,54 @@ namespace BattlePlan.Resolver
                         .FirstOrDefault();
                     if (closestEnemy != null)
                     {
-                        switch (this.Class.WeaponType)
-                        {
-                            case WeaponType.Physical:
-                                actionEvent = TryBeginPhysicalAttack(battleState, time, deltaSeconds, closestEnemy);
-                                break;
-                            default:
-                                throw new NotImplementedException();
-                        }
+                        actionEvent = TryBeginPhysicalAttack(battleState, time, deltaSeconds, closestEnemy);
                     }
 
                     if (_logger.IsDebugEnabled && actionEvent!=null)
                         _logger.Trace("{0} is attacking {1} because it's in range", this.Id, closestEnemy.Id);
                 }
             }
+
+            return actionEvent;
+        }
+
+        private BattleEvent AttackIfPossibleSpawnFire(BattleState battleState, double time, double deltaSeconds)
+        {
+            BattleEvent actionEvent = null;
+
+            bool weaponReady = this.Class.WeaponDamage>0 && this.WeaponReloadElapsedTime>=this.Class.WeaponReloadTime;
+            if (!weaponReady)
+                return null;
+
+            // We're going to spawn a line of fire from us to the target.  Projecting a line between tiles
+            // will have greater precision the farther apart they are.  Or dragons are far-sighted - whichever you prefer.
+            var farthestEnemy = ListEnemiesInRange(battleState)
+                .OrderByDescending( (ent) => this.Position.DistanceTo(ent.Position) )
+                .FirstOrDefault();
+            if (farthestEnemy != null)
+            {
+                if (this.WeaponReloadElapsedTime<this.Class.WeaponReloadTime)
+                    return null;
+
+                this.CurrentAction = Action.Attack;
+                this.CurrentActionElapsedTime = deltaSeconds;
+                this.AttackTargetId = farthestEnemy.Id;
+                this.AttackTargetInitialPosition = farthestEnemy.Position;
+
+                actionEvent = new BattleEvent()
+                {
+                    Time = time,
+                    Type = BattleEventType.BeginAttack,
+                    SourceEntity = this.Id,
+                    SourceLocation = this.Position,
+                    TargetEntity = farthestEnemy.Id,
+                    TargetLocation = farthestEnemy.Position,
+                    TargetTeamId = farthestEnemy.TeamId,
+                };
+            }
+
+            if (_logger.IsDebugEnabled && actionEvent!=null)
+                _logger.Trace("{0} is attacking {1} with fire", this.Id, farthestEnemy.Id);
 
             return actionEvent;
         }

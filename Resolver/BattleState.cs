@@ -40,6 +40,8 @@ namespace BattlePlan.Resolver
             _blockedPositions = new BattleEntity[_terrain.Width,_terrain.Height];
             _pathGraph = new BattlePathGraph(this);
             _hurtMap = new HurtMap(_terrain);
+            _miscSpawnQueue = new List<SpawnRequest>();
+            _forceRepathAll = false;
 
             // Make a bunch of queues for the attackers remaining to be spawned.
             _remainingAttackerSpawns = new SpawnQueueCluster(_terrain, _attackPlans);
@@ -122,11 +124,29 @@ namespace BattlePlan.Resolver
                         defenderCasualtyCounts[deadEnt.TeamId] += 1;
                 }
 
+                // Remove entities whose time-to-live has expired.
+                var expriedEntities = _entities.Where( (ent) => ent.TimeToLive <= 0).ToList();
+                foreach (var expEnt in expriedEntities)
+                {
+                    AddEvent(CreateEvent(time, BattleEventType.Despawn, expEnt, null));
+                    expEnt.PrepareToDespawn(this);
+                    _hurtMap.InvalidateTeam(expEnt.TeamId);
+                    _entities.Remove(expEnt);
+                }
+
                 // Spawn new entities
                 SpawnAttackers(time);
+                AddMiscellaneousSpawns(time);
 
                 // Update the hurtmap.
                 _hurtMap.Update(_entities);
+
+                if (_forceRepathAll)
+                {
+                    foreach (var entity in _entities)
+                        entity.ForceRepath();
+                    _forceRepathAll = false;
+                }
 
                 // End things if there are no attacker units left (and nothing left to spawn),
                 // or if the time gets too high.
@@ -195,6 +215,23 @@ namespace BattlePlan.Resolver
             return this._terrain.GoalPointsMap[teamId];
         }
 
+        internal void RequestSpawn(string unitType, int teamId, bool isAttacker, Vector2Di pos, double? timeToLive)
+        {
+            _miscSpawnQueue.Add(new SpawnRequest()
+            {
+                UnitType = unitType,
+                TeamId = teamId,
+                Position = pos,
+                TimeToLive = timeToLive,
+                IsAttacker = isAttacker,
+            });
+        }
+
+        internal void ForceRepathAll()
+        {
+            _forceRepathAll = true;
+        }
+
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private Terrain _terrain;
@@ -213,6 +250,9 @@ namespace BattlePlan.Resolver
         private int _nextId;
         private HurtMap _hurtMap;
         private SpawnQueueCluster _remainingAttackerSpawns;
+        private List<SpawnRequest> _miscSpawnQueue;
+
+        private bool _forceRepathAll;
 
         private static readonly double _maxTime = 300.0;
         private static readonly double _timeSlice = 0.1;
@@ -240,30 +280,6 @@ namespace BattlePlan.Resolver
 
             if (_logger.IsDebugEnabled)
                 _logger.Debug(evt.ToString());
-        }
-
-        private BattleEntity TrySpawnNextAttacker(double time, AttackPlan plan)
-        {
-            var nextSpawnCommand = (plan.Spawns.Count>0)? plan.Spawns[0] : null;
-            if (nextSpawnCommand != null && nextSpawnCommand.Time<=time)
-            {
-                var spawnPos = _terrain.SpawnPointsMap[plan.TeamId][nextSpawnCommand.SpawnPointIndex];
-                var isBlocked = GetEntityBlockingTile(spawnPos) != null;
-                if (!isBlocked)
-                {
-                    var id = GenerateId(time, nextSpawnCommand.UnitType);
-                    var classChar = _unitTypeMap[nextSpawnCommand.UnitType];
-                    var newEntity = new BattleEntity(id, classChar, plan.TeamId, true);
-                    newEntity.Spawn(this, spawnPos);
-
-                    // TODO: use a better data structure.  This is stupid.
-                    plan.Spawns.RemoveAt(0);
-
-                    return newEntity;
-                }
-            }
-
-            return null;
         }
 
         private void SpawnAttackers(double time)
@@ -297,7 +313,28 @@ namespace BattlePlan.Resolver
             }
         }
 
-        private string GenerateId(double time, string cls)
+        private void AddMiscellaneousSpawns(double time)
+        {
+            foreach (var spawnReq in _miscSpawnQueue)
+            {
+                var id = GenerateId(time, spawnReq.UnitType);
+                var classChar = _unitTypeMap[spawnReq.UnitType];
+                var newEntity = new BattleEntity(id, classChar, spawnReq.TeamId, spawnReq.IsAttacker);
+
+                if (spawnReq.TimeToLive.HasValue)
+                    newEntity.TimeToLive = spawnReq.TimeToLive.Value;
+
+                newEntity.Spawn(this, spawnReq.Position);
+
+                _entities.Add(newEntity);
+                AddEvent(CreateEvent(time, BattleEventType.Spawn, newEntity, null));
+
+                _hurtMap.InvalidateTeam(spawnReq.TeamId);
+            }
+            _miscSpawnQueue.Clear();
+        }
+
+        internal string GenerateId(double time, string cls)
         {
             var id = $"{cls}{_nextId.ToString()}";
             _nextId += 1;
@@ -393,6 +430,15 @@ namespace BattlePlan.Resolver
 
                 resolution.AttackerResourceTotals = attackerMap;
             }
+        }
+
+        private class SpawnRequest
+        {
+            public string UnitType { get; set; }
+            public int TeamId { get; set; }
+            public bool IsAttacker { get; set; }
+            public Vector2Di Position { get; set; }
+            public double? TimeToLive { get; set; }
         }
     }
 }
