@@ -315,7 +315,7 @@ namespace BattlePlan.Viewer
         private void WriteKeyHelp()
         {
             var msg = $"{_displayTime.ToString("F2")}  (1-5) speed, (Space) pause/step, (L/R-arrow) skip, (ESC) exit";
-            _canvas.WriteText(msg, 0, _statusBarRow, 0);
+            _canvas.WriteText(msg, 0, _statusBarRow, LowEffortCanvas.RegularTextColor);
         }
 
         private void ShowErrorErrorMessages(BattleResolution resolution)
@@ -351,13 +351,13 @@ namespace BattlePlan.Viewer
             else
                 _canvas.WriteText("Failure", sidebarCol, row++, -1);
 
-            _canvas.WriteText($"{totalBreachCount} attacker breaches", sidebarCol, row++, 0);
-            _canvas.WriteText($"{totalDefenderCasualties} defender casualties", sidebarCol, row++, 0);
+            _canvas.WriteText($"{totalBreachCount} attacker breaches", sidebarCol, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText($"{totalDefenderCasualties} defender casualties", sidebarCol, row++, LowEffortCanvas.RegularTextColor);
 
             if (_resolution.ChallengesAchieved!=null && _resolution.ChallengesAchieved.Count>0)
             {
                 row += 1;
-                _canvas.WriteText("Challenges achieved", sidebarCol, row++, 0);
+                _canvas.WriteText("Challenges achieved", sidebarCol, row++, LowEffortCanvas.RegularTextColor);
                 foreach (var challenge in _resolution.ChallengesAchieved)
                     _canvas.WriteText($"  {challenge.Name}", sidebarCol, row++, challenge.PlayerTeamId);
 
@@ -366,9 +366,9 @@ namespace BattlePlan.Viewer
             if (_resolution.ChallengesFailed!=null && _resolution.ChallengesFailed.Count>0)
             {
                 row += 1;
-                _canvas.WriteText("Challenges failed", sidebarCol, row++, 0);
+                _canvas.WriteText("Challenges failed", sidebarCol, row++, LowEffortCanvas.RegularTextColor);
                 foreach (var challenge in _resolution.ChallengesFailed)
-                    _canvas.WriteText($"  {challenge.Name}", sidebarCol, row++, 0);
+                    _canvas.WriteText($"  {challenge.Name}", sidebarCol, row++, LowEffortCanvas.RegularTextColor);
             }
 
             // Draw the map and everything on it.
@@ -379,7 +379,7 @@ namespace BattlePlan.Viewer
             _canvas.PaintEntities(_entities.Values, 0, _topMapRow);
             _canvas.PaintDamageIndicators(_rencentDamageEvents, 0, _topMapRow);
 
-            _canvas.WriteText("Press any key to continue", 0, _statusBarRow, 0);
+            _canvas.WriteText("Press any key to continue", 0, _statusBarRow, LowEffortCanvas.RegularTextColor);
             _canvas.EndFrame();
 
             _canvas.ReadKey();
@@ -390,7 +390,7 @@ namespace BattlePlan.Viewer
             if (_resolution.BannerText != null)
             {
                 for (int row=0; row<_resolution.BannerText.Count; ++row)
-                    _canvas.WriteText(_resolution.BannerText[row], 0, row, 0);
+                    _canvas.WriteText(_resolution.BannerText[row], 0, row, LowEffortCanvas.RegularTextColor);
             }
         }
     }

@@ -122,7 +122,7 @@
     "Attackable": true,
     "BlocksTile": true,
     "SpeedTilesPerSec": 1.5,
-    "InitialHitPoints": 90,
+    "InitialHitPoints": 165,
     "WeaponType": "SpawnFire",
     "WeaponUseTime": 1.0,
     "WeaponReloadTime": 5.0,
@@ -130,7 +130,7 @@
     "WeaponDamage": 400,
     "CrowdAversionBias": 2.0,
     "HurtAversionBias": 2.0,
-    "ResourceCost": 300
+    "ResourceCost": 200
   },
   {
     "Name": "Barricade",

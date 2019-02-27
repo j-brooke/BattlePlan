@@ -348,9 +348,9 @@ namespace BattlePlan.Viewer
         private void WriteStatusMessage()
         {
             if (!String.IsNullOrEmpty(_statusMsg))
-                _canvas.WriteText(_statusMsg, 0, _statusBarRow, 0);
+                _canvas.WriteText(_statusMsg, 0, _statusBarRow, LowEffortCanvas.RegularTextColor);
             else
-                _canvas.WriteText("", 0, _statusBarRow, 0);
+                _canvas.WriteText("", 0, _statusBarRow, LowEffortCanvas.RegularTextColor);
         }
 
         private void WriteBannerText()
@@ -358,7 +358,7 @@ namespace BattlePlan.Viewer
             if (_scenario.BannerText != null)
             {
                 for (int row=0; row<_scenario.BannerText.Count; ++row)
-                    _canvas.WriteText(_scenario.BannerText[row], 0, row, 0);
+                    _canvas.WriteText(_scenario.BannerText[row], 0, row, LowEffortCanvas.RegularTextColor);
             }
         }
 
@@ -887,15 +887,15 @@ namespace BattlePlan.Viewer
             Debug.Assert(_mode==EditorMode.Challenges);
 
             row += 1;
-            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-            _canvas.WriteText("(D) set spawn dist all", col, row++, 0);
-            _canvas.WriteText("(G) set goal dist all", col, row++, 0);
-            _canvas.WriteText("(+) add challenge", col, row++, 0);
-            _canvas.WriteText("(-) remove challenge", col, row++, 0);
+            _canvas.WriteText("(Backspace) clear all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(D) set spawn dist all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(G) set goal dist all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(+) add challenge", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(-) remove challenge", col, row++, LowEffortCanvas.RegularTextColor);
 
             row += 1;
             for (int i=0; i<_scenario.Challenges.Count; ++i)
-                _canvas.WriteText($"({i+1}) edit \"{_scenario.Challenges[i].Name}\"", col, row++, 0);
+                _canvas.WriteText($"({i+1}) edit \"{_scenario.Challenges[i].Name}\"", col, row++, LowEffortCanvas.RegularTextColor);
 
             row += 1;
         }
@@ -1164,8 +1164,8 @@ namespace BattlePlan.Viewer
         {
             int row = _topMapRow;
             int col = _scenario.Terrain.Width + 1;
-            _canvas.WriteText("(Enter) mode:", col, row++, 0);
-            _canvas.WriteText($"{_mode}", col, row++, 0);
+            _canvas.WriteText("(Enter) mode:", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText($"{_mode}", col, row++, LowEffortCanvas.RegularTextColor);
 
             switch (_mode)
             {
@@ -1185,18 +1185,18 @@ namespace BattlePlan.Viewer
                     WriteModeHelpAttackers(col, ref row);
                     break;
                 default:
-                    _canvas.WriteText("Not implemented", col, row++, 0);
+                    _canvas.WriteText("Not implemented", col, row++, LowEffortCanvas.RegularTextColor);
                     break;
             }
 
             row += 1;
-            _canvas.WriteText("(`) toggle color", col, row++, 0);
-            _canvas.WriteText("(Tab) toggle forbidden", col, row++, 0);
-            _canvas.WriteText("(L) load scenario", col, row++, 0);
-            _canvas.WriteText("(S) save scenario", col, row++, 0);
-            _canvas.WriteText("(C) challenges/errors", col, row++, 0);
-            _canvas.WriteText("(V) view resolution", col, row++, 0);
-            _canvas.WriteText("(ESC) exit", col, row++, 0);
+            _canvas.WriteText("(`) toggle color", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(Tab) toggle forbidden", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(L) load scenario", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(S) save scenario", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(C) challenges/errors", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(V) view resolution", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(ESC) exit", col, row++, LowEffortCanvas.RegularTextColor);
         }
 
         private void ProcessEditorUserInput(ConsoleKeyInfo keyInfo)
@@ -1236,20 +1236,20 @@ namespace BattlePlan.Viewer
             var paintModeIndicator = _paintEnabled? "on" : "off";
 
             row += 1;
-            _canvas.WriteText("(Space) change Tile", col, row++, 0);
+            _canvas.WriteText("(Space) change Tile", col, row++, LowEffortCanvas.RegularTextColor);
 
             row += 1;
             for (int i=0; i<_scenario.Terrain.TileTypes.Count; ++i)
             {
                 var name = _scenario.Terrain.TileTypes[i].Name;
-                _canvas.WriteText($"({i+1}) place {name}", col, row++, 0);
+                _canvas.WriteText($"({i+1}) place {name}", col, row++, LowEffortCanvas.RegularTextColor);
             }
 
             row += 1;
-            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-            _canvas.WriteText($"(P) toggle paint mode ({paintModeIndicator})", col, row++, 0);
-            _canvas.WriteText("(R) randomly generate", col, row++, 0);
-            _canvas.WriteText("(O) generator options", col, row++, 0);
+            _canvas.WriteText("(Backspace) clear all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText($"(P) toggle paint mode ({paintModeIndicator})", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(R) randomly generate", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(O) generator options", col, row++, LowEffortCanvas.RegularTextColor);
         }
 
         private void ProcessKeyTerrainMode(ConsoleKeyInfo keyInfo)
@@ -1290,15 +1290,15 @@ namespace BattlePlan.Viewer
             _canvas.WriteText($"(T) Team {_teamId}", col, row++, _teamId);
 
             row += 1;
-            _canvas.WriteText("(\\) toggle LoS", col, row++, 0);
-            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-            _canvas.WriteText("(1) none", col, row++, 0);
+            _canvas.WriteText("(\\) toggle LoS", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(Backspace) clear all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(1) none", col, row++, LowEffortCanvas.RegularTextColor);
 
             for (int i=0; i<_defenderClasses.Count; ++i)
-                _canvas.WriteText($"({i+2}) {_defenderClasses[i].Name}", col, row++, 0);
+                _canvas.WriteText($"({i+2}) {_defenderClasses[i].Name}", col, row++, LowEffortCanvas.RegularTextColor);
 
             row += 1;
-            _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
+            _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, LowEffortCanvas.RegularTextColor);
         }
 
         private void ProcessKeyDefendersMode(ConsoleKeyInfo keyInfo)
@@ -1338,10 +1338,10 @@ namespace BattlePlan.Viewer
             _canvas.WriteText($"(T) team {_teamId}", col, row++, _teamId);
 
             row += 1;
-            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-            _canvas.WriteText("(1) remove", col, row++, 0);
-            _canvas.WriteText("(2) add spawn O", col, row++, 0);
-            _canvas.WriteText("(3) add goal X", col, row++, 0);
+            _canvas.WriteText("(Backspace) clear all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(1) remove", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(2) add spawn O", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(3) add goal X", col, row++, LowEffortCanvas.RegularTextColor);
         }
 
         private void ProcessKeySpawnsAndGoalsMode(ConsoleKeyInfo keyInfo)
@@ -1398,15 +1398,15 @@ namespace BattlePlan.Viewer
 
             // Basic selections: team, spawn point delay, spawn point index.
             _canvas.WriteText($"(T) team {_teamId}", col, row++, _teamId);
-            _canvas.WriteText($"(D) spawn delay time {_spawnTime}", col, row++, 0);
-            _canvas.WriteText("  " + existingTimesStr, col, row++, 0);
-            _canvas.WriteText($"(P) spawn point {spawnPointText}" , col, row++, 0);
+            _canvas.WriteText($"(D) spawn delay time {_spawnTime}", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("  " + existingTimesStr, col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText($"(P) spawn point {spawnPointText}" , col, row++, LowEffortCanvas.RegularTextColor);
 
             if (hasSpawnPoint)
             {
                 row += 1;
-                _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-                _canvas.WriteText($"(1) clear for this time", col, row++, 0);
+                _canvas.WriteText("(Backspace) clear all", col, row++, LowEffortCanvas.RegularTextColor);
+                _canvas.WriteText($"(1) clear for this time", col, row++, LowEffortCanvas.RegularTextColor);
 
                 // Write a list of all available attacker types.  But the trick part is, we also
                 // want to include the count for that unit type already assigned.
@@ -1421,11 +1421,11 @@ namespace BattlePlan.Viewer
                     };
 
                     var count = plan.Spawns.Where( (matchFunc) ).Count();
-                    _canvas.WriteText($"({i+2}) Add {_attackerClasses[i].Name} {count}", col, row++, 0);
+                    _canvas.WriteText($"({i+2}) Add {_attackerClasses[i].Name} {count}", col, row++, LowEffortCanvas.RegularTextColor);
                 }
 
                 row += 1;
-                _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
+                _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, LowEffortCanvas.RegularTextColor);
             }
             else
             {
@@ -1479,26 +1479,26 @@ namespace BattlePlan.Viewer
             _canvas.WriteText("Place defenders", col, row++, _playerViewTeamId);
             row += 1;
 
-            _canvas.WriteText("(H) show help screen", col, row++, 0);
-            _canvas.WriteText("(Arrow keys) move cursor", col, row++, 0);
-            _canvas.WriteText("(\\) toggle LoS", col, row++, 0);
-            _canvas.WriteText("(Backspace) clear all", col, row++, 0);
-            _canvas.WriteText("(1) none", col, row++, 0);
+            _canvas.WriteText("(H) show help screen", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(Arrow keys) move cursor", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(\\) toggle LoS", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(Backspace) clear all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(1) none", col, row++, LowEffortCanvas.RegularTextColor);
 
             for (int i=0; i<_defenderClasses.Count; ++i)
-                _canvas.WriteText($"({i+2}) {_defenderClasses[i].Name}", col, row++, 0);
+                _canvas.WriteText($"({i+2}) {_defenderClasses[i].Name}", col, row++, LowEffortCanvas.RegularTextColor);
 
             row += 1;
-            _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, 0);
+            _canvas.WriteText($"Total Cost: {_totalResourceCost}", col, row++, LowEffortCanvas.RegularTextColor);
 
             row += 1;
-            _canvas.WriteText("(`) toggle color", col, row++, 0);
-            _canvas.WriteText("(Tab) toggle forbidden", col, row++, 0);
-            _canvas.WriteText("(L) load game", col, row++, 0);
-            _canvas.WriteText("(S) save game", col, row++, 0);
-            _canvas.WriteText("(C) challenges/errors", col, row++, 0);
-            _canvas.WriteText("(V) view resolution", col, row++, 0);
-            _canvas.WriteText("(ESC) exit", col, row++, 0);
+            _canvas.WriteText("(`) toggle color", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(Tab) toggle forbidden", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(L) load game", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(S) save game", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(C) challenges/errors", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(V) view resolution", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(ESC) exit", col, row++, LowEffortCanvas.RegularTextColor);
         }
 
         private void ProcessKeyPlayerView(ConsoleKeyInfo keyInfo)

@@ -12,6 +12,9 @@ namespace BattlePlan.Viewer
     /// </summary>
     internal class LowEffortCanvas
     {
+        public const int RegularTextColor = -1;
+        public const int DamageColor = 0;
+
         public bool UseColor { get; set; } = true;
 
         public LowEffortCanvas()
@@ -420,7 +423,7 @@ namespace BattlePlan.Viewer
         {
             switch (teamId)
             {
-                case -1: return ConsoleColor.Red;
+                case 0: return ConsoleColor.Red;
                 case 1: return ConsoleColor.Yellow;
                 case 2: return ConsoleColor.Green;
                 case 3: return ConsoleColor.Cyan;
