@@ -8,4 +8,6 @@
     * facing?
     * damage reduction from some directions?
     * limited movement for defenders?  Tethered at placed location.
-
+* Flamestrike:
+    * smarter target selection
+    * only invalidate nearby paths
