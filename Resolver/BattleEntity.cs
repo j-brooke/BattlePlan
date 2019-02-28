@@ -274,7 +274,6 @@ namespace BattlePlan.Resolver
                 TargetEntity = target?.Id,
                 TargetLocation = target?.Position,
                 TargetTeamId = target?.TeamId ?? 0,
-                DamageAmount = 0,
             };
 
             // Perhaps this needs refinement, but c'mon!  A giant swath of fire just cut through your ranks!  If that

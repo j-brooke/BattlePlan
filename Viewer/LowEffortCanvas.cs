@@ -266,10 +266,16 @@ namespace BattlePlan.Viewer
                 {
                     case BattleEventType.EndAttack:
                         col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
-                        col = WriteText(" damages ", col, row, GetTextColor());
+                        if (evt.DamageAmount.HasValue)
+                            col = WriteText(" damages ", col, row, GetTextColor());
+                        else
+                            col = WriteText(" attacks ", col, row, GetTextColor());
                         col = WriteText(evt.TargetEntity, col, row, GetTeamColor(evt.TargetTeamId));
-                        col = WriteText(" for ", col, row, GetTextColor());
-                        col = WriteText(evt.DamageAmount.ToString(), col, row, GetDamageColor());
+                        if (evt.DamageAmount.HasValue)
+                        {
+                            col = WriteText(" for ", col, row, GetTextColor());
+                            col = WriteText(evt.DamageAmount.ToString(), col, row, GetDamageColor());
+                        }
                         break;
                     case BattleEventType.ReachesGoal:
                         col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
