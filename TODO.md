@@ -1,6 +1,5 @@
 * Units: tuning, including resource cost
 * Units: maybe new units?
-    * Firespitter (S) - creates patches of DoT fire for any that move through it.
     * Storm Mage (A) - shoots chain lightning
     * Giant - knockback attack?
     * Paladin - normal attacks plus healing?
@@ -9,5 +8,4 @@
     * damage reduction from some directions?
     * limited movement for defenders?  Tethered at placed location.
 * Flamestrike:
-    * smarter target selection
     * only invalidate nearby paths

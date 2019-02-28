@@ -238,12 +238,13 @@ namespace BattlePlan.Resolver
 
             Debug.Assert(this.AttackTargetInitialPosition.HasValue);
 
-            // If our target still exists and is in range, use its current location.  Otherwise use
-            // whereever it was when we started the attack.
+            // Look for the line that will hit the most enemies, as of right now.  If there aren't actually
+            // any enemies in range any more, use the location of the one that caught our eye when we started
+            // the attack.  They're dead or out of range, but we need to shoot somewhere.
             var targetPos = this.AttackTargetInitialPosition.Value;
-            var target = battleState.GetEntityById(this.AttackTargetId);
-            if (target!=null && target.Position.DistanceTo(this.Position)<=this.Class.WeaponRangeTiles)
-                targetPos = target.Position;
+            var bestTarget = ChooseFlamestrikeTarget(battleState);
+            if (bestTarget != null)
+                targetPos = bestTarget.Position;
 
             var tilesInLine = battleState.Terrain.StraightLinePath(this.Position, targetPos, this.Class.WeaponRangeTiles);
             double timeToLive = this.Class.WeaponDamage / 100.0;
@@ -271,9 +272,9 @@ namespace BattlePlan.Resolver
                 SourceEntity = this.Id,
                 SourceLocation = this.Position,
                 SourceTeamId = this.TeamId,
-                TargetEntity = target?.Id,
-                TargetLocation = target?.Position,
-                TargetTeamId = target?.TeamId ?? 0,
+                TargetEntity = bestTarget?.Id,
+                TargetLocation = targetPos,
+                TargetTeamId = bestTarget?.TeamId ?? 0,
             };
 
             // Perhaps this needs refinement, but c'mon!  A giant swath of fire just cut through your ranks!  If that
@@ -554,20 +555,18 @@ namespace BattlePlan.Resolver
             if (!weaponReady)
                 return null;
 
-            // We're going to spawn a line of fire from us to the target.  Projecting a line between tiles
-            // will have greater precision the farther apart they are.  Or dragons are far-sighted - whichever you prefer.
-            var farthestEnemy = ListEnemiesInRange(battleState)
-                .OrderByDescending( (ent) => this.Position.DistanceTo(ent.Position) )
-                .FirstOrDefault();
-            if (farthestEnemy != null)
+            // Right now we don't care which enemy to attack, as long as there's at least one.  We'll
+            // pick our line when we finish the attack.
+            var firstEnemy = ListEnemiesInRange(battleState).FirstOrDefault();
+            if (firstEnemy != null)
             {
                 if (this.WeaponReloadElapsedTime<this.Class.WeaponReloadTime)
                     return null;
 
                 this.CurrentAction = Action.Attack;
                 this.CurrentActionElapsedTime = deltaSeconds;
-                this.AttackTargetId = farthestEnemy.Id;
-                this.AttackTargetInitialPosition = farthestEnemy.Position;
+                this.AttackTargetId = null;
+                this.AttackTargetInitialPosition = firstEnemy.Position;
 
                 actionEvent = new BattleEvent()
                 {
@@ -575,14 +574,14 @@ namespace BattlePlan.Resolver
                     Type = BattleEventType.BeginAttack,
                     SourceEntity = this.Id,
                     SourceLocation = this.Position,
-                    TargetEntity = farthestEnemy.Id,
-                    TargetLocation = farthestEnemy.Position,
-                    TargetTeamId = farthestEnemy.TeamId,
+                    TargetEntity = null,
+                    TargetLocation = firstEnemy.Position,
+                    TargetTeamId = firstEnemy.TeamId,
                 };
             }
 
             if (_logger.IsDebugEnabled && actionEvent!=null)
-                _logger.Trace("{0} is attacking {1} with fire", this.Id, farthestEnemy.Id);
+                _logger.Trace("{0} is beginning a flamestrike", this.Id);
 
             return actionEvent;
         }
@@ -705,6 +704,35 @@ namespace BattlePlan.Resolver
                 .Where(canFight)
                 .Where(inRange)
                 .Where(reachable);
+        }
+
+        /// <summary>
+        /// Choses a target for a flamestrike attack, based on how many enemies will be hit.
+        /// </summary>
+        private BattleEntity ChooseFlamestrikeTarget(BattleState battleState)
+        {
+            var enemiesList = ListEnemiesInRange(battleState).ToList();
+            var enemyLocations = enemiesList.Select( (entity) => entity.Position );
+
+            int bestCount = 0;
+            BattleEntity bestEnemy = null;
+
+            foreach (var enemy in enemiesList)
+            {
+                // Project a line to this enemy and count how many enemies are on it.
+                var lineToEnemy = battleState.Terrain.StraightLinePath(this.Position, enemy.Position, this.Class.WeaponRangeTiles);
+                var enemiesOnLine = enemyLocations.Intersect(lineToEnemy).Count();
+                if (enemiesOnLine > bestCount
+                    || (enemiesOnLine == bestCount && this.Position.DistanceTo(enemy.Position) < this.Position.DistanceTo(bestEnemy.Position)))
+                {
+                    bestCount = enemiesOnLine;
+                    bestEnemy = enemy;
+                }
+            }
+
+            _logger.Trace("{0} is flamestriking {1} enemies", this.Id, bestCount);
+
+            return bestEnemy;
         }
     }
 }
