@@ -64,7 +64,7 @@
       "                                                  ",
       "                                                  ",
       "                                                  ",
-      "                                                  ",
+      "                    :::::::::                     ",
       "                                                  "
     ],
     "SpawnPointsMap": {
@@ -152,11 +152,24 @@
           "Time": 0.0,
           "UnitType": "Crossbowman",
           "SpawnPointIndex": 4
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 5
         }
       ]
     },
     {
       "TeamId": 2,
+      "Spawns": []
+    },
+    {
+      "TeamId": 3,
+      "Spawns": []
+    },
+    {
+      "TeamId": 4,
       "Spawns": []
     }
   ],
@@ -335,48 +348,6 @@
         {
           "UnitType": "Pikeman",
           "Position": [
-            24,
-            35
-          ]
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": [
-            23,
-            35
-          ]
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": [
-            23,
-            34
-          ]
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": [
-            24,
-            34
-          ]
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": [
-            25,
-            34
-          ]
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": [
-            25,
-            35
-          ]
-        },
-        {
-          "UnitType": "Pikeman",
-          "Position": [
             18,
             6
           ]
@@ -463,6 +434,104 @@
           "Position": [
             24,
             28
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            34,
+            0
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            35,
+            0
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            36,
+            0
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            36,
+            1
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            35,
+            1
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            34,
+            1
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            34,
+            2
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            35,
+            2
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            36,
+            2
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            35,
+            3
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            34,
+            4
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            35,
+            4
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            36,
+            4
+          ]
+        },
+        {
+          "UnitType": "Fire-Serpent",
+          "Position": [
+            24,
+            30
           ]
         }
       ]

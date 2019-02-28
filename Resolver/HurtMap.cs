@@ -13,9 +13,11 @@ namespace BattlePlan.Resolver
     /// </summary>
     internal class HurtMap
     {
-        public HurtMap(Terrain terrain)
+        public HurtMap(Terrain terrain, UnitCharacteristics fireClass)
         {
             _terrain = terrain;
+            _fireClass = fireClass;
+            _fireDPS = (fireClass==null)? 0.0 : fireClass.WeaponDamage /  (fireClass.WeaponUseTime + fireClass.WeaponReloadTime);
         }
 
         /// <summary>
@@ -68,13 +70,16 @@ namespace BattlePlan.Resolver
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private Terrain _terrain;
+        private UnitCharacteristics _fireClass;
+        private double _fireDPS;
+
         private Dictionary<int, bool> _layerIsValid = new Dictionary<int, bool>();
         private Dictionary<int, double[,]> _layers = new Dictionary<int, double[,]>();
 
         private void UpdateForTeam(IEnumerable<BattleEntity> entities, int teamId)
         {
             var teamDefenders = entities
-                .Where( (ent) => ent.TeamId==teamId && !ent.IsAttacker && ent.Class.WeaponType==WeaponType.Physical);
+                .Where( (ent) => ent.TeamId==teamId && !ent.IsAttacker && ent.Class.WeaponType!=WeaponType.None);
             var layer = new double[_terrain.Width, _terrain.Height];
 
             _logger.Debug("Rebuilding HurtMap for team {0} from {1} units", teamId, teamDefenders.Count());
@@ -86,6 +91,21 @@ namespace BattlePlan.Resolver
                 var minY = Math.Max(0, (int)Math.Round(unit.Position.Y-range));
                 var maxX = Math.Min(_terrain.Width-1, (int)Math.Round(unit.Position.X+range));
                 var maxY = Math.Min(_terrain.Height-1, (int)Math.Round(unit.Position.Y+range));
+
+                double thisUnitsDPS;
+                switch (unit.Class.WeaponType)
+                {
+                    case WeaponType.Physical:
+                        thisUnitsDPS = unit.Class.WeaponDamage / (unit.Class.WeaponUseTime + unit.Class.WeaponReloadTime);
+                        break;
+                    case WeaponType.Flamestrike:
+                        // Weapon damage in this case is the fire's time-to-live in 1/100ths of a second.
+                        thisUnitsDPS = _fireDPS * unit.Class.WeaponDamage / 100.0 / (unit.Class.WeaponUseTime + unit.Class.WeaponReloadTime);
+                        break;
+                    default:
+                        throw new NotImplementedException("Weapon type not implemented");
+                }
+
                 for (int y=minY; y<=maxY; ++y)
                 {
                     for (int x=minX; x<=maxX; ++x)
@@ -97,7 +117,6 @@ namespace BattlePlan.Resolver
                         if (!_terrain.HasLineOfSight(unit.Position, evalPos))
                             continue;
 
-                        var thisUnitsDPS = unit.Class.WeaponDamage / (unit.Class.WeaponUseTime + unit.Class.WeaponReloadTime);
                         layer[x,y] += thisUnitsDPS;
                     }
                 }

@@ -163,7 +163,7 @@
     "SpeedTilesPerSec": 0.0,
     "InitialHitPoints": 100,
     "WeaponUseTime": 0.0,
-    "WeaponReloadTime": 0.24,
+    "WeaponReloadTime": 0.19,
     "WeaponRangeTiles": 0.0,
     "WeaponDamage": 20,
     "CrowdAversionBias": 0,

@@ -23,6 +23,9 @@ namespace BattlePlan.Resolver
             foreach (var unitType in unitTypes)
                 _unitTypeMap.Add(unitType.Name, unitType);
 
+            UnitCharacteristics fireClass = null;
+            _unitTypeMap.TryGetValue("Fire", out fireClass);
+
             // Validate and exit early if we fail.
             var valErrs = GetValidationFailures(scenario, unitTypes);
             if (valErrs.Any())
@@ -39,7 +42,7 @@ namespace BattlePlan.Resolver
             _entities = new List<BattleEntity>();
             _blockedPositions = new BattleEntity[_terrain.Width,_terrain.Height];
             _pathGraph = new BattlePathGraph(this);
-            _hurtMap = new HurtMap(_terrain);
+            _hurtMap = new HurtMap(_terrain, fireClass);
             _miscSpawnQueue = new List<SpawnRequest>();
             _forceRepathAll = false;
 
