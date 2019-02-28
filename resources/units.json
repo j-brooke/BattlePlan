@@ -123,7 +123,7 @@
     "BlocksTile": true,
     "SpeedTilesPerSec": 1.5,
     "InitialHitPoints": 165,
-    "WeaponType": "SpawnFire",
+    "WeaponType": "Flamestrike",
     "WeaponUseTime": 1.0,
     "WeaponReloadTime": 5.0,
     "WeaponRangeTiles": 7.5,

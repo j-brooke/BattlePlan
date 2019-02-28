@@ -187,8 +187,8 @@ namespace BattlePlan.Resolver
                     case WeaponType.Physical:
                         evt = FinishAttackPhysical(battleState, time, deltaSeconds);
                         break;
-                    case WeaponType.SpawnFire:
-                        evt = FinishAttackSpawnFire(battleState, time, deltaSeconds);
+                    case WeaponType.Flamestrike:
+                        evt = FinishAttackFlamestrike(battleState, time, deltaSeconds);
                         break;
                     default:
                         throw new NotImplementedException();
@@ -231,7 +231,7 @@ namespace BattlePlan.Resolver
             return evt;
         }
 
-        private BattleEvent FinishAttackSpawnFire(BattleState battleState, double time, double deltaSeconds)
+        private BattleEvent FinishAttackFlamestrike(BattleState battleState, double time, double deltaSeconds)
         {
             const string fireClassName = "Fire";
             const double lineFadeOutTimeSeconds = 1.0;
@@ -498,8 +498,8 @@ namespace BattlePlan.Resolver
             {
                 case WeaponType.Physical:
                     return AttackIfPossiblePhysical(battleState, time, deltaSeconds);
-                case WeaponType.SpawnFire:
-                    return AttackIfPossibleSpawnFire(battleState, time, deltaSeconds);
+                case WeaponType.Flamestrike:
+                    return AttackIfPossibleFlamestrike(battleState, time, deltaSeconds);
                 default:
                     throw new NotImplementedException();
             }
@@ -547,7 +547,7 @@ namespace BattlePlan.Resolver
             return actionEvent;
         }
 
-        private BattleEvent AttackIfPossibleSpawnFire(BattleState battleState, double time, double deltaSeconds)
+        private BattleEvent AttackIfPossibleFlamestrike(BattleState battleState, double time, double deltaSeconds)
         {
             BattleEvent actionEvent = null;
 

@@ -6,6 +6,6 @@ namespace BattlePlan.Model
     {
         None,
         Physical,
-        SpawnFire,
+        Flamestrike,
     }
 }
