@@ -53,6 +53,9 @@ namespace BattlePlan.Resolver
             // Decrease the lifetime timer.
             this.TimeToLive -= deltaSeconds;
 
+            // Update how long we've been walking on our current path.
+            _plannedPathAgeSeconds += deltaSeconds;
+
             switch (this.CurrentAction)
             {
                 case Action.None:
@@ -119,6 +122,7 @@ namespace BattlePlan.Resolver
         private const double _repathAfterIdleFactor = 0.99;
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private Queue<Vector2Di> _plannedPath;
+        private double _plannedPathAgeSeconds;
         private double _elapsedSecondsDoingNothing;
         private string _berserkTargetId;
 
@@ -276,10 +280,6 @@ namespace BattlePlan.Resolver
                 TargetLocation = targetPos,
                 TargetTeamId = bestTarget?.TeamId ?? 0,
             };
-
-            // Perhaps this needs refinement, but c'mon!  A giant swath of fire just cut through your ranks!  If that
-            // doesn't make you think about where you want to be, what does?
-            battleState.ForceRepathAll();
 
             return evt;
         }
@@ -636,6 +636,7 @@ namespace BattlePlan.Resolver
                             var target = potentialTargets.Where( (targ) => targ.Position==pathEnd ).First();
                             _berserkTargetId = target.Id;
                             _plannedPath = new Queue<Vector2Di>(pathToTarget);
+                            _plannedPathAgeSeconds = 0.0;
                             _logger.Trace("{0} is planning a berserker charge on {1}, {2} steps away", this.Id, target.Id, pathToTarget.Count);
                         }
                     }
@@ -654,8 +655,17 @@ namespace BattlePlan.Resolver
                 // This should be an adjacent tile.
                 Debug.Assert(this.Position.DistanceTo(nextPos)<=1.5);
 
-                var entityInNextPos = battleState.GetEntityBlockingTile(nextPos);
+                // If there's a hazard (fire, etc) in the next tile, do nothing this tick and reevaluate our path,
+                // unless we picked this path during this tick.
+                bool hazardInNextPos = _plannedPathAgeSeconds!=0.0 && battleState.GetHazardLocations().Contains(nextPos);
+                if (hazardInNextPos)
+                {
+                    _logger.Trace("{0} is rethinking their path because there's a hazard at {1}", this.Id, nextPos);
+                    _plannedPath = null;
+                    return null;
+                }
 
+                var entityInNextPos = battleState.GetEntityBlockingTile(nextPos);
                 if (entityInNextPos==null)
                 {
                     // Nothing to stop us moving into the next tile in out planned path.
@@ -674,6 +684,7 @@ namespace BattlePlan.Resolver
         {
             var path = battleState.PathGraph.FindPathToGoal(this);
             _plannedPath = new Queue<Vector2Di>(path);
+            _plannedPathAgeSeconds = 0.0;
         }
 
         private IEnumerable<BattleEntity> ListEnemiesInRange(BattleState battleState)

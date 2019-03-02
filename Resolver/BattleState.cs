@@ -14,6 +14,8 @@ namespace BattlePlan.Resolver
     {
         public BattleResolution Resolve(Scenario scenario, IList<UnitCharacteristics> unitTypes)
         {
+            var timer = System.Diagnostics.Stopwatch.StartNew();
+
             _terrain = scenario.Terrain;
             _attackPlans = new List<AttackPlan>(scenario.AttackPlans);
             _defensePlans = new List<DefensePlan>(scenario.DefensePlans ?? Enumerable.Empty<DefensePlan>());
@@ -44,7 +46,6 @@ namespace BattlePlan.Resolver
             _pathGraph = new BattlePathGraph(this);
             _hurtMap = new HurtMap(_terrain, fireClass);
             _miscSpawnQueue = new List<SpawnRequest>();
-            _forceRepathAll = false;
 
             // Make a bunch of queues for the attackers remaining to be spawned.
             _remainingAttackerSpawns = new SpawnQueueCluster(_terrain, _attackPlans);
@@ -82,6 +83,11 @@ namespace BattlePlan.Resolver
             {
                 previousTime = time;
                 time += _timeSlice;
+
+                // Make a list of all hazard tiles such as fire.
+                _hazardLocations = _entities.Where( (ent) => !ent.Class.BlocksTile && !ent.Class.Attackable )
+                    .Select( (ent) => ent.Position )
+                    .ToList();
 
                 // Update existing entities
                 var entitiesReachingGoal = new List<BattleEntity>();
@@ -144,13 +150,6 @@ namespace BattlePlan.Resolver
                 // Update the hurtmap.
                 _hurtMap.Update(_entities);
 
-                if (_forceRepathAll)
-                {
-                    foreach (var entity in _entities)
-                        entity.ForceRepath();
-                    _forceRepathAll = false;
-                }
-
                 // End things if there are no attacker units left (and nothing left to spawn),
                 // or if the time gets too high.
                 var noMobileUnitsLeft = false;
@@ -163,8 +162,6 @@ namespace BattlePlan.Resolver
                 battleEnded = (time >= _maxTime)
                     || noMobileUnitsLeft;
             }
-
-            _logger.Info("Resolution pathfinding stats: " + _pathGraph.DebugInfo() );
 
             var resolution = new BattleResolution()
             {
@@ -180,6 +177,9 @@ namespace BattlePlan.Resolver
 
             ResolveChallenges(scenario, resolution, unitTypes);
             CountResources(scenario, resolution);
+
+            _logger.Info("Pathfinding stats: " + _pathGraph.DebugInfo() );
+            _logger.Info("Resolution stats: timeMS={0}; eventCount={1}", timer.ElapsedMilliseconds, _events.Count);
 
             return resolution;
         }
@@ -230,9 +230,9 @@ namespace BattlePlan.Resolver
             });
         }
 
-        internal void ForceRepathAll()
+        internal IList<Vector2Di> GetHazardLocations()
         {
-            _forceRepathAll = true;
+            return _hazardLocations;
         }
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
@@ -254,8 +254,7 @@ namespace BattlePlan.Resolver
         private HurtMap _hurtMap;
         private SpawnQueueCluster _remainingAttackerSpawns;
         private List<SpawnRequest> _miscSpawnQueue;
-
-        private bool _forceRepathAll;
+        private IList<Vector2Di> _hazardLocations;
 
         private static readonly double _maxTime = 300.0;
         private static readonly double _timeSlice = 0.1;
