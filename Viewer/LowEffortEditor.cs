@@ -1555,7 +1555,6 @@ namespace BattlePlan.Viewer
             _canvas.WriteTextDirect(" i Scout - Tries to avoid defenders while moving toward the goal.", 0, row++);
             _canvas.WriteTextDirect(" ] Crossbowman - Moves toward the goal, but attacks at range along the way.", 0, row++);
             _canvas.WriteTextDirect(" Y Berserker - Attacks any enemy it sees.", 0, row++);
-            _canvas.WriteTextDirect(" & Assassin - Chooses the best approach to attack enemies it seees.", 0, row++);
 
             row += 1;
             _canvas.WriteTextDirect("Defenders (all immobile)", 0, row++);

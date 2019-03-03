@@ -241,11 +241,6 @@
           "Time": 20.0,
           "UnitType": "Crossbowman",
           "SpawnPointIndex": 1
-        },
-        {
-          "Time": 30.0,
-          "UnitType": "Assassin",
-          "SpawnPointIndex": 1
         }
       ]
     },

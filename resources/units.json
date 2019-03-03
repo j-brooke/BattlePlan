@@ -130,7 +130,7 @@
     "WeaponDamage": 400,
     "CrowdAversionBias": 2.0,
     "HurtAversionBias": 2.0,
-    "ResourceCost": 200
+    "ResourceCost": 150
   },
   {
     "Name": "Barricade",

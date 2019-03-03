@@ -187,16 +187,6 @@
           "SpawnPointIndex": 0
         },
         {
-          "Time": 12.0,
-          "UnitType": "Assassin",
-          "SpawnPointIndex": 1
-        },
-        {
-          "Time": 12.0,
-          "UnitType": "Assassin",
-          "SpawnPointIndex": 2
-        },
-        {
           "Time": 24.0,
           "UnitType": "Grunt",
           "SpawnPointIndex": 0
