@@ -93,13 +93,13 @@ namespace BattlePlan.Resolver
                 var entitiesReachingGoal = new List<BattleEntity>();
                 foreach (var entity in _entities)
                 {
-                    var newEvent = entity.Update(this, time, _timeSlice);
-                    if (newEvent != null)
+                    var newEvents = entity.Update(this, time, _timeSlice);
+                    for (int i=0; newEvents!=null && i<newEvents.Length; ++i)
                     {
-                        AddEvent(newEvent);
+                        AddEvent(newEvents[i]);
 
                         // If the entity moved, check to see if it reached its goal and take note.
-                        if (newEvent.Type==BattleEventType.EndMovement)
+                        if (newEvents[i].Type==BattleEventType.EndMovement)
                         {
                             if (GetGoalTiles(entity.TeamId).Contains(entity.Position))
                                 entitiesReachingGoal.Add(entity);

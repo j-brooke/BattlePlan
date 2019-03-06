@@ -7,5 +7,6 @@ namespace BattlePlan.Model
         None,
         Physical,
         Flamestrike,
+        ChainLightning,
     }
 }

@@ -102,6 +102,10 @@ namespace BattlePlan.Resolver
                         // Weapon damage in this case is the fire's time-to-live in 1/100ths of a second.
                         thisUnitsDPS = _fireDPS * unit.Class.WeaponDamage / 100.0 / (unit.Class.WeaponUseTime + unit.Class.WeaponReloadTime);
                         break;
+                    case WeaponType.ChainLightning:
+                        // Bonus perceived threat because it hits so many at a time.  And it's freaking lightning.
+                        thisUnitsDPS = 2.0 * unit.Class.WeaponDamage / (unit.Class.WeaponUseTime + unit.Class.WeaponReloadTime);
+                        break;
                     default:
                         throw new NotImplementedException("Weapon type not implemented");
                 }

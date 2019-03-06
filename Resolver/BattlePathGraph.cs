@@ -74,20 +74,38 @@ namespace BattlePlan.Resolver
                 }
                 else
                 {
-                    // Make a penalty based on how long it'll take us to kill the thing in the way.  (This is
-                    // an approximation using continuous math instead of discrete whacks, and it doesn't consider
-                    // that our friends might be attacking too.)
+                    // Make a penalty based on approximately how long it'll take us to kill the thing in the way.
+                    // In the case of AoE attackers, reduce the penalty by an arbitrary amount since they'll be hitting
+                    // multiple obstacles at once.
                     if (entity.Class.WeaponDamage>0)
-                        penalty = (blockingEnt.HitPoints / entity.Class.WeaponDamage)
+                    {
+                        var timeToKill = (double)blockingEnt.HitPoints / entity.Class.WeaponDamage
                             * (entity.Class.WeaponUseTime + entity.Class.WeaponReloadTime);
+
+                        switch (entity.Class.WeaponType)
+                        {
+                            case WeaponType.ChainLightning:
+                            case WeaponType.Flamestrike:
+                                penalty = timeToKill / 3.0;
+                                break;
+                            default:
+                                penalty = timeToKill;
+                                break;
+                        }
+                    }
                 }
             }
 
             // Add a penalty for tiles where this entity will take damage. Normalize the DPS relative to the unit's health.
             // (Should this be it's starting HP instead?)
-            var enemyDpsInTile = _battleState.HurtMap.GetHurtFactor(toNode, entity.TeamId);
-            var myDeathPerSecond = enemyDpsInTile / entity.HitPoints;
-            penalty += entity.Class.HurtAversionBias * myDeathPerSecond;
+            if (entity.HitPoints > 0)
+            {
+                var enemyDpsInTile = _battleState.HurtMap.GetHurtFactor(toNode, entity.TeamId);
+                var myDeathPerSecond = enemyDpsInTile / entity.HitPoints;
+                penalty += entity.Class.HurtAversionBias * myDeathPerSecond;
+            }
+
+            Debug.Assert((timeToMove + penalty)!=double.PositiveInfinity && (timeToMove + penalty)>0);
 
             return Math.Max(timeToMove + penalty, 0.0);
         }

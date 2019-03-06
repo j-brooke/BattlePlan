@@ -76,6 +76,25 @@
     "ResourceCost": 100
   },
   {
+    "Name": "Storm-Mage",
+    "Symbol": "A",
+    "Behavior": "Marcher",
+    "CanBeAttacker": true,
+    "CanBeDefender": false,
+    "Attackable": true,
+    "BlocksTile": true,
+    "SpeedTilesPerSec": 1.5,
+    "InitialHitPoints": 100,
+    "WeaponType": "ChainLightning",
+    "WeaponUseTime": 0.75,
+    "WeaponReloadTime": 3.25,
+    "WeaponRangeTiles": 10.4,
+    "WeaponDamage": 70,
+    "CrowdAversionBias": 1.0,
+    "HurtAversionBias": 1.0,
+    "ResourceCost": 250
+  },
+  {
     "Name": "Archer",
     "Symbol": "{",
     "Behavior": "Marcher",
