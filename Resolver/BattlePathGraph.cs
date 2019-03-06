@@ -77,7 +77,7 @@ namespace BattlePlan.Resolver
                     // Make a penalty based on approximately how long it'll take us to kill the thing in the way.
                     // In the case of AoE attackers, reduce the penalty by an arbitrary amount since they'll be hitting
                     // multiple obstacles at once.
-                    if (entity.Class.WeaponDamage>0)
+                    if (entity.Class.WeaponDamage>0 && blockingEnt.HitPoints>0)
                     {
                         var timeToKill = (double)blockingEnt.HitPoints / entity.Class.WeaponDamage
                             * (entity.Class.WeaponUseTime + entity.Class.WeaponReloadTime);
