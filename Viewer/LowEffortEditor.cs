@@ -140,7 +140,7 @@ namespace BattlePlan.Viewer
         private bool _showForbiddenTiles;
         private int[,] _terrainOverlayTiles;
         private int _totalResourceCost;
-        private IList<UnitCharacteristics> _unitTypes;
+        private UnitTypeMap _unitTypes;
         private int _topMapRow;
         private int _statusBarRow;
         private FileLoader _loader;
@@ -152,8 +152,8 @@ namespace BattlePlan.Viewer
         private void InitFromScenario()
         {
             // Make lists of which units can attack or defend, for spawn/placement menus.
-            _attackerClasses = _unitTypes.Where( (uc) => uc.CanBeAttacker ).ToList();
-            _defenderClasses = _unitTypes.Where( (uc) => uc.CanBeDefender ).ToList();
+            _attackerClasses = _unitTypes.AsList.Where( (uc) => uc.CanBeAttacker ).ToList();
+            _defenderClasses = _unitTypes.AsList.Where( (uc) => uc.CanBeDefender ).ToList();
 
             _paintEnabled = false;
             _terrainOverlayTiles = null;
@@ -621,7 +621,7 @@ namespace BattlePlan.Viewer
             {
                 foreach (var defPlacement in plan.Placements)
                 {
-                    var unitClass = _unitTypes.FirstOrDefault( (ut) => ut.Name==defPlacement.UnitType);
+                    var unitClass = _unitTypes.Get(defPlacement.UnitType);
                     var range = unitClass.WeaponRangeTiles;
                     if (unitClass != null && unitClass.WeaponDamage>0)
                     {

@@ -71,11 +71,11 @@ namespace BattlePlan.Resolver
         }
 
         public static IEnumerable<string> FindAttackPlanErrors(Terrain terrain,
-            IEnumerable<UnitCharacteristics> unitTypes,
+            UnitTypeMap unitTypes,
             IEnumerable<AttackPlan> attackPlans)
         {
-            var unitTypeMap = MakeUnitTypeMap(unitTypes);
-            if (unitTypeMap.Count==0)
+            var unitTypeMap = unitTypes;
+            if (unitTypeMap.AsList.Count==0)
                 yield return "No unit types defined";
 
             foreach (var plan in attackPlans)
@@ -97,7 +97,7 @@ namespace BattlePlan.Resolver
                     if (hasBadSpawnTimes)
                         yield return "Spawn time too large";
 
-                    var hasInvalidType = plan.Spawns.Any( (aSp) => !unitTypeMap.ContainsKey(aSp.UnitType) || !unitTypeMap[aSp.UnitType].CanBeAttacker );
+                    var hasInvalidType = plan.Spawns.Any( (aSp) => unitTypeMap.Get(aSp.UnitType)==null || !unitTypeMap.Get(aSp.UnitType).CanBeAttacker );
                     if (hasInvalidType)
                         yield return "Some attacker unit types are invalid";
                 }
@@ -105,16 +105,16 @@ namespace BattlePlan.Resolver
         }
 
         public static IEnumerable<string> FindDefensePlanErrors(Terrain terrain,
-            IEnumerable<UnitCharacteristics> unitTypes,
+            UnitTypeMap unitTypes,
             IEnumerable<DefensePlan> defensePlans)
         {
-            var unitTypeMap = MakeUnitTypeMap(unitTypes);
-            if (unitTypeMap.Count==0)
+            var unitTypeMap = unitTypes;
+            if (unitTypeMap.AsList.Count==0)
                 yield return "No unit types defined";
 
             var allPlacements = defensePlans?.SelectMany( (plan) => plan.Placements ) ?? Enumerable.Empty<DefenderPlacement>();
 
-            var hasInvalidType = allPlacements.Any( (dp) => !unitTypeMap.ContainsKey(dp.UnitType) || !unitTypeMap[dp.UnitType].CanBeDefender );
+            var hasInvalidType = allPlacements.Any( (dp) => unitTypeMap.Get(dp.UnitType)==null || !unitTypeMap.Get(dp.UnitType).CanBeDefender );
             if (hasInvalidType)
                 yield return "Some defender unit types are invalid";
 
@@ -154,10 +154,10 @@ namespace BattlePlan.Resolver
 
         public static IEnumerable<string> GetChallengeDisqualifiers(Scenario scenario,
             BattleResolution resolution,
-            IEnumerable<UnitCharacteristics> unitTypes,
+            UnitTypeMap unitTypes,
             DefenderChallenge challenge)
         {
-            var unitTypeMap = MakeUnitTypeMap(unitTypes);
+            var unitTypeMap = unitTypes;
 
             var totalResourceCost = 0;
             var totalUnitCount = 0;
@@ -182,7 +182,7 @@ namespace BattlePlan.Resolver
                 foreach (var placement in plan.Placements)
                 {
                     totalUnitCount += 1;
-                    totalResourceCost += unitTypeMap[placement.UnitType].ResourceCost;
+                    totalResourceCost += unitTypeMap.Get(placement.UnitType).ResourceCost;
 
                     int unitCount = 0;
                     unitTypeCounts.TryGetValue(placement.UnitType, out unitCount);
@@ -266,14 +266,5 @@ namespace BattlePlan.Resolver
         private const double _maxSaneSpawnTime = 300.0;
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
-
-
-        private static Dictionary<string,UnitCharacteristics> MakeUnitTypeMap(IEnumerable<UnitCharacteristics> unitTypeList)
-        {
-            if (unitTypeList == null)
-                return new Dictionary<string,UnitCharacteristics>();
-            var unitKVPs = unitTypeList.Select( (ut) => new KeyValuePair<string,UnitCharacteristics>(ut.Name, ut) );
-            return new Dictionary<string,UnitCharacteristics>(unitKVPs);
-        }
     }
 }

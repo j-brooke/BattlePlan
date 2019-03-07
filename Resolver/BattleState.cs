@@ -12,7 +12,7 @@ namespace BattlePlan.Resolver
     /// </summary>
     public sealed class BattleState
     {
-        public BattleResolution Resolve(Scenario scenario, IList<UnitCharacteristics> unitTypes)
+        public BattleResolution Resolve(Scenario scenario, UnitTypeMap unitTypes)
         {
             var timer = System.Diagnostics.Stopwatch.StartNew();
 
@@ -20,13 +20,9 @@ namespace BattlePlan.Resolver
             _attackPlans = new List<AttackPlan>(scenario.AttackPlans);
             _defensePlans = new List<DefensePlan>(scenario.DefensePlans ?? Enumerable.Empty<DefensePlan>());
 
-            // Make a lookup table for unit types.
-            _unitTypeMap = new Dictionary<string, UnitCharacteristics>();
-            foreach (var unitType in unitTypes)
-                _unitTypeMap.Add(unitType.Name, unitType);
+            _unitTypeMap = unitTypes;
 
-            UnitCharacteristics fireClass = null;
-            _unitTypeMap.TryGetValue("Fire", out fireClass);
+            var fireClass = _unitTypeMap.Get("Fire");
 
             // Validate and exit early if we fail.
             var valErrs = GetValidationFailures(scenario, unitTypes);
@@ -35,7 +31,7 @@ namespace BattlePlan.Resolver
                 return new BattleResolution()
                 {
                     Terrain = scenario.Terrain,
-                    UnitTypes = unitTypes,
+                    UnitTypes = unitTypes.AsList,
                     ErrorMessages = valErrs,
                 };
             }
@@ -64,7 +60,7 @@ namespace BattlePlan.Resolver
                 foreach (var placement in plan.Placements)
                 {
                     var id = GenerateId(0.0, placement.UnitType);
-                    var classChar = _unitTypeMap[placement.UnitType];
+                    var classChar = _unitTypeMap.Get(placement.UnitType);
                     var newEntity = new BattleEntity(id, classChar, plan.TeamId, false);
                     newEntity.Spawn(this, placement.Position);
                     _entities.Add(newEntity);
@@ -167,7 +163,7 @@ namespace BattlePlan.Resolver
             {
                 BannerText = new List<string>(scenario.BannerText ?? Enumerable.Empty<string>() ),
                 Terrain = _terrain,
-                UnitTypes = _unitTypeMap.Values.ToList(),
+                UnitTypes = _unitTypeMap.AsList,
                 Events = _events,
                 AttackerBreachCounts = attackerBreachCounts,
                 DefenderCasualtyCounts = defenderCasualtyCounts,
@@ -248,7 +244,7 @@ namespace BattlePlan.Resolver
 
         private BattlePathGraph _pathGraph;
 
-        private Dictionary<string, UnitCharacteristics> _unitTypeMap;
+        private UnitTypeMap _unitTypeMap;
 
         private int _nextId;
         private HurtMap _hurtMap;
@@ -304,7 +300,7 @@ namespace BattlePlan.Resolver
                     if (spawnDef != null)
                     {
                         var id = GenerateId(time, spawnDef.UnitType);
-                        var classChar = _unitTypeMap[spawnDef.UnitType];
+                        var classChar = _unitTypeMap.Get(spawnDef.UnitType);
                         var newEntity = new BattleEntity(id, classChar, teamId, true);
                         newEntity.Spawn(this, pos);
 
@@ -320,7 +316,7 @@ namespace BattlePlan.Resolver
             foreach (var spawnReq in _miscSpawnQueue)
             {
                 var id = GenerateId(time, spawnReq.UnitType);
-                var classChar = _unitTypeMap[spawnReq.UnitType];
+                var classChar = _unitTypeMap.Get(spawnReq.UnitType);
                 var newEntity = new BattleEntity(id, classChar, spawnReq.TeamId, spawnReq.IsAttacker);
 
                 if (spawnReq.TimeToLive.HasValue)
@@ -343,7 +339,7 @@ namespace BattlePlan.Resolver
             return id;
         }
 
-        private IList<string> GetValidationFailures(Scenario scenario, IEnumerable<UnitCharacteristics> unitTypes)
+        private IList<string> GetValidationFailures(Scenario scenario, UnitTypeMap unitTypes)
         {
             var errs = new List<string>();
             errs.AddRange(Validator.FindTerrainErrors(scenario.Terrain));
@@ -357,7 +353,7 @@ namespace BattlePlan.Resolver
             return errs;
         }
 
-        private void ResolveChallenges(Scenario scenario, BattleResolution resolution, IEnumerable<UnitCharacteristics> unitTypes)
+        private void ResolveChallenges(Scenario scenario, BattleResolution resolution, UnitTypeMap unitTypes)
         {
             if (scenario.Challenges != null)
             {
@@ -400,7 +396,7 @@ namespace BattlePlan.Resolver
 
                     var countForPlan = 0;
                     foreach (var placement in plan.Placements)
-                        countForPlan += _unitTypeMap[placement.UnitType].ResourceCost;
+                        countForPlan += _unitTypeMap.Get(placement.UnitType).ResourceCost;
 
                     if (defenderMap.ContainsKey(plan.TeamId))
                         defenderMap[plan.TeamId] += countForPlan;
@@ -422,7 +418,7 @@ namespace BattlePlan.Resolver
 
                     var countForPlan = 0;
                     foreach (var spawn in plan.Spawns)
-                        countForPlan += _unitTypeMap[spawn.UnitType].ResourceCost;
+                        countForPlan += _unitTypeMap.Get(spawn.UnitType).ResourceCost;
 
                     if (attackerMap.ContainsKey(plan.TeamId))
                         attackerMap[plan.TeamId] += countForPlan;

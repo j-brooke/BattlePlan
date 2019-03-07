@@ -70,7 +70,7 @@ namespace BattlePlan.Viewer
 
         private string _scenarioPath;
         private string _sectionPath;
-        private List<UnitCharacteristics> _unitsList;
+        private UnitTypeMap _unitsList;
         private List<HighScoreEntry> _highScores;
         private FileLoader _loader;
 

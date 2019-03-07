@@ -123,7 +123,7 @@ namespace BattlePlan
                 return;
             }
 
-            List<Model.UnitCharacteristics> unitsList = null;
+            Model.UnitTypeMap unitsList = null;
             var editor = new Viewer.LowEffortEditor()
             {
                 UseColor = !_monochrome,

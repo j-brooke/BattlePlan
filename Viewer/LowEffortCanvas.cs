@@ -366,13 +366,13 @@ namespace BattlePlan.Viewer
             Console.Write(text);
         }
 
-        public void PaintDefensePlan(DefensePlan plan, IList<UnitCharacteristics> unitChars, int canvasOffsetX, int canvasOffsetY)
+        public void PaintDefensePlan(DefensePlan plan, UnitTypeMap unitChars, int canvasOffsetX, int canvasOffsetY)
         {
             var teamColor = GetTeamColor(plan.TeamId);
             var bgColor = GetTerrainBGColor(' ');
             foreach (var placement in plan.Placements)
             {
-                var unitClass = unitChars.FirstOrDefault( (cls) => cls.Name==placement.UnitType );
+                var unitClass = unitChars.Get(placement.UnitType);
                 PaintTile(
                     placement.Position.X,
                     placement.Position.Y,

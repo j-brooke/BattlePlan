@@ -15,12 +15,12 @@ namespace BattlePlan.Viewer
     {
         public bool WritePrettyJson { get; set; } = true;
 
-        public List<Model.UnitCharacteristics> LoadUnits()
+        public Model.UnitTypeMap LoadUnits()
         {
             var fileContentsAsString = File.ReadAllText(_unitsFileName);
             var unitList = JsonConvert.DeserializeObject<List<Dto.V2.UnitCharacteristics>>(fileContentsAsString);
             var domainUnitList = unitList.Select( (item) => Translator.V2Translator.ToModel(item) ).ToList();
-            return domainUnitList;
+            return new Model.UnitTypeMap(domainUnitList);
         }
 
         public Model.Scenario LoadScenario(string filename)
