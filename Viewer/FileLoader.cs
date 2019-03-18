@@ -38,14 +38,14 @@ namespace BattlePlan.Viewer
             File.WriteAllText(filename, fileContentsAsString);
         }
 
-        public MapGeneration.GeneratorOptions LoadGeneratorOptions(string filename)
+        public Generators.MapGeneratorOptions LoadGeneratorOptions(string filename)
         {
             var fileContentsAsString = File.ReadAllText(filename);
-            var mapGenOpts = JsonConvert.DeserializeObject<MapGeneration.GeneratorOptions>(fileContentsAsString);
+            var mapGenOpts = JsonConvert.DeserializeObject<Generators.MapGeneratorOptions>(fileContentsAsString);
             return mapGenOpts;
         }
 
-        public void SaveGeneratorOptions(string filename, MapGeneration.GeneratorOptions opts)
+        public void SaveGeneratorOptions(string filename, Generators.MapGeneratorOptions opts)
         {
             var fileContentsAsString = JsonConvert.SerializeObject(opts, GetJsonOpts());
             File.WriteAllText(filename, fileContentsAsString);

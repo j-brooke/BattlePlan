@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using BattlePlan.Model;
-using BattlePlan.MapGeneration;
+using BattlePlan.Generators;
 using BattlePlan.Resolver;
 
 namespace BattlePlan.Viewer
@@ -113,7 +113,7 @@ namespace BattlePlan.Viewer
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
-        private GeneratorOptions _mapGenOptions;
+        private MapGeneratorOptions _mapGenOptions;
         private Scenario _scenario;
 
         // Actual cursor position on screen
@@ -218,7 +218,7 @@ namespace BattlePlan.Viewer
 
         private void GenerateTerrain()
         {
-            var mapGenerator = new Generator(_mapGenOptions);
+            var mapGenerator = new MapGenerator(_mapGenOptions);
             _scenario.Terrain = mapGenerator.Create();
 
             // Invalidate all defense plans.  If the map resized, they might be out of bounds.
@@ -252,7 +252,7 @@ namespace BattlePlan.Viewer
 
             if (_mapGenOptions ==  null)
             {
-                _mapGenOptions = new GeneratorOptions();
+                _mapGenOptions = new MapGeneratorOptions();
             }
         }
 

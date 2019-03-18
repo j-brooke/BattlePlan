@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using BattlePlan.Model;
 
-namespace BattlePlan.MapGeneration
+namespace BattlePlan.Generators
 {
     /// <summary>
     /// Parameters for random map generation.
     /// </summary>
-    public class GeneratorOptions
+    public class MapGeneratorOptions
     {
         /// <summary>
         /// Total map height in tiles.

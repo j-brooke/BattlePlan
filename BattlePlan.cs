@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using BattlePlan;
 using BattlePlan.Resolver;
-using BattlePlan.MapGeneration;
 using Mono.Options;
 
 namespace BattlePlan

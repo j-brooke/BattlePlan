@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using BattlePlan.Model;
-using BattlePlan.MapGeneration;
 
 namespace BattlePlan.Viewer
 {

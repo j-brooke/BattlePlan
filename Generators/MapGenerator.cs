@@ -4,15 +4,15 @@ using System.Linq;
 using BattlePlan.Model;
 using BattlePlan.Resolver;
 
-namespace BattlePlan.MapGeneration
+namespace BattlePlan.Generators
 {
     /// <summary>
     /// Class for generating random maps.
     /// TODO: Might want to add a RNG seed to make the process repeatable.
     /// </summary>
-    public class Generator
+    public class MapGenerator
     {
-        public Generator(GeneratorOptions options)
+        public MapGenerator(MapGeneratorOptions options)
         {
             _options = options;
             InitTerrain();
@@ -78,7 +78,7 @@ namespace BattlePlan.MapGeneration
         // For now we'll assume only 1 attacking team.
         private const int _attackerTeamId = 1;
 
-        private readonly GeneratorOptions _options;
+        private readonly MapGeneratorOptions _options;
         private Terrain _terrain;
         private Random _rng;
 
