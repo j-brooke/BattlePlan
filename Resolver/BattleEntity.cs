@@ -37,9 +37,10 @@ namespace BattlePlan.Resolver
             this.CurrentAction = Action.None;
             this.CurrentActionElapsedTime = 0.0;
             this.TeamId = teamId;
-            this.WeaponReloadElapsedTime = 0.0;
-
             _elapsedSecondsDoingNothing = 0.0;
+
+            // Attackers start with their weapons ready, to discourage spawn camping.
+            this.WeaponReloadElapsedTime = (isAttacker)? double.PositiveInfinity : 0.0;
 
             // Only attackers are allowed to move.
             this.SpeedTilesPerSec = (isAttacker)? clsChar.SpeedTilesPerSec : 0.0;

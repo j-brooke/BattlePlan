@@ -2,5 +2,6 @@ bin/
 obj/
 .vscode/
 .options.json
+.editor-options.json
 logs/
 games/

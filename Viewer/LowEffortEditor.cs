@@ -25,7 +25,7 @@ namespace BattlePlan.Viewer
         public LowEffortEditor()
         {
             _loader = new FileLoader();
-            LoadOrCreateGeneratorOptions();
+            LoadOrCreateEditorOptions();
             _unitTypes = _loader.LoadUnits();
         }
 
@@ -102,18 +102,19 @@ namespace BattlePlan.Viewer
             else
                 return null;
         }
+
         private const int _minimumTeamId = 1;
         private const int _maximumTeamId = 4;
         private const int _playerViewTeamId = 2;
 
         private const string _unitsFileName = "resources/units.json";
 
-        private const string _optionsFile = ".options.json";
+        private const string _optionsFile = ".editor-options.json";
 
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
 
         private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
-        private MapGeneratorOptions _mapGenOptions;
+        private GeneratorOptions _editorOptions;
         private Scenario _scenario;
 
         // Actual cursor position on screen
@@ -218,7 +219,7 @@ namespace BattlePlan.Viewer
 
         private void GenerateTerrain()
         {
-            var mapGenerator = new MapGenerator(_mapGenOptions);
+            var mapGenerator = new MapGenerator(_editorOptions.MapGeneratorOptions);
             _scenario.Terrain = mapGenerator.Create();
 
             // Invalidate all defense plans.  If the map resized, they might be out of bounds.
@@ -234,12 +235,12 @@ namespace BattlePlan.Viewer
             _canvas.Init(_statusBarRow+1);
         }
 
-        private void LoadOrCreateGeneratorOptions()
+        private void LoadOrCreateEditorOptions()
         {
             try
             {
                 if (File.Exists(_optionsFile))
-                    _mapGenOptions = _loader.LoadGeneratorOptions(_optionsFile);
+                    _editorOptions = _loader.LoadEditorOptions(_optionsFile);
             }
             catch (IOException ioe)
             {
@@ -247,32 +248,32 @@ namespace BattlePlan.Viewer
             }
             catch (Newtonsoft.Json.JsonException je)
             {
-                _logger.Warn(je, "Error loading GeneratorOptions file");
+                _logger.Warn(je, "Error loading EditorOptions file");
             }
 
-            if (_mapGenOptions ==  null)
+            if (_editorOptions ==  null)
             {
-                _mapGenOptions = new MapGeneratorOptions();
+                _editorOptions = new GeneratorOptions();
             }
         }
 
-        private void SaveGeneratorOptions()
+        private void SaveEditorOptions()
         {
-            if (_mapGenOptions==null)
+            if (_editorOptions==null)
                 return;
 
             try
             {
-                _loader.SaveGeneratorOptions(_optionsFile, _mapGenOptions);
+                _loader.SaveEditorOptions(_optionsFile, _editorOptions);
             }
             catch (IOException ioe)
             {
-                _logger.Warn(ioe, "Error loading GeneratorOptions file");
+                _logger.Warn(ioe, "Error loading EditorOptions file");
                 _statusMsg = ioe.Message;
             }
             catch (Newtonsoft.Json.JsonException je)
             {
-                _logger.Warn(je, "Error loading GeneratorOptions file");
+                _logger.Warn(je, "Error loading EditorOptions file");
                 _statusMsg = je.Message;
             }
         }
@@ -718,8 +719,8 @@ namespace BattlePlan.Viewer
 
         private void PromptToEditGeneratorOptions()
         {
-            EditPoco(_mapGenOptions);
-            SaveGeneratorOptions();
+            EditPoco(_editorOptions.MapGeneratorOptions);
+            SaveEditorOptions();
         }
 
         private void RecalculateResourceCost()
@@ -1081,6 +1082,19 @@ namespace BattlePlan.Viewer
             _terrainOverlayTiles = null;
         }
 
+        private void GenerateAttackPlan()
+        {
+            // TODO: load from disk
+            var opts = new AttackPlanGeneratorOptions();
+            var numberOfSpawnPts = _scenario.Terrain.SpawnPointsMap[_teamId].Count;
+            var generator = new AttackPlanGenerator(opts, _unitTypes);
+            var newPlan = generator.Create(_teamId, numberOfSpawnPts);
+
+            _scenario.AttackPlans = _scenario.AttackPlans.Where( (ap) => ap.TeamId!=_teamId )
+                .ToList();
+            _scenario.AttackPlans.Add(newPlan);
+        }
+
         #region UIPages
 
         private void WriteModeHelp()
@@ -1406,11 +1420,12 @@ namespace BattlePlan.Viewer
             {
                 row += 1;
                 _canvas.WriteText("(Backspace) clear all", col, row++, LowEffortCanvas.RegularTextColor);
+                _canvas.WriteText("(R) randomly assign", col, row++, LowEffortCanvas.RegularTextColor);
                 _canvas.WriteText($"(1) clear for this time", col, row++, LowEffortCanvas.RegularTextColor);
 
                 // Write a list of all available attacker types.  But the trick part is, we also
                 // want to include the count for that unit type already assigned.
-                // This obviously breaks if we have >7 attacker types.
+                // This obviously breaks if we have >8 attacker types.
                 for (int i=0; i<_attackerClasses.Count; ++i)
                 {
                     Func<AttackerSpawn,bool> matchFunc = (sp) =>
@@ -1446,6 +1461,9 @@ namespace BattlePlan.Viewer
                     return;
                 case ConsoleKey.P:
                     CycleSpawnPointIndex();
+                    return;
+                case ConsoleKey.R:
+                    GenerateAttackPlan();
                     return;
                 case ConsoleKey.Backspace:
                     ClearAllAttackersForTeam();

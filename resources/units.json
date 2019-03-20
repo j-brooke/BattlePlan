@@ -7,16 +7,16 @@
     "CanBeDefender": false,
     "Attackable": true,
     "BlocksTile": true,
-    "SpeedTilesPerSec": 1.25,
-    "InitialHitPoints": 60,
+    "SpeedTilesPerSec": 1.5,
+    "InitialHitPoints": 120,
     "WeaponType": "Physical",
     "WeaponUseTime": 0.5,
     "WeaponReloadTime": 0.5,
     "WeaponRangeTiles": 1.5,
     "WeaponDamage": 40,
-    "CrowdAversionBias": 0.0,
+    "CrowdAversionBias": 1.0,
     "HurtAversionBias": 0.0,
-    "ResourceCost": 25
+    "ResourceCost": 50
   },
   {
     "Name": "Grunt",
@@ -73,7 +73,7 @@
     "WeaponDamage": 75,
     "CrowdAversionBias": 5.0,
     "HurtAversionBias": 0.0,
-    "ResourceCost": 150
+    "ResourceCost": 175
   },
   {
     "Name": "Crossbowman",
