@@ -1,7 +1,6 @@
 {
   "BannerText": [
-    "Water ~ blocks movement but not vision or ranged attacks.",
-    "Fog @ blocks vision but not movement."
+    "Storm-Mages A use chain lightning to attack many enemies at once."
   ],
   "Terrain": {
     "TileTypes": [
@@ -33,26 +32,26 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "     :::         ~     :::        ::::::::   ",
-      "    :::::::      ~                   ::::    ",
-      ":::::::::::      ~~                   ::::   ",
-      ":::::::::::      ~~                   :::::::",
-      ":::::::::        ~~       :::::::::::        ",
-      "  ::::::         ~~~         ::::::::        ",
-      "                  ~~                     ::::",
-      "                  ~~          @              ",
-      "                            @@@@@@       @   ",
-      "                           @@@@@@@      @@@@ ",
-      "          :       ~~~~    @@@@@@@@@@   @@::::",
-      " :       :::::     ~~~    @@@@::@@@   @@@@@@@",
-      "::::    ::::::     ~~~ ::::@@@@@@@@  @@@@@@@@",
-      ":::::    ::::       ~~~ ::   @@@@      @@@@@@",
-      "::::::         :::  ~~~       @@@      ::  @@",
-      "::::::          :  ~~~                       ",
-      " ::                ~~~                    :::",
-      "         :        ~~~                   :::::",
-      "        ::::       ~~                   :::::",
-      "         ::        ~~                   :::::"
+      "     :::               :::        ::::::::   ",
+      "    :::::::                          ::::    ",
+      ":::::::::::                           ::::   ",
+      ":::::::::::                           :::::::",
+      ":::::::::                 :::::::::::        ",
+      "  ::::::                     ::::::::        ",
+      "                            :::          ::::",
+      "                                             ",
+      "                                             ",
+      "                                             ",
+      "          :                              ::::",
+      " :       :::::                ::             ",
+      "::::    ::::::         ::::                  ",
+      ":::::    ::::           ::                   ",
+      "::::::         :::                     ::    ",
+      "::::::          :                            ",
+      " ::                                       :::",
+      "         :                              :::::",
+      "        ::::                            :::::",
+      "         ::                             :::::"
     ],
     "SpawnPointsMap": {
       "1": [
@@ -77,23 +76,26 @@
       "Spawns": [
         {
           "Time": 0.0,
-          "UnitType": "Grunt",
+          "UnitType": "Storm-Mage",
           "SpawnPointIndex": 0
         },
         {
           "Time": 0.0,
-          "UnitType": "Grunt",
-          "SpawnPointIndex": 0
-        },
-        {
-          "Time": 0.0,
-          "UnitType": "Grunt",
+          "UnitType": "Storm-Mage",
           "SpawnPointIndex": 0
         }
       ]
     },
     {
       "TeamId": 2,
+      "Spawns": []
+    },
+    {
+      "TeamId": 3,
+      "Spawns": []
+    },
+    {
+      "TeamId": 4,
       "Spawns": []
     }
   ],
@@ -102,10 +104,45 @@
       "TeamId": 2,
       "Placements": [
         {
-          "UnitType": "Archer",
+          "UnitType": "Pikeman",
           "Position": [
-            22,
-            6
+            40,
+            7
+          ]
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": [
+            40,
+            8
+          ]
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": [
+            40,
+            9
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            39,
+            9
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            39,
+            8
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            39,
+            7
           ]
         }
       ]
@@ -115,23 +152,12 @@
     {
       "Name": "*",
       "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 0,
-      "MinimumDistFromGoalPts": 0,
-      "MaximumResourceCost": 10000,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1000,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": false,
-      "MaximumUnitTypeCount": {}
-    },
-    {
-      "Name": "**",
-      "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 0,
-      "MinimumDistFromGoalPts": 0,
-      "MaximumResourceCost": 10000,
-      "MaximumTotalUnitCount": 100,
-      "MaximumDefendersLostCount": 100,
-      "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     }
   ]

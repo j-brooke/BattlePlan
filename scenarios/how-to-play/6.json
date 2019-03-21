@@ -1,6 +1,7 @@
 {
   "BannerText": [
-    "Sometimes you'll have to protect multiple enemy goals."
+    "Crossbowmen ] will attack at range while marching toward the goal.",
+    "Berserkers Y ignore the goal and charge enemies they see."
   ],
   "Terrain": {
     "TileTypes": [
@@ -48,10 +49,10 @@
       ":::::    ::::           ::                   ",
       "::::::         :::                     ::    ",
       "::::::          :                            ",
-      " ::                             ::::::   ::::",
-      "         :                           :       ",
-      "        ::::                                 ",
-      "         ::                                  "
+      " ::                                       :::",
+      "         :                              :::::",
+      "        ::::                            :::::",
+      "         ::                             :::::"
     ],
     "SpawnPointsMap": {
       "1": [
@@ -66,10 +67,6 @@
         [
           43,
           8
-        ],
-        [
-          43,
-          18
         ]
       ]
     }
@@ -80,27 +77,22 @@
       "Spawns": [
         {
           "Time": 0.0,
-          "UnitType": "Grunt",
+          "UnitType": "Crossbowman",
           "SpawnPointIndex": 0
         },
         {
           "Time": 0.0,
-          "UnitType": "Grunt",
+          "UnitType": "Crossbowman",
           "SpawnPointIndex": 0
         },
         {
-          "Time": 0.0,
-          "UnitType": "Grunt",
+          "Time": 20.0,
+          "UnitType": "Berserker",
           "SpawnPointIndex": 0
         },
         {
-          "Time": 0.0,
-          "UnitType": "Grunt",
-          "SpawnPointIndex": 0
-        },
-        {
-          "Time": 0.0,
-          "UnitType": "Grunt",
+          "Time": 20.0,
+          "UnitType": "Berserker",
           "SpawnPointIndex": 0
         }
       ]
@@ -115,73 +107,59 @@
       "TeamId": 2,
       "Placements": [
         {
-          "UnitType": "Archer",
+          "UnitType": "Pikeman",
           "Position": [
-            41,
-            7
-          ]
-        },
-        {
-          "UnitType": "Archer",
-          "Position": [
-            41,
-            8
-          ]
-        },
-        {
-          "UnitType": "Archer",
-          "Position": [
-            41,
-            9
+            14,
+            2
           ]
         },
         {
           "UnitType": "Pikeman",
           "Position": [
-            40,
-            9
+            16,
+            2
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            14,
+            3
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            15,
+            3
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            16,
+            3
+          ]
+        },
+        {
+          "UnitType": "Barricade",
+          "Position": [
+            17,
+            3
           ]
         },
         {
           "UnitType": "Pikeman",
           "Position": [
-            40,
-            8
+            15,
+            2
           ]
         },
         {
           "UnitType": "Pikeman",
           "Position": [
-            40,
-            7
-          ]
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": [
-            39,
-            7
-          ]
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": [
-            39,
-            8
-          ]
-        },
-        {
-          "UnitType": "Barricade",
-          "Position": [
-            39,
-            9
-          ]
-        },
-        {
-          "UnitType": "Archer",
-          "Position": [
-            41,
-            18
+            17,
+            2
           ]
         }
       ]

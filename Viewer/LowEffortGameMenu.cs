@@ -68,6 +68,9 @@ namespace BattlePlan.Viewer
             "",
         };
 
+        // In the "sections" list, we want these directory names to show up at the front, if present.
+        private static readonly string[] _fixedSectionOrder = { "how-to-play", "beginner" };
+
         private string _scenarioPath;
         private string _sectionPath;
         private UnitTypeMap _unitsList;
@@ -83,25 +86,25 @@ namespace BattlePlan.Viewer
 
         private void ChooseSection()
         {
-            var dirsInScenarios = Directory.EnumerateDirectories(this.ScenariosFolder).ToList();
+            var sectionNames = Directory.EnumerateDirectories(this.ScenariosFolder)
+                .Select( (path) => System.IO.Path.GetRelativePath(this.ScenariosFolder, path) )
+                .ToList();
+            sectionNames.Sort(SectionSortComparison);
 
             Console.Clear();
             PrintBanner(true);
 
-            for (int i=0; i<dirsInScenarios.Count; ++i)
-            {
-                var dirName = System.IO.Path.GetRelativePath(this.ScenariosFolder, dirsInScenarios[i]);
-                Console.WriteLine($"{i+1} {dirName}");
-            }
+            for (int i=0; i<sectionNames.Count; ++i)
+                Console.WriteLine($"{i+1} {sectionNames[i]}");
 
             Console.WriteLine();
-            Console.Write($"Choose a section (1-{dirsInScenarios.Count} or enter to quit): ");
+            Console.Write($"Choose a section (1-{sectionNames.Count} or enter to quit): ");
             var input = Console.ReadLine();
 
             int chosenNumber = 0;
             int.TryParse(input, out chosenNumber);
-            if (chosenNumber>=1 && chosenNumber<=dirsInScenarios.Count)
-                _sectionPath = dirsInScenarios[chosenNumber-1];
+            if (chosenNumber>=1 && chosenNumber<=sectionNames.Count)
+                _sectionPath = System.IO.Path.Join(this.ScenariosFolder, sectionNames[chosenNumber-1]);
             else
                 _sectionPath = null;
         }
@@ -293,12 +296,68 @@ namespace BattlePlan.Viewer
                 return $"{entry.BestDate:d} ({entry.BestResourceCost})";
         }
 
+        /// <summary>
+        /// Comparison to sort file names by numerical value if they're numbers, or alphabetically.
+        /// </summary>
         private int FileSortComparison(string pathA, string pathB)
         {
-            // TODO: make this handle filenames that are numbers nicely.
             var nameA = System.IO.Path.GetFileNameWithoutExtension(pathA).ToLower();
             var nameB = System.IO.Path.GetFileNameWithoutExtension(pathB).ToLower();
-            return string.Compare(nameA, nameB);
+
+            if (nameA == nameB)
+                return 0;
+
+            int numberA = -1;
+            int.TryParse(nameA, out numberA);
+
+            int numberB = -1;
+            int.TryParse(nameB, out numberB);
+
+            if (numberA >= 0)
+            {
+                if (numberB >= 0)
+                    return numberA - numberB;
+                else
+                    return -1;
+            }
+            else
+            {
+                if (numberB >= 0)
+                    return +1;
+                else
+                    return string.Compare(nameA, nameB);
+            }
+        }
+
+        /// <summary>
+        /// Comparison for sorting section names.  Uses the order listed in _fixedSectionOrder for those
+        /// present, and puts the rest at the end in alphabetic order.
+        /// </summary>
+        private int SectionSortComparison(string nameA, string nameB)
+        {
+            var normalizedA = nameA.Trim().ToLower();
+            var normalizedB = nameB.Trim().ToLower();
+
+            if (normalizedA == normalizedB)
+                return 0;
+
+            var indexOfA = Array.IndexOf(_fixedSectionOrder, normalizedA);
+            var indexOfB = Array.IndexOf(_fixedSectionOrder, normalizedB);
+
+            if (indexOfA >= 0)
+            {
+                if (indexOfB >= 0)
+                    return indexOfA - indexOfB;
+                else
+                    return -1;
+            }
+            else
+            {
+                if (indexOfB >= 0)
+                    return +1;
+                else
+                    return string.Compare(normalizedA, normalizedB);
+            }
         }
     }
 }

@@ -1,7 +1,6 @@
 {
   "BannerText": [
-    "Fire-Serpents S attack with jets of fire that damages anyone who",
-    "pass through it."
+    "Sometimes the enemies spawn at multiple locations."
   ],
   "Terrain": {
     "TileTypes": [
@@ -33,9 +32,9 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "     :::               :::        ::::::::   ",
-      "    :::::::                          ::::    ",
-      ":::::::::::                           ::::   ",
+      "      :::              :::        ::::::::   ",
+      "                                     ::::    ",
+      "                                      ::::   ",
       ":::::::::::                           :::::::",
       ":::::::::                 :::::::::::        ",
       "  ::::::                     ::::::::        ",
@@ -58,7 +57,11 @@
       "1": [
         [
           1,
-          8
+          1
+        ],
+        [
+          1,
+          18
         ]
       ]
     },
@@ -89,19 +92,36 @@
           "Time": 0.0,
           "UnitType": "Grunt",
           "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
         }
       ]
     },
     {
       "TeamId": 2,
-      "Spawns": []
-    },
-    {
-      "TeamId": 3,
-      "Spawns": []
-    },
-    {
-      "TeamId": 4,
       "Spawns": []
     }
   ],
@@ -110,10 +130,66 @@
       "TeamId": 2,
       "Placements": [
         {
-          "UnitType": "Fire-Serpent",
+          "UnitType": "Archer",
           "Position": [
-            40,
-            8
+            16,
+            0
+          ]
+        },
+        {
+          "UnitType": "Archer",
+          "Position": [
+            16,
+            1
+          ]
+        },
+        {
+          "UnitType": "Archer",
+          "Position": [
+            16,
+            2
+          ]
+        },
+        {
+          "UnitType": "Archer",
+          "Position": [
+            17,
+            2
+          ]
+        },
+        {
+          "UnitType": "Archer",
+          "Position": [
+            17,
+            1
+          ]
+        },
+        {
+          "UnitType": "Archer",
+          "Position": [
+            17,
+            0
+          ]
+        },
+        {
+          "UnitType": "Archer",
+          "Position": [
+            18,
+            2
+          ]
+        },
+        {
+          "UnitType": "Archer",
+          "Position": [
+            18,
+            1
+          ]
+        },
+        {
+          "UnitType": "Archer",
+          "Position": [
+            18,
+            0
           ]
         }
       ]
@@ -123,12 +199,23 @@
     {
       "Name": "*",
       "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 8,
-      "MinimumDistFromGoalPts": 2,
-      "MaximumResourceCost": 1000,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
+      "MaximumResourceCost": 10000,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": false,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 0,
+      "MinimumDistFromGoalPts": 0,
+      "MaximumResourceCost": 10000,
+      "MaximumTotalUnitCount": 100,
+      "MaximumDefendersLostCount": 100,
+      "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     }
   ]

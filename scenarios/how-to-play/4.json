@@ -1,9 +1,9 @@
 {
-  "BannerText": [
-    "Pikemen ^ have a strong 2-tile range attack.",
-    "Scouts i will always look for the safest path."
-  ],
-  "Terrain": {
+    "BannerText": [
+      "Zombies f are fearless and stupid.  They take a direct",
+      "path regardless of enemies in the way."
+    ],
+    "Terrain": {
     "TileTypes": [
       {
         "BlocksMovement": false,
@@ -33,13 +33,13 @@
     "Width": 45,
     "Height": 20,
     "Tiles": [
-      "::::   ::::::::     ::   :        ::::::::   ",
-      ":::: :        :::   :: :     ::      ::      ",
-      ":::: ::::::    :: :  : ::    ::::       ::   ",
-      ":::       ::      :    ::::  ::::     :::::: ",
-      ":::   ::   :::::::::::::: :::::::::::::    : ",
-      "  ::::::         :  ::::     ::::::::      : ",
-      "       :::::::::            :::          ::: ",
+      "     :::               :::        ::::::::   ",
+      "    :::::::                          ::::    ",
+      ":::::::::::                           ::::   ",
+      ":::::::::::                           :::::::",
+      ":::::::::                 :::::::::::        ",
+      "  ::::::                     ::::::::        ",
+      "                            :::          ::::",
       "                                             ",
       "                                             ",
       "                                             ",
@@ -77,22 +77,17 @@
       "Spawns": [
         {
           "Time": 0.0,
-          "UnitType": "Grunt",
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Zombie",
           "SpawnPointIndex": 0
         },
         {
           "Time": 0.0,
           "UnitType": "Grunt",
-          "SpawnPointIndex": 0
-        },
-        {
-          "Time": 0.0,
-          "UnitType": "Grunt",
-          "SpawnPointIndex": 0
-        },
-        {
-          "Time": 8.0,
-          "UnitType": "Scout",
           "SpawnPointIndex": 0
         }
       ]
@@ -109,21 +104,21 @@
         {
           "UnitType": "Pikeman",
           "Position": [
-            40,
-            7
-          ]
-        },
-        {
-          "UnitType": "Pikeman",
-          "Position": [
-            40,
+            20,
             8
           ]
         },
         {
           "UnitType": "Pikeman",
           "Position": [
-            40,
+            20,
+            7
+          ]
+        },
+        {
+          "UnitType": "Pikeman",
+          "Position": [
+            20,
             9
           ]
         }
@@ -134,23 +129,12 @@
     {
       "Name": "*",
       "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 0,
-      "MinimumDistFromGoalPts": 0,
-      "MaximumResourceCost": 10000,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1000,
       "MaximumTotalUnitCount": 100,
       "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": false,
-      "MaximumUnitTypeCount": {}
-    },
-    {
-      "Name": "**",
-      "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 0,
-      "MinimumDistFromGoalPts": 0,
-      "MaximumResourceCost": 10000,
-      "MaximumTotalUnitCount": 100,
-      "MaximumDefendersLostCount": 100,
-      "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     }
   ]
