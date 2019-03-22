@@ -1570,14 +1570,17 @@ namespace BattlePlan.Viewer
             row += 1;
             _canvas.WriteTextDirect("Attackers", 0, row++);
             _canvas.WriteTextDirect(" T Grunt - Moves toward the goal, but attacks things in the way.", 0, row++);
+            _canvas.WriteTextDirect(" f Zombie - Moves toward the goal, but attacks things in the way.", 0, row++);
             _canvas.WriteTextDirect(" i Scout - Tries to avoid defenders while moving toward the goal.", 0, row++);
             _canvas.WriteTextDirect(" ] Crossbowman - Moves toward the goal, but attacks at range along the way.", 0, row++);
             _canvas.WriteTextDirect(" Y Berserker - Attacks any enemy it sees.", 0, row++);
+            _canvas.WriteTextDirect(" A Storm-Mage - Uses chain lightning to attack many enemies at once.", 0, row++);
 
             row += 1;
             _canvas.WriteTextDirect("Defenders (all immobile)", 0, row++);
             _canvas.WriteTextDirect(" { Archer - Attacks any enemies at long range.", 0, row++);
             _canvas.WriteTextDirect(" ^ Pikeman - Attacks enemies within 2 tiles.", 0, row++);
+            _canvas.WriteTextDirect(" S Fire-Serpent - Shoots jets of fire that damage anything that passes over.", 0, row++);
             _canvas.WriteTextDirect(" # Barricade - Doesn't attack, but blocks enemy movement until destroyed.", 0, row++);
 
             // Wait for the user to press a key.  We don't care what key it is, unless it's

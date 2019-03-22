@@ -87,24 +87,24 @@ namespace BattlePlan.Viewer
         private void ChooseSection()
         {
             var sectionNames = Directory.EnumerateDirectories(this.ScenariosFolder)
-                .Select( (path) => System.IO.Path.GetRelativePath(this.ScenariosFolder, path) )
+                .Select( (path) => System.IO.Path.GetRelativePath(this.ScenariosFolder, path) );
+            var sortedNames = SortSemiFixedOrder(sectionNames, _fixedSectionOrder)
                 .ToList();
-            sectionNames.Sort(SectionSortComparison);
 
             Console.Clear();
             PrintBanner(true);
 
-            for (int i=0; i<sectionNames.Count; ++i)
-                Console.WriteLine($"{i+1} {sectionNames[i]}");
+            for (int i=0; i<sortedNames.Count; ++i)
+                Console.WriteLine($"{i+1} {sortedNames[i]}");
 
             Console.WriteLine();
-            Console.Write($"Choose a section (1-{sectionNames.Count} or enter to quit): ");
+            Console.Write($"Choose a section (1-{sortedNames.Count} or enter to quit): ");
             var input = Console.ReadLine();
 
             int chosenNumber = 0;
             int.TryParse(input, out chosenNumber);
-            if (chosenNumber>=1 && chosenNumber<=sectionNames.Count)
-                _sectionPath = System.IO.Path.Join(this.ScenariosFolder, sectionNames[chosenNumber-1]);
+            if (chosenNumber>=1 && chosenNumber<=sortedNames.Count)
+                _sectionPath = System.IO.Path.Join(this.ScenariosFolder, sortedNames[chosenNumber-1]);
             else
                 _sectionPath = null;
         }
@@ -330,34 +330,17 @@ namespace BattlePlan.Viewer
         }
 
         /// <summary>
-        /// Comparison for sorting section names.  Uses the order listed in _fixedSectionOrder for those
-        /// present, and puts the rest at the end in alphabetic order.
+        /// Orders a list, prioritizing items in the given fixedOrderList.  Items present in fixedOrderList
+        /// will be returned in the same order as that sequence.  Items that aren't present in fixedOrderList
+        /// will be after the ones that are, and sorted according to T's default comparison.
         /// </summary>
-        private int SectionSortComparison(string nameA, string nameB)
+        private IEnumerable<T> SortSemiFixedOrder<T>(IEnumerable<T> sequence, IEnumerable<T> fixedOrderList)
+            where T : IComparable<T>, IEquatable<T>
         {
-            var normalizedA = nameA.Trim().ToLower();
-            var normalizedB = nameB.Trim().ToLower();
-
-            if (normalizedA == normalizedB)
-                return 0;
-
-            var indexOfA = Array.IndexOf(_fixedSectionOrder, normalizedA);
-            var indexOfB = Array.IndexOf(_fixedSectionOrder, normalizedB);
-
-            if (indexOfA >= 0)
-            {
-                if (indexOfB >= 0)
-                    return indexOfA - indexOfB;
-                else
-                    return -1;
-            }
-            else
-            {
-                if (indexOfB >= 0)
-                    return +1;
-                else
-                    return string.Compare(normalizedA, normalizedB);
-            }
+            var fixedPart = fixedOrderList.Intersect(sequence);
+            var extrasPart = sequence.Except(fixedOrderList)
+                .OrderBy( (item) => item );
+            return fixedPart.Concat(extrasPart);
         }
     }
 }
