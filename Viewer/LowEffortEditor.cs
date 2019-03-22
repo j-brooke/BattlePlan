@@ -1084,10 +1084,8 @@ namespace BattlePlan.Viewer
 
         private void GenerateAttackPlan()
         {
-            // TODO: load from disk
-            var opts = new AttackPlanGeneratorOptions();
             var numberOfSpawnPts = _scenario.Terrain.SpawnPointsMap[_teamId].Count;
-            var generator = new AttackPlanGenerator(opts, _unitTypes);
+            var generator = new AttackPlanGenerator(_editorOptions.AttackPlanGeneratorOptions, _unitTypes);
             var newPlan = generator.Create(_teamId, numberOfSpawnPts);
 
             _scenario.AttackPlans = _scenario.AttackPlans.Where( (ap) => ap.TeamId!=_teamId )
