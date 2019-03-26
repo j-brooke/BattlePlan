@@ -122,7 +122,7 @@ namespace BattlePlan.Generators
             // For each position in the list, we want to pick one of those for that position, swaping out the
             // current value.
             int selectForIdx = list.Count-1;
-            while (selectForIdx>1)
+            while (selectForIdx>0)
             {
                 var idxToSwap = _rng.Next(selectForIdx+1);
 
