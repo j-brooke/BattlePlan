@@ -1,0 +1,211 @@
+{
+  "BannerText": [],
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Stone"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 50,
+    "Height": 36,
+    "Tiles": [
+      "::         : ::::::::        ::    :::::   ~~~~~~:",
+      "::         : ::::::::        ::    :::::   ~~::~~:",
+      "::         : :::::::::::                   ~~::~~:",
+      "::         : ::::::::        ~~~~~~~    :::::::~~:",
+      "::                           ~~~~~~~    :::::::  :",
+      "::::::                       ~~~~~~~              ",
+      "::::::::                                     :    ",
+      "::::::::   ::                                :   ~",
+      "::::::::   ::                          ::::::::::~",
+      " :::::::   ::                               ::::: ",
+      " :::::::::::::                                    ",
+      " :::::::::::::                              :     ",
+      " :::::::::::::::                            :     ",
+      "        :::  :::                            :     ",
+      "        :::  :::           ::::             :     ",
+      "::::::::     :::           ::::::            :::::",
+      "::::::::                   ::::                   ",
+      "::::::::      ::::         ::::               ::::",
+      "::::::::   :: ::::                            ::::",
+      "     :::   :: ::::                            ::::",
+      "     :::   ::   :       ::::           ::::   ::::",
+      ":::::::::  ::           ::::           ::::       ",
+      "::::::::::              ::::           ::::       ",
+      "::::::::::                             ::::       ",
+      "                                       ::::   ::::",
+      "               ::                                 ",
+      ":::::   :      ::                                 ",
+      ":::::   :      ::                                 ",
+      "::::::::::                                        ",
+      "::::::::::         ::::                           ",
+      "       ::::::::                                   ",
+      "                                  :::::::         ",
+      "    ::                          :::::::::         ",
+      "    ::::::::::          ::::::  :::::::::         ",
+      "::::::::::::::          ::::::    :::::::         ",
+      "::::::::::    ::         ~~~~~~~  :::::::         "
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        [
+          6,
+          2
+        ]
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        [
+          49,
+          33
+        ]
+      ]
+    }
+  },
+  "AttackPlans": [
+    {
+      "TeamId": 2,
+      "Spawns": []
+    },
+    {
+      "TeamId": 3,
+      "Spawns": []
+    },
+    {
+      "TeamId": 4,
+      "Spawns": []
+    },
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 36.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 36.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 36.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 36.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 48.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 0
+        }
+      ]
+    }
+  ],
+  "DefensePlans": [],
+  "Challenges": [
+    {
+      "Name": "*",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 550,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 350,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "***",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 200,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    }
+  ]
+}

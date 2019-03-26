@@ -1,0 +1,206 @@
+{
+  "BannerText": [],
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Stone"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 50,
+    "Height": 36,
+    "Tiles": [
+      "                 ::::::    ::::::             ::::",
+      "                 ::::::    ::::::             ::::",
+      "                 ::::::    :::::::::::::      ::::",
+      ":::::::          ::::::    :::::::::::::         :",
+      ":::::::          ::::::    ::::::                :",
+      ":::::::               :    ::::::                :",
+      "::::::::       :::::: :    ::::::                :",
+      "   ::::: ::::::::::::                            :",
+      "         ::::::::::::                            :",
+      "         :::::       :::::                     :: ",
+      "                     :::::                     :: ",
+      "                     :::::    :           :       ",
+      ":::::::              :::::::   :::::::    :       ",
+      ":::::::               ~:::::   :::::::    :       ",
+      "                      ~:::::   :::::::::::::      ",
+      "   ::::::             ~:::::   ::::::::::::::::   ",
+      "   ::::::::        :::::~~           ::::::::::   ",
+      "   ::::::          :::::     ~~~        :::::::   ",
+      ":::::::            :::::  @@@  :::::   ::::::::   ",
+      ":::::::            ::::: @@@@@ :::::              ",
+      "::::::::           :::::@@@@@@@:::::              ",
+      ":::::::            @@@@@@@@@@@@:::::         :::: ",
+      ":::::::::          @@:@@@@@@@@@@@            :::: ",
+      ":::::::::           @:::::::@@@@               :  ",
+      ":::::::::        @   :::::::@@@@              ::::",
+      "::::::::::::      ::::::::::@@@@@  ::         ::::",
+      "::::::::::::      ::::::::::@  @   ::         ::::",
+      "::::::::::::      :::              ::             ",
+      "::::::::   :::::  :::              ::             ",
+      "::::::::   :::::                                  ",
+      "                   :                              ",
+      "                   :                ::           :",
+      "          :::                       ::      :    :",
+      "          :::                         :::::::    :",
+      "                                            :     ",
+      "       :::::      :                         :     "
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        [
+          1,
+          8
+        ]
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        [
+          49,
+          18
+        ]
+      ]
+    }
+  },
+  "AttackPlans": [
+    {
+      "TeamId": 2,
+      "Spawns": []
+    },
+    {
+      "TeamId": 3,
+      "Spawns": []
+    },
+    {
+      "TeamId": 4,
+      "Spawns": []
+    },
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 12.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 24.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 0
+        }
+      ]
+    }
+  ],
+  "DefensePlans": [],
+  "Challenges": [
+    {
+      "Name": "*",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 750,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 650,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "***",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 400,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    }
+  ]
+}
