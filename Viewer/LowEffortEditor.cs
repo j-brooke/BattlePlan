@@ -963,8 +963,6 @@ namespace BattlePlan.Viewer
                     MinimumDistFromSpawnPts = 8,
                     MinimumDistFromGoalPts = 2,
                     MaximumResourceCost = 1000,
-                    MaximumTotalUnitCount = 100,
-                    MaximumDefendersLostCount = 100,
                     AttackersMustNotReachGoal = true,
                 };
             }
