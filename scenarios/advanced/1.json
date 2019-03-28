@@ -1,0 +1,240 @@
+{
+  "BannerText": [],
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Stone"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 50,
+    "Height": 36,
+    "Tiles": [
+      "  ::::                 ::::::::::::               ",
+      "::::::     :::      :  ::::::::::::::             ",
+      "::::::    :::::::  ::::::::::::::::::             ",
+      "          :::::::::::::::::::::::::::             ",
+      "         :::::::::::::::::::::::::::              ",
+      "            :::::::::::::::::::::::::             ",
+      "                  :::::::::::::: :                ",
+      "     :::          :: :::::::::                    ",
+      "  :::::     ::      :::::::::::     : :           ",
+      " ::::::   ::::         :::::::   :::::::    ::    ",
+      ":::::::   :::            :     :::::::::::::::    ",
+      "::::::::::::::                 :::::::::::::::::  ",
+      ":::::::::::::::                :::::::::::::::::: ",
+      "    :::::::::::::              :::  ::::::::::::: ",
+      "    :::::::::::::               ::   :: ::::::::  ",
+      "    :::::::::::                ::          :::    ",
+      "   :  :  ::::::                      :            ",
+      "         ::::::                                   ",
+      "                                                  ",
+      "                                                  ",
+      "                                                  ",
+      "       ::                                         ",
+      "    :::::                                     :   ",
+      ":::::::::                                   ::::  ",
+      "::::::::::                                ::::::: ",
+      "::::::::::                                 :::::  ",
+      ":::::::::::::                                     ",
+      "::::::::::::     ::::                             ",
+      ":::::::::::                        ::::           ",
+      " ::::::::::::                             :   :   ",
+      " ::::::::::::                           :::   ::  ",
+      " :::::::::::                             :::::::: ",
+      " :::::::                                 :::::::: ",
+      ":::::::                                 ::::::::::",
+      "     :                          ::        ::::::  ",
+      "                                          ::::    "
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        [
+          7,
+          0
+        ],
+        [
+          8,
+          9
+        ],
+        [
+          2,
+          14
+        ],
+        [
+          0,
+          21
+        ],
+        [
+          7,
+          35
+        ]
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        [
+          42,
+          2
+        ],
+        [
+          46,
+          7
+        ],
+        [
+          43,
+          19
+        ],
+        [
+          40,
+          27
+        ],
+        [
+          44,
+          29
+        ]
+      ]
+    }
+  },
+  "AttackPlans": [
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 3
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Crossbowman",
+          "SpawnPointIndex": 2
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 4
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 4
+        }
+      ]
+    },
+    {
+      "TeamId": 2,
+      "Spawns": []
+    }
+  ],
+  "DefensePlans": [],
+  "Challenges": [
+    {
+      "Name": "*",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1000,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 850,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "***",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 625,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    }
+  ]
+}

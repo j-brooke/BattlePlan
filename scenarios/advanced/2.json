@@ -1,0 +1,286 @@
+{
+  "BannerText": [],
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Stone"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 50,
+    "Height": 36,
+    "Tiles": [
+      ":::::                                             ",
+      ":::::                                             ",
+      ":::::      ::::                                   ",
+      " ::::       ::::::                                ",
+      "  ::         ::::::                               ",
+      "            ::::::                                ",
+      "              :::::                               ",
+      "                     :::                          ",
+      "                    :::::                         ",
+      "                 ::::::::: ::::                   ",
+      "              :::::::::::: :::::::                ",
+      "             :::::::::::::::::::::                ",
+      "            :::::::::::::::::: :::                ",
+      "         :     ::::::::::::::::     ::            ",
+      "                 : :::::::::::                    ",
+      "                    ::::::::                      ",
+      "            ::                                    ",
+      "            :::       ~~~~   ~~~~                 ",
+      "                     ~~~~~~~:~~~~~~               ",
+      "                    ~~~~~~~~~~~~~~~~~             ",
+      "  ::              ~~~~~~~~~~~~~~~~~~~             ",
+      "::::::           ~~~~~~~~~~~~~~~~~~~              ",
+      "::::   :         ~~~~~~~~~~~~~~~~~~~~             ",
+      "::::            ~~~~~~~~:~~~~~~~~~~~              ",
+      "::::               ~~~~~~~~~~~~~~~~               ",
+      "                :::~~~~~~~~~~~~~~~~               ",
+      "                    ~~~~~~~~~~~~~~      :         ",
+      "                        ~~~~~~~~~    ::::::::::   ",
+      "                            ~~~~~    :::::::::::::",
+      "                                  ::::::::::::::::",
+      "                                 :::::::::::::::::",
+      "   :                                  ::::::::::: ",
+      "  :::::                               :::   :     ",
+      "::::::::                                          ",
+      "::::::::::                                        ",
+      "::::::::::                                        "
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        [
+          4,
+          14
+        ],
+        [
+          5,
+          23
+        ]
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        [
+          46,
+          3
+        ],
+        [
+          42,
+          33
+        ]
+      ]
+    }
+  },
+  "AttackPlans": [
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 9.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 26.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 26.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 26.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 26.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 26.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 35.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 35.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 35.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 35.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 35.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        }
+      ]
+    },
+    {
+      "TeamId": 2,
+      "Spawns": []
+    }
+  ],
+  "DefensePlans": [],
+  "Challenges": [
+    {
+      "Name": "*",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1200,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 900,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "***",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 650,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    }
+  ]
+}

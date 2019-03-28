@@ -1,0 +1,240 @@
+{
+  "BannerText": [],
+  "Terrain": {
+    "TileTypes": [
+      {
+        "BlocksMovement": false,
+        "BlocksVision": false,
+        "Appearance": " ",
+        "Name": "Open"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": true,
+        "Appearance": ":",
+        "Name": "Stone"
+      },
+      {
+        "BlocksMovement": true,
+        "BlocksVision": false,
+        "Appearance": "~",
+        "Name": "Water"
+      },
+      {
+        "BlocksMovement": false,
+        "BlocksVision": true,
+        "Appearance": "@",
+        "Name": "Fog"
+      }
+    ],
+    "Width": 50,
+    "Height": 36,
+    "Tiles": [
+      "                                    :::           ",
+      "    :                               ::            ",
+      "   :::                                            ",
+      ":::::::::                                         ",
+      "::::::::::::                                      ",
+      "::::::::::::                                      ",
+      "::::::::::::             :          :::   :::     ",
+      "::::::::::::::          ::::       ::::::::::::   ",
+      "::::::::: :                        ::::::::::::   ",
+      "  ::::                             ::::::::::::   ",
+      "                                  ::::::::   :::  ",
+      "                                ::::::::::    :   ",
+      "      :                       ::::::::::::        ",
+      "      ::                     :::::::::::          ",
+      "      :::::                  ::::::::::::         ",
+      "    :::::::::               :::::::::::::         ",
+      "    ::::::::::                 ::::::             ",
+      " :::::::::::::::   :::           ::               ",
+      " ::::::::::::::::::::::                           ",
+      " ::::::::::::::::::::::                           ",
+      "   :::::::::::  ::::::::                          ",
+      "  :::::::::::    ::::::   ::::  ::: :             ",
+      "      :                 ::::::::::::::            ",
+      "                        ::::::::::::::::  :       ",
+      "                        ::::::::::::::::::::      ",
+      "          ::::          :::::::::::::::::::       ",
+      " :::       :::              ::::::::::: ::::      ",
+      "           :::::           :::::::::::   :::   :  ",
+      "           :::::::         ::::::::::    :::::::  ",
+      "           ::::::         ::::::::::    ::::::::  ",
+      "         :::::::::::::    ::::::::                ",
+      "        ::::::::::::::                            ",
+      "  :      :::::::::: :                             ",
+      "::::     ::::::::::                               ",
+      "::   :::  :::::::::                               ",
+      " :   :::     ::::::                               "
+    ],
+    "SpawnPointsMap": {
+      "1": [
+        [
+          7,
+          1
+        ],
+        [
+          4,
+          13
+        ],
+        [
+          0,
+          15
+        ],
+        [
+          9,
+          27
+        ],
+        [
+          3,
+          35
+        ]
+      ]
+    },
+    "GoalPointsMap": {
+      "1": [
+        [
+          40,
+          5
+        ],
+        [
+          43,
+          11
+        ],
+        [
+          44,
+          19
+        ],
+        [
+          45,
+          26
+        ],
+        [
+          45,
+          31
+        ]
+      ]
+    }
+  },
+  "AttackPlans": [
+    {
+      "TeamId": 1,
+      "Spawns": [
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 1
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Scout",
+          "SpawnPointIndex": 4
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Zombie",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Berserker",
+          "SpawnPointIndex": 0
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 3
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 3
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 3
+        },
+        {
+          "Time": 0.0,
+          "UnitType": "Grunt",
+          "SpawnPointIndex": 3
+        }
+      ]
+    },
+    {
+      "TeamId": 2,
+      "Spawns": []
+    }
+  ],
+  "DefensePlans": [
+    {
+      "TeamId": 1,
+      "Placements": []
+    }
+  ],
+  "Challenges": [
+    {
+      "Name": "*",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1150,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 1000,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "***",
+      "PlayerTeamId": 2,
+      "MinimumDistFromSpawnPts": 8,
+      "MinimumDistFromGoalPts": 2,
+      "MaximumResourceCost": 700,
+      "AttackersMustNotReachGoal": true,
+      "MaximumUnitTypeCount": {}
+    }
+  ]
+}
