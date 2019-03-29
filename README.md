@@ -22,9 +22,13 @@ The rest of these instructions assume the earlier situation, but hopefully it's 
 
 ### Play
 
-To "play" an already setup scenario, type:
+To start the game's menu from which you can select and play scenarios, type:
 
-    dotnet run play scenarios/test1.json
+    dotnet run menu
+
+To play a specific scenario, you can also type:
+
+    dotnet run play scenarios/beginner/1.json
 
 You can set up scenarios by editing the JSON files, or using the editor (see below).
 

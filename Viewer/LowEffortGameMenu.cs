@@ -69,7 +69,7 @@ namespace BattlePlan.Viewer
         };
 
         // In the "sections" list, we want these directory names to show up at the front, if present.
-        private static readonly string[] _fixedSectionOrder = { "how-to-play", "beginner" };
+        private static readonly string[] _fixedSectionOrder = { "how-to-play", "beginner", "advanced" };
 
         private string _scenarioPath;
         private string _sectionPath;

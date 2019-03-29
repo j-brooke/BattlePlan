@@ -4,8 +4,9 @@ BattlePlan - A game of epic ASCII tactics
 INTRO
 -----
 
-BattlePlan is a tower-defense game.  Unlike traditional tower-defense, attackers
-will adapt to your defenses, and they will try to kill you.  Don't let them.
+BattlePlan is a tower-defense game.  Unlike traditional tower-defense,
+attackers will adapt to your defenses, and they will try to kill you.  Don't
+let them.
 
 BattlePlan is currently implemented as a console application, which means you
 have to run it from your operating system's commandline: the text window with
@@ -24,7 +25,7 @@ To install it, go to this page:
 
 Pick the tab for your OS and click the link for the ".NET Core 2.2 Runtime"
 installer.  (Although if you're a programmer, there's no harm in downloading
-the SDK.)
+the SDK instead.)
 
 Note that ".NET Core" is different from ".NET Framework": the latter is a
 for Windows only.  As Microsoft naming goes this is actually surprisingly
