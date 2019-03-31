@@ -183,7 +183,7 @@
       "PlayerTeamId": 2,
       "MinimumDistFromSpawnPts": 8,
       "MinimumDistFromGoalPts": 2,
-      "MaximumResourceCost": 1000,
+      "MaximumResourceCost": 500,
       "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     }

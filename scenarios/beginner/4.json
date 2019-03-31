@@ -190,7 +190,7 @@
       "PlayerTeamId": 2,
       "MinimumDistFromSpawnPts": 8,
       "MinimumDistFromGoalPts": 2,
-      "MaximumResourceCost": 1000,
+      "MaximumResourceCost": 800,
       "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     },
@@ -199,7 +199,7 @@
       "PlayerTeamId": 2,
       "MinimumDistFromSpawnPts": 8,
       "MinimumDistFromGoalPts": 2,
-      "MaximumResourceCost": 450,
+      "MaximumResourceCost": 550,
       "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     },
@@ -208,7 +208,7 @@
       "PlayerTeamId": 2,
       "MinimumDistFromSpawnPts": 8,
       "MinimumDistFromGoalPts": 2,
-      "MaximumResourceCost": 600,
+      "MaximumResourceCost": 450,
       "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     }
