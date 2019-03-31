@@ -129,12 +129,13 @@
     {
       "Name": "*",
       "PlayerTeamId": 2,
-      "MinimumDistFromSpawnPts": 8,
-      "MinimumDistFromGoalPts": 2,
-      "MaximumResourceCost": 1000,
-      "MaximumTotalUnitCount": 100,
-      "MaximumDefendersLostCount": 100,
       "AttackersMustNotReachGoal": false,
+      "MaximumUnitTypeCount": {}
+    },
+    {
+      "Name": "**",
+      "PlayerTeamId": 2,
+      "AttackersMustNotReachGoal": true,
       "MaximumUnitTypeCount": {}
     }
   ]
