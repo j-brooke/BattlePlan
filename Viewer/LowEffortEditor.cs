@@ -1565,11 +1565,11 @@ namespace BattlePlan.Viewer
 
             row += 1;
             _canvas.WriteTextDirect("Attackers", 0, row++);
-            _canvas.WriteTextDirect(" T Grunt - Moves toward the goal, but attacks things in the way.", 0, row++);
-            _canvas.WriteTextDirect(" f Zombie - Moves toward the goal, but attacks things in the way.", 0, row++);
-            _canvas.WriteTextDirect(" i Scout - Tries to avoid defenders while moving toward the goal.", 0, row++);
+            _canvas.WriteTextDirect(" T Grunt - Moves toward the goal, avoiding obviously dangerous paths.", 0, row++);
+            _canvas.WriteTextDirect(" f Zombie - Moves toward the goal without fear of danger.", 0, row++);
+            _canvas.WriteTextDirect(" i Scout - Tries to find the safest path while moving toward the goal.", 0, row++);
             _canvas.WriteTextDirect(" ] Crossbowman - Moves toward the goal, but attacks at range along the way.", 0, row++);
-            _canvas.WriteTextDirect(" Y Berserker - Attacks any enemy it sees.", 0, row++);
+            _canvas.WriteTextDirect(" Y Berserker - Charges any enemy it sees.", 0, row++);
             _canvas.WriteTextDirect(" A Storm-Mage - Uses chain lightning to attack many enemies at once.", 0, row++);
 
             row += 1;
