@@ -309,7 +309,6 @@ namespace BattlePlan.Viewer
                 var filename = String.IsNullOrEmpty(input)? _lastScenarioFilename : input;
                 var newScenario = _loader.LoadScenario(filename);
 
-                // TODO: validate new scenario?
                 _scenario = newScenario;
 
                 _lastScenarioFilename = filename;
@@ -925,8 +924,6 @@ namespace BattlePlan.Viewer
                     SetAllChallengeGoalDistance();
                     return;
             }
-
-            // TODO: add set-minimum-distance-from-spawn button
 
             int keyNumberValue = keyInfo.KeyChar - '0';
             if (keyNumberValue>=1 && keyNumberValue<=_scenario.Challenges.Count)
