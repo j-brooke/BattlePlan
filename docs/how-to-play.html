@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BattlePlan Gameplay Instructions</title>
+  <style>
+    body {
+      background-color: powderblue;
+    }
+    h1 {
+      color: blue;
+    }
+    .enemy {
+      color: yellow;
+    }
+    .ally {
+      color: lightgreen;
+    }
+    .symbol {
+      background-color: gray;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: large;
+    }
+    .open-terrain {
+      background-color: gray;
+    }
+    .stone-terrain {
+      background-color: lightgray;
+      color: white;
+    }
+    .water-terrain {
+      background-color: darkblue;
+      color: lightblue;
+    }
+    .fog-terrain {
+      background-color: gray;
+      color: white;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <h1>BattlePlan Gameplay Instructions</h1>
+  </header>
+
+  <h2>Planning</h2>
+  <p>In BattlePlan, enemy attackers are trying to march from their spawn points <span class="enemy symbol">O</span> to
+  their goals <span class="enemy symbol">X</span>.</p>
+
+  <img src="img/how-to-play-1.gif"/>
+
+  <p>Your goal is to place defenders to stop them.  (Use the arrow keys to move the cursor.)</p>
+
+  <img src="img/how-to-play-2.gif"/>
+
+  <p>Once you have finished planning your defense, press the V key to play out the battle and view the results.</p>
+
+  <img src="img/how-to-play-3.gif"/>
+
+  <p>You win if no attackers breach your defenses.  If you use few enough resources and don't place any in
+  prohibited areas, you can beat scenario-specific challenges.</p>
+
+  <img src="img/victory-screen.png"/>
+
+
+  <h2>Terrain</h2>
+  <p>The map is made up of four different kinds of terrain:</p>
+  <ul>
+    <li><span class="symbol open-terrain">&nbsp;</span> Open - Units can move, see, and attack through open terrain.</li>
+    <li><span class="symbol stone-terrain">:</span> Stone - Blocks movement, vision, and attacks.</li>
+    <li><span class="symbol water-terrain">~</span> Water - Blocks movement but not vision or attacks.</li>
+    <li><span class="symbol fog-terrain">@</span> Open - Blocks vision but not movement or attacks.</li>
+  </ul>
+
+
+  <h2>Attackers</h2>
+  <p>The enemy has several types of attackers at its disposal:</p>
+  <ul>
+    <li><span class="symbol enemy">f</span> Zombies are fearless.  They will try to take the most direct path toward a goal,
+    regardless of the danger.  They will attack defenders blocking their path.</li>
+    <li><span class="symbol enemy">T</span> Grunts will go a little out of their way to avoid strongly-defended areas.
+    They will attack defenders blocking their path.</li>
+    <li><span class="symbol enemy">i</span> Scouts look for the least-defended path to a goal, even if it means going
+    far out of their way.</li>
+    <li><span class="symbol enemy">Y</span> Berserkers will charge toward and attack any enemies they see.  They will only
+    move toward a goal if they can't find any more defenders to fight.</li>
+    <li><span class="symbol enemy">]</span> Crossbowmen shoot any defenders they see from long range while marching toward
+    a goal.</li>
+    <li><span class="symbol enemy">A</span> Storm-Mages strike many defenders at once from a distance using chain lightning.</li>
+  </ul>
+
+
+  <h2>Defenders</h2>
+  <p>You have four types of defenders you can place to help fight back the enemy.  Defenders don't move.</p>
+  <ul>
+    <li><span class="symbol ally">{</span> Archers attack at considerable range.</li>
+    <li><span class="symbol ally">^</span> Pikemen have a strong attack with a two-tile range.</li>
+    <li><span class="symbol ally">S</span> Fire-Serpents shoot jets of fire that damage anyone who is caught in them.</li>
+    <li><span class="symbol ally">#</span> Barricades don't do anything except block movement until they are destroyed.</li>
+  </ul>
+</body>
+</html>

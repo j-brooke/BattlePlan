@@ -1,12 +1,12 @@
 # BattlePlan
 
-A crude tower-defense style game.
+A game of epic ASCII tactics.  (Put another way: A tower defense style game implemented as a console application.)
 
 ## Prerequisits
 
 This app is written in .NET Core, an open-source cross-platform runtime.  You can download the SDK or runtime here:
 
-https://dotnet.microsoft.com/download
+    https://dotnet.microsoft.com/download
 
 ## Running
 
@@ -31,6 +31,8 @@ To play a specific scenario, you can also type:
     dotnet run play scenarios/beginner/1.json
 
 You can set up scenarios by editing the JSON files, or using the editor (see below).
+
+For instructions on how to play, see docs/how-to-play.html.
 
 
 ### Edit
