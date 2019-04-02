@@ -1,0 +1,29 @@
+Open Source Credits
+
+BattlePlan relies on the following open source code projects.  Many thanks to the authors of these libraries.
+The license files are linked below, but also included in the docs/credits/licences folder of this release.
+
+
+.NET Core
+Runtime environment
+https://github.com/dotnet/core
+License: https://github.com/dotnet/core/blob/master/LICENSE.TXT
+
+
+Mono.Options
+Command line parsing
+https://github.com/xamarin/XamarinComponents/tree/master/XPlat/Mono.Options
+License: https://github.com/xamarin/XamarinComponents/blob/master/XPlat/Mono.Options/License.md
+
+
+Newtonsoft Json.NET
+JSON processing
+https://www.newtonsoft.com/json
+License: https://github.com/JamesNK/Newtonsoft.Json/blob/master/LICENSE.md
+
+
+NLog
+Logging
+https://nlog-project.org/
+License: https://github.com/NLog/NLog/blob/master/LICENSE.txt
+
