@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace BattlePlan.Model
 {
+    /// <summary>
+    /// Defines the map used in a battle scenario.
+    /// </summary>
     public class Terrain
     {
         public IList<TileCharacteristics> TileTypes { get; }
@@ -113,7 +116,8 @@ namespace BattlePlan.Model
         /// <summary>
         /// Tests whether one tile can see to another: that is, whether there are any tiles
         /// with the BlocksVision property alone a straight-line path between them.
-        /// A tile may always see itself and its adjacent ones.
+        /// A tile can always see itself and its adjacent ones.  (Passing by an enemy in fog
+        /// should still be dangerous.)
         /// </summary>
         public bool HasLineOfSight(Vector2Di fromPos, Vector2Di toPos)
         {
@@ -173,7 +177,7 @@ namespace BattlePlan.Model
         }
 
         /// <summary>
-        /// Returns a sequence of positions representing a straight ray-cast line between them.
+        /// Returns an enumeration of positions representing a straight ray-cast line between them.
         /// fromPos is not included in the results but toPos is.  (Or, empty collection if they're
         /// the same.)  This is just math - it doesn't look at the underlying tile characteristics.
         /// If minDistance is greater than the natural distance between the two, the line continues.

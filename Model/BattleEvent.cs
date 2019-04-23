@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace BattlePlan.Model
 {
+    /// <summary>
+    /// Something that happens in a BattleResolution.  (Unit moves, takes damage, reaches goal, etc.)
+    /// </summary>
     public class BattleEvent
     {
         public double Time { get; set; }

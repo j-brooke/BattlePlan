@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace BattlePlan.Model
 {
+    /// <summary>
+    /// Record of everything that happened when a battle was played-out: who hit who, who died screaming, etc.
+    /// </summary>
     public class BattleResolution
     {
         /// <summary>

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace BattlePlan.Model
 {
+    /// <summary>
+    /// Immutable value-type point in 2D integer space.
+    /// </summary>
     public struct Vector2Di : IEquatable<Vector2Di>
     {
         public short X { get; }

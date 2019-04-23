@@ -2,6 +2,9 @@ using System;
 
 namespace BattlePlan.Model
 {
+    /// <summary>
+    /// Describes when and where a single attacker unit is scheduled to spawn.
+    /// </summary>
     public class AttackerSpawn
     {
         public double Time { get; set; }

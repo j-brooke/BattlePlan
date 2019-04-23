@@ -2,6 +2,9 @@ using System;
 
 namespace BattlePlan.Model
 {
+    /// <summary>
+    /// Enum representing a unit type's priorities among moving, attacking, etc.
+    /// </summary>
     public enum UnitBehavior
     {
         /// <summary>

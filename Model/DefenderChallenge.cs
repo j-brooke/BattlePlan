@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace BattlePlan.Model
 {
+    /// <summary>
+    /// A goal for a player to meet.  This only applies to players creating DefensePlans.
+    /// </summary>
     public class DefenderChallenge
     {
         public string Name { get; set; }

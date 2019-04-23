@@ -3,6 +3,10 @@ using System.Collections.Generic;
 
 namespace BattlePlan.Model
 {
+    /// <summary>
+    /// Collection of everything that describes a battle before it happens (as opposed to
+    /// a BattleResoltuion, which is the results of the battle.)
+    /// </summary>
     public class Scenario
     {
         // TODO: Find a better way to handle this.  It keeps getting me in trouble.

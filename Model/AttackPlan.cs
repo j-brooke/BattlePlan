@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace BattlePlan.Model
 {
+    /// <summary>
+    /// Collection of all of the spawns planned for a particular team's attackers.
+    /// </summary>
     public class AttackPlan
     {
         public int TeamId { get; set; }
