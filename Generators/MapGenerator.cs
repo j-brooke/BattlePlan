@@ -90,7 +90,7 @@ namespace BattlePlan.Generators
         }
 
         /// <summary>
-        /// Sets the tiles in the specified rectangle to the given value.false  The specified
+        /// Sets the tiles in the specified rectangle to the given value.  The specified
         /// region may be partly or wholely outside of the map without error.
         /// </summary>
         private void SetRect(int x, int y, int height, int width, byte value)
@@ -107,6 +107,9 @@ namespace BattlePlan.Generators
                     _terrain.SetTileValue(c+boundedX, r+boundedY, value);
         }
 
+        /// <summary>
+        /// Sets all tiles in a given circle to a specific value if their current value is startingValue.
+        /// </summary>
         private void SetCircle(Vector2Di pos, double radius, byte setToValue, byte startingValue)
         {
             int radiusInt = (int)Math.Ceiling(Math.Max(0.0, radius));

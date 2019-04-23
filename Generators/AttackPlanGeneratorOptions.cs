@@ -5,7 +5,7 @@ using BattlePlan.Model;
 namespace BattlePlan.Generators
 {
     /// <summary>
-    /// Parameters for random
+    /// Parameters for random AttackPlan creation.
     /// </summary>
     public class AttackPlanGeneratorOptions
     {
