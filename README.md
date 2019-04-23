@@ -20,6 +20,8 @@ If you're running from a published DLL, it's like this:
 
 The rest of these instructions assume the earlier situation, but hopefully it's obvious how to adapt.
 
+More detailed instructions on how to setup and run can be found in docs/how-to-run.txt.
+
 ### Play
 
 To start the game's menu from which you can select and play scenarios, type:
