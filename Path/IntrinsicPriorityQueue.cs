@@ -43,7 +43,7 @@ namespace BattlePlan.Path
         { }
 
         /// <summary>
-        /// Creates a new queu using the given Comparison<T> for prioritization.  For instance,
+        /// Creates a new queue using the given Comparison<T> for prioritization.  For instance,
         /// you could give it StringComparer.InvariantCultureIgnoreCase.Compare and false for
         /// highestValuesFirst to give you strings from a-z.
         /// </summary>
@@ -141,7 +141,7 @@ namespace BattlePlan.Path
         }
 
         /// <summary>
-        /// Removes an arbitrary instance of item from the queue, if one exists.  O(n)
+        /// Removes an arbitrary instance from the queue that is equal to item, if one exists.  O(n)
         /// </summary>
         public void Remove(T item)
         {
@@ -189,6 +189,7 @@ namespace BattlePlan.Path
 
         /// <summary>
         /// Comparison function that prioritizes smaller values based on the type's CompareTo method.
+        /// Provided as a convenience for callers to pass to the constructor.
         /// </summary>
         public static bool LessThan<U>(U a, U b) where U : T, IComparable<T>
         {
@@ -197,6 +198,7 @@ namespace BattlePlan.Path
 
         /// <summary>
         /// Comparison function that prioritizes larger values based on the type's CompareTo method.
+        /// Provided as a convenience for callers to pass to the constructor.
         /// </summary>
         public static bool GreaterThan<U>(U a, U b) where U : T, IComparable<T>
         {
@@ -209,7 +211,9 @@ namespace BattlePlan.Path
 
         private readonly Func<T,T,bool> _compareFunc;
 
-
+        /// <summary>
+        /// Swaps the elements at two given places in the array.
+        /// </summary>
         private void SwapAt(int indexA, int indexB)
         {
             var temp = _heap[indexA];

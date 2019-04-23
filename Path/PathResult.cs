@@ -16,6 +16,10 @@ namespace BattlePlan.Path
         /// </summary>
         public List<T> Path { get; set; }
         public T StartingNode { get; set; }
+
+        /// <summary>
+        /// Sum of all of the costs from one node to the next for this path, as given by IPathGraph.
+        /// </summary>
         public double PathCost { get; set; }
 
         // -- Everything else is just performance data --
@@ -49,6 +53,9 @@ namespace BattlePlan.Path
         /// </summary>
         public int MaxQueueSize { get; set; }
 
+        /// <summary>
+        /// Returns a string based on the performance fields, intended for logging.
+        /// </summary>
         public string PerformanceSummary()
         {
             var pathIds = (Path!=null && Path.Count>0)?

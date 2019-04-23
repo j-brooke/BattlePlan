@@ -16,7 +16,7 @@ namespace BattlePlan.Path
     /// this probably isn't optimal for you.</para>
     /// <para>On construction you give PathSolver a IPathGraph instance.  This is an object that knows how to describe
     /// your problem space to the PathSolver.  In particular, it knows: 1) Which nodes can travel to others in a single step
-    /// (neighbors); 2) The actual cost of travelling from one node to another (in distance, time, whatever); and
+    /// (neighbors); 2) The actual cost of travelling from one node to a neighbor (in distance, time, whatever); and
     /// 3) An estimated cost for travelling from one node to a distant one (the A* heuristic).</para>
     /// <para>Before calling FindPath, you'll need to call BuildAdjacencyGraph.  This builds internal data structures
     /// that will be used on all future FindPath calls.</para>
@@ -30,6 +30,11 @@ namespace BattlePlan.Path
         public int LifetimeMaxQueueSize => _lifetimeMaxQueueSize;
         public int GraphSize => _infoGraph.Count;
 
+        /// <summary>
+        /// Create a solver object for the given IPathGraph.  The PathSolver is reusable - it assumes you'll
+        /// potentially want to find multiple paths using the same worldGraph.
+        /// </summary>
+        /// <param name="worldGraph">Object that knows how to describe your world in pathfinding terms.</param>
         public PathSolver(IPathGraph<TNode, TPassthrough> worldGraph)
         {
             _worldGraph = worldGraph;
@@ -40,14 +45,26 @@ namespace BattlePlan.Path
 
         /// <summary>
         /// Prepares the PathSolver by building a graph of which nodes are connected directly to each other.
-        /// Call this before calling FindPath, or if the shape of your world changes.
+        /// Call this before calling FindPath, or any time the shape of your world changes.
         /// </summary>
+        /// <remarks>
+        /// The idea behind this implementation is that the adjacency graph - which nodes are connected to
+        /// each other - won't change often.  The actual costs for moving from X to Y can vary as much as you
+        /// want, but the question of whether you can move directly from X to Y is fixed.  (You can work around
+        /// this restriction a little by returning PositiveInfinity from the cost function when you want extra
+        /// restrictions.)
+        /// </remarks>
+        /// <param name="seedNodeIds">One or more node IDs that are part of the space you'll be searching
+        /// for paths in.  These don't have to all be connected to each other, but every node you later
+        /// search for paths from must be connected to at least one.</param>
         public void BuildAdjacencyGraph(IEnumerable<TNode> seedNodeIds)
         {
             _lifetimeTimer.Start();
             _infoGraph.Clear();
 
-            // Create a NodeInfo for every reachable NodeId from the given start ones.
+            // Create a NodeInfo for every reachable NodeId from the given start ones.  These are reusable
+            // containers for the data FindPath uses in its computations.  The whole point of this function
+            // is so that we can create these once, rather than doing it on the fly for every path we solve.
             var queue = new Queue<TNode>(seedNodeIds);
             while (queue.Count>0)
             {
@@ -93,6 +110,19 @@ namespace BattlePlan.Path
         /// (If your IPathGraph.EstimatedCost can overestimate the cost, then this won't always
         /// strictly be the shortest path.)
         /// </summary>
+        /// <param name="startNodeId">
+        /// Your identifier for the starting node in the path.  (This could be a
+        /// 2D point, a city name, or whatever else makes sense in your world-space.)
+        /// </param>
+        /// <param name="endNodeIdList">
+        /// Collection of acceptable destination nodes to find a path to.  If more than
+        /// one is given, FindPath returns the shortest of the paths to any of them.
+        /// </param>
+        /// <param name="callerData">
+        /// (Optional) Whatever info you want to be given to your IPathGraph while solving this path.
+        /// For example, you might want to give it the speed of the particular world object you're finding a path for,
+        /// or perhaps that world object itself.
+        /// </param>
         public PathResult<TNode> FindPath(TNode startNodeId, IEnumerable<TNode> endNodeIdList, TPassthrough callerData)
         {
             // Initialize some performance data.
@@ -150,7 +180,7 @@ namespace BattlePlan.Path
                 if (currentInfo.BestCostFromStart==double.PositiveInfinity)
                     break;
 
-                // If this node is our goal, stop the loop.
+                // If this node is one of our goals for this call, we have found a good path.
                 if (currentInfo.IsDestinationForSeqNum==_seqNum)
                 {
                     arrivalInfo = currentInfo;
@@ -159,6 +189,8 @@ namespace BattlePlan.Path
 
                 foreach (var neighborInfo in currentInfo.Neighbors)
                 {
+                    // Calculate the total cost from the start to the neighbor we'll looking at, if travelling
+                    // through the current node.
                     double costToNeighbor = currentInfo.BestCostFromStart + _worldGraph.Cost(currentInfo.NodeId, neighborInfo.NodeId, callerData);
 
                     // If the neighbor node hasn't been touched on this FindPath call, re-initialize it and put it
@@ -184,10 +216,15 @@ namespace BattlePlan.Path
                             neighborInfo.BestPreviousNode = currentInfo;
                             if (neighborInfo.IsOpen)
                             {
+                                // The node's priority value has changed, so the priority queue needs to know.
                                 openQueue.AdjustPriority(neighborInfo);
                             }
                             else
                             {
+                                // We already processed this node and took it out of the Open list before, but
+                                // then we found a shorter path to it.  We'll need to redo it.  (This can happen
+                                // if IPathGraph.EstimatedCost - the A* heuristic - sometimes overestimates the cost
+                                // of the remaining path.)
                                 neighborInfo.IsOpen = true;
                                 openQueue.Enqueue(neighborInfo);
                                 nodesReprocessedCount += 1;
@@ -255,13 +292,18 @@ namespace BattlePlan.Path
                 .Min();
         }
 
+        /// <summary>
+        /// Comparison function for the priority queue.  a is higher priority than b if its estimated total path cost
+        /// (known cost from start + estimate of remaining cost to destination) is less than b's.
+        /// </summary>
         private static bool PriorityFunction(NodeInfo a, NodeInfo b)
         {
             return (a.BestCostFromStart + a.EstimatedRemainingCost) < (b.BestCostFromStart + b.EstimatedRemainingCost);
         }
 
         /// <summary>
-        /// Private class holding info during path-finding.
+        /// Private class holding info during path-finding.  We create a bunch of these when BuildAdjacencyGraph
+        /// is called, and then reuse them on every call to FindPath.
         /// </summary>
         private class NodeInfo : IndexedQueueItem
         {
@@ -283,7 +325,7 @@ namespace BattlePlan.Path
             /// <summary>Is this NodeInfo in openQueue?  It's quicker if we track it here than ask the queue.</summary>
             public bool IsOpen { get; set; }
 
-            /// <summary>Is this one of our final destination points?</summary>
+            /// <summary>Is this one of our final destination points for the current FindPath request?</summary>
             public int IsDestinationForSeqNum { get; set; }
 
             /// <summary>
