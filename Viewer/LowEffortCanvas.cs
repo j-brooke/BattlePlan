@@ -10,6 +10,10 @@ namespace BattlePlan.Viewer
     /// <summary>
     /// Tool for drawing the game-specific UI to a terminal window.
     /// </summary>
+    /// <remarks>
+    /// This is only a loose analog to a traditional animation canvas.  As it is right now it's
+    /// highly coupled to the game's models.
+    /// </remarks>
     internal class LowEffortCanvas
     {
         public const int RegularTextColor = -1;
@@ -44,6 +48,7 @@ namespace BattlePlan.Viewer
             // for a line of input.  See PromptForInput below.)
             Console.TreatControlCAsInput = true;
 
+            // If allowed, set the cursor to a solid blinking block, rather than a skinny blinking underline.
             if (_canSetCursorSize)
                 Console.CursorSize = 100;
 
@@ -51,7 +56,7 @@ namespace BattlePlan.Viewer
             Console.Clear();
 
             // Initiallize our internal buffer.  Most of the time we want to draw everything
-            // to the backbuffers, and then slam it all onto the screen at once.
+            // to the backbuffers, and then slam it all onto the screen at once, to minimize flicker.
             _bufferHeight = Math.Min(requestedHeight, Console.WindowHeight);
             _bufferWidth = Console.WindowWidth;
             _symbolBackBuffer = new char[_bufferHeight][];
@@ -127,6 +132,9 @@ namespace BattlePlan.Viewer
             _logger.Trace("Single frame time: {0}", frameTime);
         }
 
+        /// <summary>
+        /// Paints the map to our backbuffer.
+        /// </summary>
         public void PaintTerrain(Terrain terrain, int[,] terrainOverride, int canvasOffsetX, int canvasOffsetY)
         {
             for (int row=0; row<terrain.Height && row<_bufferHeight; ++row)
@@ -141,7 +149,8 @@ namespace BattlePlan.Viewer
                     var overrideTeam = (terrainOverride!=null)? terrainOverride[col,row] : 0;
 
                     // Normally the background color should be the terrain BG color.  But if there's an override here,
-                    // it's either a team color (>=1) or -1 to indicate multiple teams.
+                    // it's either a team color (>=1) or -1 to indicate multiple teams.  This is used in the editor
+                    // for showing line of sight regions, and so forth.
                     ConsoleColor bgColor;
                     if (overrideTeam==0)
                         bgColor = GetTerrainBGColor(tileChars.Appearance);
@@ -172,6 +181,9 @@ namespace BattlePlan.Viewer
             _bgBackBuffer[buffY][buffX] = bgColor;
         }
 
+        /// <summary>
+        /// Draw our sprites
+        /// </summary>
         public void PaintEntities(IEnumerable<ViewEntity> entities, int canvasOffsetX, int canvasOffsetY)
         {
             foreach(var entity in entities)
@@ -213,6 +225,9 @@ namespace BattlePlan.Viewer
             }
         }
 
+        /// <summary>
+        /// Draw short-lived red *'s to indicate someone is taking damage.
+        /// </summary>
         public void PaintDamageIndicators(IEnumerable<BattleEvent> dmgEvents, int canvasOffsetX, int canvasOffsetY)
         {
             const char dmgSymbol = '*';
@@ -256,6 +271,9 @@ namespace BattlePlan.Viewer
             }
         }
 
+        /// <summary>
+        /// Text of important happenings to the side of the map.
+        /// </summary>
         public void WriteTextEvents(IEnumerable<BattleEvent> textEvents, int canvasOffsetX, int canvasOffsetY)
         {
             var row = canvasOffsetY;
@@ -359,6 +377,9 @@ namespace BattlePlan.Viewer
             return input;
         }
 
+        /// <summary>
+        /// Write directly to the screen, ignoring the backbuffer.
+        /// </summary>
         public void WriteTextDirect(string text, int x, int y)
         {
             Console.ResetColor();
@@ -366,6 +387,9 @@ namespace BattlePlan.Viewer
             Console.Write(text);
         }
 
+        /// <summary>
+        /// Draw all of the defenders to the backbuffer from a DefensePlan, rather than from a BattleResolution.
+        /// </summary>
         public void PaintDefensePlan(DefensePlan plan, UnitTypeMap unitChars, int canvasOffsetX, int canvasOffsetY)
         {
             var teamColor = GetTeamColor(plan.TeamId);
@@ -401,7 +425,7 @@ namespace BattlePlan.Viewer
         private bool _canSetCursorSize;
 
 
-        // TODO: Color values should probably come from a config file.
+        // Ideally color values should probably come from a config file.  Meh.
         private ConsoleColor GetTerrainFGColor(char tileSymbol)
         {
             switch (tileSymbol)
@@ -448,6 +472,9 @@ namespace BattlePlan.Viewer
             return ConsoleColor.White;
         }
 
+        /// <summary>
+        /// Copy the entire backbuffer to the console screen.
+        /// </summary>
         private void RenderBackBuffer()
         {
             Debug.Assert(_symbolBackBuffer!=null && _fgBackBuffer!=null && _bgBackBuffer!=null);
@@ -467,7 +494,8 @@ namespace BattlePlan.Viewer
                 int x=0;
                 while (x<width)
                 {
-                    // Figure out how many characters in a row share the same colors.
+                    // Figure out how many characters in a row share the same colors.  I'm assuming there's some unwanted
+                    // overhead to doing it all character by character.
                     var span = 1;
                     while (x+span<width)
                     {

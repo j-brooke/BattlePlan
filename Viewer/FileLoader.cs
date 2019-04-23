@@ -11,7 +11,7 @@ namespace BattlePlan.Viewer
     /// Class responsible for loading and saving various items to/from files.  Where appropriate,
     /// it also converts between the DTO stored on disk and the domain objects.
     /// </summary>
-    public class FileLoader
+    internal class FileLoader
     {
         public bool WritePrettyJson { get; set; } = true;
 

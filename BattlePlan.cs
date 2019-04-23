@@ -94,6 +94,10 @@ namespace BattlePlan
         private static bool _monochrome = false;
         private static Viewer.FileLoader _loader = new Viewer.FileLoader();
 
+        /// <summary>
+        /// "Resolves" a scenario file, figuring out which teams do what and who wins, and then
+        /// displays the result as animated ASCII characters.
+        /// </summary>
         private static void ResolveAndShow(string filename)
         {
             if (String.IsNullOrWhiteSpace(filename))
@@ -112,6 +116,11 @@ namespace BattlePlan
             viewer.ShowBattleResolution(result);
         }
 
+        /// <summary>
+        /// Launches the editor, to allow changing scenarios.  If playerView is true, the user
+        /// is restricted to only changing Team 2's defense plan.  Otherwise, the user can manipulate
+        /// the terrain, spawns/goals, challenges, and all teams' attack and defense plans.
+        /// </summary>
         private static void Edit(string filename, bool playerView)
         {
             // Only allow playerView if a filename is provided.  Not much fun to play an empty field
@@ -129,6 +138,8 @@ namespace BattlePlan
                 PlayerView = playerView,
             };
 
+            // If EditScenario returns a scenario object, the user wants to see the resolution.
+            // Keep looping between edit and resolve until edit returns null, meaning exit.
             Model.Scenario scenarioToPlay = editor.EditScenario(filename);
 
             while (scenarioToPlay != null)

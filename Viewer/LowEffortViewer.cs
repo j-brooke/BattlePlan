@@ -58,6 +58,7 @@ namespace BattlePlan.Viewer
 
             ResetDisplayTime(0.0);
 
+            // _displaySpeed is how fast the game results are shown, as a multiple of real elapsed time.
             _displaySpeed = 1.0;
             _exitRequested = false;
 
@@ -93,7 +94,10 @@ namespace BattlePlan.Viewer
                     }
                 }
 
+                // Damage markers (red *'s) should only exist briefly.
                 RemoveOldDamageEvents(_displayTime);
+
+                // There's a limit to how many text events (e.g., "Archer3 damages Grunt17 for 20") on screen.
                 RemoveOldTextEvents(maxTextEvents);
 
                 _canvas.BeginFrame();
@@ -112,10 +116,12 @@ namespace BattlePlan.Viewer
 
                 _canvas.EndFrame();
 
+                // Check for key presses without blocking.
                 ProcessUserInput();
 
                 firstPass = false;
 
+                // Figure out how long to sleep before the next frame (if at all).
                 var processFrameTimeMS = frameTimer.ElapsedMilliseconds;
                 var sleepTimeMS = Math.Max(0, (int)(minFrameTimeMS - processFrameTimeMS));
                 System.Threading.Thread.Sleep(sleepTimeMS);
@@ -144,8 +150,12 @@ namespace BattlePlan.Viewer
         private int _topMapRow;
         private int _statusBarRow;
 
+        /// <summary>
+        /// Update our sprites and things based on a BattleResolution's BattleEvent.
+        /// </summary>
         private void ProcessEvent(BattleEvent evt)
         {
+            // Note that some BattleEventTypes aren't relevant to us.  For example: BeginMovement.
             switch (evt.Type)
             {
                 case BattleEventType.Spawn:
@@ -241,6 +251,9 @@ namespace BattlePlan.Viewer
                 _recentTextEvents.Dequeue();
         }
 
+        /// <summary>
+        /// Look for key presses and handle them (but don't block)
+        /// </summary>
         private void ProcessUserInput()
         {
             var keyInfo = _canvas.ReadKeyWithoutBlocking();
@@ -301,6 +314,9 @@ namespace BattlePlan.Viewer
             }
         }
 
+        /// <summary>
+        /// Reset all of our display entities.  They will be rebuilt up to the desired time in the main loop.
+        /// </summary>
         private void ResetDisplayTime(double setToTime)
         {
             _eventQueue = new Queue<BattleEvent>(_resolution.Events.OrderBy( (evt) => evt.Time ) );
@@ -317,6 +333,9 @@ namespace BattlePlan.Viewer
             _canvas.WriteText(msg, 0, _statusBarRow, LowEffortCanvas.RegularTextColor);
         }
 
+        /// <summary>
+        /// Clear the screen and fill it with error text.
+        /// </summary>
         private void ShowErrorErrorMessages(BattleResolution resolution)
         {
             int row = 0;
@@ -334,6 +353,9 @@ namespace BattlePlan.Viewer
             _canvas.ReadKey();
         }
 
+        /// <summary>
+        /// Draw the final position of entities, and text saying who won.
+        /// </summary>
         private void DrawScoreFrame()
         {
             _canvas.BeginFrame();
@@ -342,8 +364,6 @@ namespace BattlePlan.Viewer
             int row = _topMapRow;
             var totalBreachCount = _resolution.AttackerBreachCounts.Values.Sum();
             var totalDefenderCasualties = _resolution.DefenderCasualtyCounts.Values.Sum();
-
-            // TODO: fix this.  It doesn't differentiate between teams.
 
             if (totalBreachCount==0)
                 _canvas.WriteText("Victory", sidebarCol, row++, 2);

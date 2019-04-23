@@ -7,6 +7,9 @@ using BattlePlan.Resolver;
 
 namespace BattlePlan.Viewer
 {
+    /// <summary>
+    /// Console/text menu that lets users choose scenarios to play and keeps track of best scores.
+    /// </summary>
     public class LowEffortGameMenu
     {
         public bool UseColor { get; set; }
@@ -29,11 +32,13 @@ namespace BattlePlan.Viewer
             {
                 Console.TreatControlCAsInput = false;
 
+                // Choose a section (directory).  If null, exit.
                 if (_sectionPath == null)
                     ChooseSection();
                 if (_sectionPath == null)
                     return;
 
+                // Choose a scenario file.  If null, back up so we choose a section next iteration.
                 ChooseScenario(_sectionPath);
                 if (_scenarioPath != null)
                     LaunchScenario(_scenarioPath);
@@ -161,8 +166,9 @@ namespace BattlePlan.Viewer
         /// </summary>
         private void LaunchScenario(string scenarioPath)
         {
-            // Copy the subdirectories and file name from the scenario directory on, and then
-            // use those to create a parallel path in the games directory.
+            // Make a copy of the scenario in the games folder, if it doesn't already exist.  That lets the
+            // user save their scenario with their defender placements, if they want, without affecting the
+            // original scenario file.
             var partialPath = System.IO.Path.GetRelativePath(this.ScenariosFolder, scenarioPath);
             var gamePath = System.IO.Path.Combine(this.GamesFolder, partialPath);
 
@@ -297,7 +303,8 @@ namespace BattlePlan.Viewer
         }
 
         /// <summary>
-        /// Comparison to sort file names by numerical value if they're numbers, or alphabetically.
+        /// Comparison to sort file names.  The strings are compared as numbers if they convert to
+        /// integers; otherwise they're compared as strings as normal.
         /// </summary>
         private int FileSortComparison(string pathA, string pathB)
         {

@@ -10,7 +10,8 @@ using BattlePlan.Resolver;
 namespace BattlePlan.Viewer
 {
     /// <summary>
-    /// Interactive terminal-based tool for editing maps and scenarios.
+    /// Interactive terminal-based tool for editing maps and scenarios.  This serves both for the creation
+    /// of scenarios, and to allow the user to play the game by placing defenders.
     /// </summary>
     public class LowEffortEditor
     {
@@ -217,6 +218,10 @@ namespace BattlePlan.Viewer
             RecalculateResourceCost();
         }
 
+        /// <summary>
+        /// Replace the existing map with a randomly-generated one.  (Note that this doesn't
+        /// invalidate attack plans, but they might be invalid now if there are fewer spawn points.)
+        /// </summary>
         private void GenerateTerrain()
         {
             var mapGenerator = new MapGenerator(_editorOptions.MapGeneratorOptions);
@@ -580,6 +585,9 @@ namespace BattlePlan.Viewer
             }
         }
 
+        /// <summary>
+        /// Marks any tiles that cause the player to fail a challenge, if defenders are placed there.
+        /// </summary>
         private void BuildForbiddenTilesMap()
         {
             if (_scenario.Challenges == null || _scenario.Challenges.Count == 0)
@@ -673,6 +681,10 @@ namespace BattlePlan.Viewer
             }
         }
 
+        /// <summary>
+        /// Prompts the user for values to put in the properties of a generic object.
+        /// (This only works for IConvertibles and Nullable<int> - other props are ignored.)
+        /// </summary>
         private int EditPoco<T>(T obj)
         {
             int row = 0;
@@ -784,6 +796,12 @@ namespace BattlePlan.Viewer
             return true;
         }
 
+        /// <summary>
+        /// Checks for invalid situations - like defenders placed in stone walls.  Prints a full-screen
+        /// list of any problems found.
+        ///
+        /// If no problems are found but challenges exist, it prints a list of the challenge criteria.
+        /// </summary>
         private void CheckForErrors()
         {
             var terrainErrors = Resolver.Validator.FindTerrainErrors(_scenario.Terrain);
@@ -879,57 +897,6 @@ namespace BattlePlan.Viewer
             var keyInfo = _canvas.ReadKey();
             if (keyInfo.Key==ConsoleKey.C && (keyInfo.Modifiers & ConsoleModifiers.Control) != 0)
                 _exitEditor = true;
-        }
-
-
-        private void WriteModeHelpChallenges(int col, ref int row)
-        {
-            Debug.Assert(_mode==EditorMode.Challenges);
-
-            row += 1;
-            _canvas.WriteText("(Backspace) clear all", col, row++, LowEffortCanvas.RegularTextColor);
-            _canvas.WriteText("(D) set spawn dist all", col, row++, LowEffortCanvas.RegularTextColor);
-            _canvas.WriteText("(G) set goal dist all", col, row++, LowEffortCanvas.RegularTextColor);
-            _canvas.WriteText("(+) add challenge", col, row++, LowEffortCanvas.RegularTextColor);
-            _canvas.WriteText("(-) remove challenge", col, row++, LowEffortCanvas.RegularTextColor);
-
-            row += 1;
-            for (int i=0; i<_scenario.Challenges.Count; ++i)
-                _canvas.WriteText($"({i+1}) edit \"{_scenario.Challenges[i].Name}\"", col, row++, LowEffortCanvas.RegularTextColor);
-
-            row += 1;
-        }
-
-        private void ProcessKeyChallengesMode(ConsoleKeyInfo keyInfo)
-        {
-            switch (keyInfo.Key)
-            {
-                case ConsoleKey.Backspace:
-                    ClearAllChallenges();
-                    return;
-            }
-
-            switch (keyInfo.KeyChar)
-            {
-                case '+':
-                    AddChallenge();
-                    return;
-                case '-':
-                    RemoveChallenge();
-                    return;
-                case 'd':
-                    SetAllChallengeSpawnDistance();
-                    return;
-                case 'g':
-                    SetAllChallengeGoalDistance();
-                    return;
-            }
-
-            int keyNumberValue = keyInfo.KeyChar - '0';
-            if (keyNumberValue>=1 && keyNumberValue<=_scenario.Challenges.Count)
-            {
-                EditChallenge(keyNumberValue-1);
-            }
         }
 
         private void ClearAllChallenges()
@@ -1077,6 +1044,9 @@ namespace BattlePlan.Viewer
             _terrainOverlayTiles = null;
         }
 
+        /// <summary>
+        /// Randomly generates a new set of attacker spawns.
+        /// </summary>
         private void GenerateAttackPlan()
         {
             var numberOfSpawnPts = _scenario.Terrain.SpawnPointsMap[_teamId].Count;
@@ -1098,6 +1068,9 @@ namespace BattlePlan.Viewer
                 WriteEditorModeHelp();
         }
 
+        /// <summary>
+        /// Waits for a key press, and then handles it according to the current mode, team, etc.
+        /// </summary>
         private void ProcessUserInput()
         {
             // Wait for a key press.
@@ -1477,6 +1450,55 @@ namespace BattlePlan.Viewer
             }
         }
 
+        private void WriteModeHelpChallenges(int col, ref int row)
+        {
+            Debug.Assert(_mode==EditorMode.Challenges);
+
+            row += 1;
+            _canvas.WriteText("(Backspace) clear all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(D) set spawn dist all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(G) set goal dist all", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(+) add challenge", col, row++, LowEffortCanvas.RegularTextColor);
+            _canvas.WriteText("(-) remove challenge", col, row++, LowEffortCanvas.RegularTextColor);
+
+            row += 1;
+            for (int i=0; i<_scenario.Challenges.Count; ++i)
+                _canvas.WriteText($"({i+1}) edit \"{_scenario.Challenges[i].Name}\"", col, row++, LowEffortCanvas.RegularTextColor);
+
+            row += 1;
+        }
+
+        private void ProcessKeyChallengesMode(ConsoleKeyInfo keyInfo)
+        {
+            switch (keyInfo.Key)
+            {
+                case ConsoleKey.Backspace:
+                    ClearAllChallenges();
+                    return;
+            }
+
+            switch (keyInfo.KeyChar)
+            {
+                case '+':
+                    AddChallenge();
+                    return;
+                case '-':
+                    RemoveChallenge();
+                    return;
+                case 'd':
+                    SetAllChallengeSpawnDistance();
+                    return;
+                case 'g':
+                    SetAllChallengeGoalDistance();
+                    return;
+            }
+
+            int keyNumberValue = keyInfo.KeyChar - '0';
+            if (keyNumberValue>=1 && keyNumberValue<=_scenario.Challenges.Count)
+            {
+                EditChallenge(keyNumberValue-1);
+            }
+        }
 
         // ---Player view---
 
