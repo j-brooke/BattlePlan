@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Diagnostics;
 using BattlePlan.Model;
-using BattlePlan.Path;
+using BattlePlanPath;
 
 namespace BattlePlan.Resolver
 {
