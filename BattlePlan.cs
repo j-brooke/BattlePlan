@@ -30,6 +30,11 @@ namespace BattlePlan
                         "m|monochrome",
                         "don't use color",
                         v => _monochrome = (v!=null)
+                    },
+                    {
+                        "o=|outfile",
+                        "output file for resolve action",
+                        v => _outfile = v
                     }
                 };
 
@@ -92,6 +97,7 @@ namespace BattlePlan
 
         private static OptionSet _cmdOptions;
         private static bool _monochrome = false;
+        private static string _outfile = null;
         private static Viewer.FileLoader _loader = new Viewer.FileLoader();
 
         /// <summary>
@@ -111,6 +117,11 @@ namespace BattlePlan
 
             var resolver = new BattleState();
             var result = resolver.Resolve(scenario, unitsList);
+
+            if (_outfile != null)
+            {
+                _loader.SaveBattleResolution(_outfile, result);
+            }
 
             var viewer = new Viewer.LowEffortViewer() { UseColor = !_monochrome };
             viewer.ShowBattleResolution(result);
