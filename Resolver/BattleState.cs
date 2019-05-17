@@ -57,7 +57,13 @@ namespace BattlePlan.Resolver
             // Spawn all defenders
             foreach (var plan in _defensePlans)
             {
-                foreach (var placement in plan.Placements)
+                // Arrange the spawns in a dependable order.  Spawn order can be meaningful - for instance,
+                // if an attacker has two equidistant defenders to choose from - but order is hidden from the
+                // user in the UI.  If a player places all his defenders in the same place as his friend, he
+                // should get the same results, not be at the mercy of invisible variables.
+                var orderedPlacements = plan.Placements.OrderBy( (placement) => placement.Position.GetHashCode() );
+
+                foreach (var placement in orderedPlacements)
                 {
                     var id = GenerateId(0.0, placement.UnitType);
                     var classChar = _unitTypeMap.Get(placement.UnitType);
