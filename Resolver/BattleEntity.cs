@@ -121,6 +121,7 @@ namespace BattlePlan.Resolver
         /// re-calculating its path.
         /// </summary>
         private const double _repathAfterIdleFactor = 0.99;
+        private static readonly double _sqrt2 = Math.Sqrt(2.0);
         private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private Queue<Vector2Di> _plannedPath;
         private double _plannedPathAgeSeconds;
@@ -151,7 +152,9 @@ namespace BattlePlan.Resolver
             Debug.Assert(this.SpeedTilesPerSec > 0);
             Debug.Assert(battleState.GetEntityBlockingTile(this.MovingToPosition.Value).Id==this.Id);
 
-            var timeToMove = 1.0/this.SpeedTilesPerSec;
+            var isMoveDiagonal = (this.MovingToPosition.Value.X != this.Position.X) & (this.MovingToPosition.Value.Y != this.Position.Y);
+            var distToMove = (isMoveDiagonal)? _sqrt2 : 1.0;
+            var timeToMove = distToMove/this.SpeedTilesPerSec;
             this.CurrentActionElapsedTime += deltaSeconds;
             if (this.CurrentActionElapsedTime >= timeToMove)
             {

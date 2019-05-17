@@ -45,7 +45,7 @@ namespace BattlePlan.Resolver
             // In our game space, a path can only ever be from one tile to an adjacent one - no teleports.
             Debug.Assert(deltaAxisDist<=2);
 
-            double distance = (deltaAxisDist==2)? _sqrt2 : deltaAxisDist;
+            double distance = (deltaAxisDist==2)? _sqrt2 : 1;
             double timeToMove = distance/entity.SpeedTilesPerSec;
 
             double penalty = 0.0;
