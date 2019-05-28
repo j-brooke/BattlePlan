@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>BattlePlanEngine</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BattlePlanPath" Version="1.0.0" />
+    <PackageReference Include="NLog" Version="4.6.3" />
+  </ItemGroup>
+
+</Project>
