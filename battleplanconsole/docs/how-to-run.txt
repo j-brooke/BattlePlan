@@ -67,7 +67,7 @@ The "cd" command changes your working directory.  Something like:
 
 Type:
 
-    dotnet battleplan.dll
+    dotnet battleplanconsole.dll
 
 You should be in the game menu now.  Choose a section (maybe "how-to-play")
 and then choose a scenario.
@@ -78,11 +78,11 @@ EDITING
 Once you've got a feel for how the game works, assuming it does work, you might
 want to try creating some scenarios of your own.  From the commandline, type:
 
-    dotnet battleplan.dll edit
+    dotnet battleplanconsole.dll edit
 
 or
 
-    dotnet battleplan.dll edit SomeFileName.json
+    dotnet battleplanconsole.dll edit SomeFileName.json
 
 
 

@@ -10,21 +10,21 @@ This app is written in .NET Core, an open-source cross-platform runtime.  You ca
 
 ## Running
 
-If you're working from source code and the .NET Core SDK, you run the app like this:
+Right now BattlePlan can only be run as a console application.  If you're working from source code and the .NET Core SDK, set your working directory to battleplanconsole (the directory with battleplanconsole.csproj in it).  Then you can run the game with this command:
 
     dotnet run <some_args>
 
-If you're running from a published DLL, it's like this:
+If you're running from a published DLL, change to the DLL's directory and run it like this:
 
-    dotnet battleplan.dll <some_args>
+    dotnet battleplanconsole.dll <some_args>
 
 The rest of these instructions assume the earlier situation, but hopefully it's obvious how to adapt.
 
-More detailed instructions on how to setup and run can be found in docs/how-to-run.txt.
+More detailed instructions on how to setup and run can be found in docs/how-to-run.txt.  (Those are mostly intended for non-programmers.)
 
 ### Play
 
-To start the game's menu from which you can select and play scenarios, type:
+To start the game's menu from which you can select and play scenarios, type the following (from the directory with battleplanconsole.csproj in it):
 
     dotnet run menu
 
@@ -34,7 +34,7 @@ To play a specific scenario, you can also type:
 
 You can set up scenarios by editing the JSON files, or using the editor (see below).
 
-For instructions on how to play, see docs/how-to-play.html.
+For gameplay instructions, see docs/how-to-play.html.
 
 
 ### Edit
