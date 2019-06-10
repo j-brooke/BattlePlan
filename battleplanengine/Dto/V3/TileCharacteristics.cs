@@ -1,6 +1,6 @@
 using System;
 
-namespace BattlePlanEngine.Dto.V2
+namespace BattlePlanEngine.Dto.V3
 {
     public class TileCharacteristics
     {

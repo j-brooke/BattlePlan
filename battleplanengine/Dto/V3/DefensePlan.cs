@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BattlePlanEngine.Dto.V2
+namespace BattlePlanEngine.Dto.V3
 {
     public class DefensePlan
     {

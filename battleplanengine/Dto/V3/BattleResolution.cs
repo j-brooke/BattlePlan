@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace BattlePlanEngine.Dto.V2
+namespace BattlePlanEngine.Dto.V3
 {
     public class BattleResolution
     {
@@ -11,7 +11,7 @@ namespace BattlePlanEngine.Dto.V2
         public IList<string> BannerText { get; set; }
         public Terrain Terrain { get; set; }
         public IList<UnitCharacteristics> UnitTypes { get; set; }
-        public IList<BattleEvent> Events { get; set; }
+        public IList<string> Events { get; set; }
 
         /// <summary>
         /// Key value pairs where the key is the TeamID of an attacking team and the value

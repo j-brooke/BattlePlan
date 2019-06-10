@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BattlePlanEngine.Dto.V2
+namespace BattlePlanEngine.Dto.V3
 {
     public class Terrain
     {

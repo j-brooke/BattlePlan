@@ -122,6 +122,9 @@ namespace BattlePlanConsole
             if (_outfile != null)
             {
                 _loader.SaveBattleResolution(_outfile, result);
+
+                // If we're writing a results file, read it back in and use that, just to be sure it works.
+                result = _loader.LoadBattleResolution(_outfile);
             }
 
             var viewer = new Viewer.LowEffortViewer() { UseColor = !_monochrome };
