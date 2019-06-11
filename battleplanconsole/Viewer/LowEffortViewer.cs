@@ -103,7 +103,7 @@ namespace BattlePlanConsole.Viewer
                 _canvas.BeginFrame();
                 WriteBannerText();
 
-                _canvas.WriteTextEvents(_recentTextEvents, resolution.Terrain.Width + 1, _topMapRow);
+                _canvas.WriteTextEvents(_recentTextEvents, resolution.Terrain.Width + 1, _topMapRow, _entityNameMap);
 
                 // Draw the map and everything on it.
                 _canvas.PaintTerrain(resolution.Terrain, null, 0, _topMapRow);
@@ -138,7 +138,8 @@ namespace BattlePlanConsole.Viewer
         private readonly LowEffortCanvas _canvas = new LowEffortCanvas();
         private BattleResolution _resolution;
         private Queue<BattleEvent> _eventQueue;
-        private Dictionary<string,ViewEntity> _entities;
+        private Dictionary<int,ViewEntity> _entities;
+        private Dictionary<int,string> _entityNameMap;
         private Queue<BattleEvent> _rencentDamageEvents;
         private Queue<BattleEvent> _recentTextEvents;
         private Dictionary<string,UnitCharacteristics> _unitTypeMap;
@@ -193,6 +194,9 @@ namespace BattlePlanConsole.Viewer
             newEnt.Symbol = newEnt.UnitType.Symbol;
 
             _entities[newEnt.Id] = newEnt;
+
+            // Give a name to this entity to be used for on-screen event messages.
+            _entityNameMap[newEnt.Id] = evt.SourceClass + evt.SourceEntity.ToString();
         }
 
         private void ProcessDespawnEvent(BattleEvent evt)
@@ -211,7 +215,7 @@ namespace BattlePlanConsole.Viewer
         private void ProcessDamageEvent(BattleEvent evt)
         {
             Debug.Assert(evt.Type==BattleEventType.EndAttack);
-            if (evt.TargetEntity != null)
+            if (evt.TargetEntity >= 0)
             {
                 _rencentDamageEvents.Enqueue(evt);
                 _recentTextEvents.Enqueue(evt);
@@ -320,7 +324,8 @@ namespace BattlePlanConsole.Viewer
         private void ResetDisplayTime(double setToTime)
         {
             _eventQueue = new Queue<BattleEvent>(_resolution.Events.OrderBy( (evt) => evt.Time ) );
-            _entities = new Dictionary<string, ViewEntity>();
+            _entities = new Dictionary<int, ViewEntity>();
+            _entityNameMap = new Dictionary<int, string>();
             _rencentDamageEvents = new Queue<BattleEvent>();
             _recentTextEvents = new Queue<BattleEvent>();
             _displayTime = Math.Max(0, setToTime);

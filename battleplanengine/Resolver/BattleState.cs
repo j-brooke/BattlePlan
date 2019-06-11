@@ -195,7 +195,7 @@ namespace BattlePlanEngine.Resolver
             return _blockedPositions[position.X, position.Y];
         }
 
-        internal BattleEntity GetEntityById(string id)
+        internal BattleEntity GetEntityById(int id)
         {
             return _entities.FirstOrDefault( (ent) => ent.Id==id );
         }
@@ -267,11 +267,11 @@ namespace BattlePlanEngine.Resolver
             {
                 Time = time,
                 Type = type,
-                SourceEntity = sourceEnt?.Id,
+                SourceEntity = sourceEnt.Id,
                 SourceLocation = sourceEnt?.Position,
                 SourceTeamId = sourceEnt?.TeamId ?? 0,
                 SourceClass = sourceEnt?.Class.Name,
-                TargetEntity = targetEnt?.Id,
+                TargetEntity = targetEnt?.Id ?? -1,
                 TargetLocation = targetEnt?.Position,
                 TargetTeamId = targetEnt?.TeamId ?? 0,
             };
@@ -338,11 +338,9 @@ namespace BattlePlanEngine.Resolver
             _miscSpawnQueue.Clear();
         }
 
-        internal string GenerateId(double time, string cls)
+        internal int GenerateId(double time, string cls)
         {
-            var id = $"{cls}{_nextId.ToString()}";
-            _nextId += 1;
-            return id;
+            return _nextId++;
         }
 
         private IList<string> GetValidationFailures(Scenario scenario, UnitTypeMap unitTypes)

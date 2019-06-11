@@ -274,21 +274,29 @@ namespace BattlePlanConsole.Viewer
         /// <summary>
         /// Text of important happenings to the side of the map.
         /// </summary>
-        public void WriteTextEvents(IEnumerable<BattleEvent> textEvents, int canvasOffsetX, int canvasOffsetY)
+        public void WriteTextEvents(IEnumerable<BattleEvent> textEvents,
+            int canvasOffsetX,
+            int canvasOffsetY,
+            IDictionary<int,string> nameMap)
         {
             var row = canvasOffsetY;
             foreach (var evt in textEvents)
             {
+                string sourceName = "<unknown>";
+                string targetName = "<unknown>";
+                nameMap.TryGetValue(evt.SourceEntity, out sourceName);
+                nameMap.TryGetValue(evt.TargetEntity, out targetName);
+
                 var col = canvasOffsetX;
                 switch (evt.Type)
                 {
                     case BattleEventType.EndAttack:
-                        col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
+                        col = WriteText(sourceName, col, row, GetTeamColor(evt.SourceTeamId));
                         if (evt.DamageAmount.HasValue)
                             col = WriteText(" damages ", col, row, GetTextColor());
                         else
                             col = WriteText(" attacks ", col, row, GetTextColor());
-                        col = WriteText(evt.TargetEntity, col, row, GetTeamColor(evt.TargetTeamId));
+                        col = WriteText(targetName, col, row, GetTeamColor(evt.TargetTeamId));
                         if (evt.DamageAmount.HasValue)
                         {
                             col = WriteText(" for ", col, row, GetTextColor());
@@ -296,11 +304,11 @@ namespace BattlePlanConsole.Viewer
                         }
                         break;
                     case BattleEventType.ReachesGoal:
-                        col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
+                        col = WriteText(sourceName, col, row, GetTeamColor(evt.SourceTeamId));
                         col = WriteText(" reaches goal!", col, row, GetTextColor());
                         break;
                     case BattleEventType.Die:
-                        col = WriteText(evt.SourceEntity, col, row, GetTeamColor(evt.SourceTeamId));
+                        col = WriteText(sourceName, col, row, GetTeamColor(evt.SourceTeamId));
                         col = WriteText(" dies!", col, row, GetTextColor());
                         break;
                 }

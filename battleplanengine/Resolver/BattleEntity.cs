@@ -11,7 +11,7 @@ namespace BattlePlanEngine.Resolver
     /// </summary>
     internal class BattleEntity
     {
-        public string Id { get; }
+        public int Id { get; }
         public UnitCharacteristics Class { get; }
         public bool IsAttacker { get; }
         public double SpeedTilesPerSec { get; private set; }
@@ -20,14 +20,14 @@ namespace BattlePlanEngine.Resolver
         public Vector2Di? MovingToPosition { get; private set; }
         public Action CurrentAction { get; private set; }
         public double CurrentActionElapsedTime { get; private set; }
-        public string AttackTargetId { get; private set; }
+        public int AttackTargetId { get; private set; }
         public Vector2Di? AttackTargetInitialPosition { get; private set; }
         public int TeamId { get; }
         public double WeaponReloadElapsedTime { get; private set; }
 
         public double TimeToLive { get; set; } = double.PositiveInfinity;
 
-        public BattleEntity(string id, UnitCharacteristics clsChar, int teamId, bool isAttacker)
+        public BattleEntity(int id, UnitCharacteristics clsChar, int teamId, bool isAttacker)
         {
             this.Id = id;
             this.Class = clsChar;
@@ -112,7 +112,7 @@ namespace BattlePlanEngine.Resolver
         public void ForceRepath()
         {
             _plannedPath = null;
-            _berserkTargetId = null;
+            _berserkTargetId = -1;
             _logger.Trace("{0} is rethinking their path because BattleState said to", this.Id);
         }
 
@@ -126,7 +126,7 @@ namespace BattlePlanEngine.Resolver
         private Queue<Vector2Di> _plannedPath;
         private double _plannedPathAgeSeconds;
         private double _elapsedSecondsDoingNothing;
-        private string _berserkTargetId;
+        private int _berserkTargetId;
 
         private BattleEvent[] UpdateNone(BattleState battleState, double time, double deltaSeconds)
         {
@@ -210,7 +210,7 @@ namespace BattlePlanEngine.Resolver
                 this.CurrentAction = Action.None;
                 this.CurrentActionElapsedTime = deltaSeconds;
                 this.WeaponReloadElapsedTime = 0.0;
-                this.AttackTargetId = null;
+                this.AttackTargetId = -1;
                 this.AttackTargetInitialPosition = null;
             }
 
@@ -235,7 +235,7 @@ namespace BattlePlanEngine.Resolver
                 SourceEntity = this.Id,
                 SourceLocation = this.Position,
                 SourceTeamId = this.TeamId,
-                TargetEntity = target?.Id,
+                TargetEntity = target?.Id ?? -1,
                 TargetLocation = target?.Position,
                 TargetTeamId = target?.TeamId ?? 0,
                 DamageAmount = this.Class.WeaponDamage,
@@ -288,7 +288,7 @@ namespace BattlePlanEngine.Resolver
                 SourceEntity = this.Id,
                 SourceLocation = this.Position,
                 SourceTeamId = this.TeamId,
-                TargetEntity = bestTarget?.Id,
+                TargetEntity = bestTarget?.Id ?? -1,
                 TargetLocation = targetPos,
                 TargetTeamId = bestTarget?.TeamId ?? 0,
             };
@@ -557,7 +557,7 @@ namespace BattlePlanEngine.Resolver
                     if (this.Class.CrowdAversionBias>0 && _elapsedSecondsDoingNothing >= _repathAfterIdleFactor/this.Class.CrowdAversionBias)
                     {
                         _plannedPath = null;
-                        _berserkTargetId = null;
+                        _berserkTargetId = -1;
                         _logger.Trace("{0} is rethinking their path because a friendly unit is in the way", this.Id);
                     }
                 }
@@ -642,7 +642,7 @@ namespace BattlePlanEngine.Resolver
             {
                 this.CurrentAction = Action.Attack;
                 this.CurrentActionElapsedTime = deltaSeconds;
-                this.AttackTargetId = null;
+                this.AttackTargetId = -1;
                 this.AttackTargetInitialPosition = firstEnemy.Position;
 
                 actionEvents = new BattleEvent[]
@@ -653,7 +653,7 @@ namespace BattlePlanEngine.Resolver
                         Type = BattleEventType.BeginAttack,
                         SourceEntity = this.Id,
                         SourceLocation = this.Position,
-                        TargetEntity = null,
+                        TargetEntity = -1,
                         TargetLocation = firstEnemy.Position,
                         TargetTeamId = firstEnemy.TeamId,
                     }
@@ -745,21 +745,21 @@ namespace BattlePlanEngine.Resolver
             if (this.SpeedTilesPerSec>0 && this.IsAttacker)
             {
                 // If our last target has despawned, clear the path.
-                if (_berserkTargetId != null)
+                if (_berserkTargetId >= 0)
                 {
                     if (battleState.GetEntityById(_berserkTargetId)==null)
                     {
                         _plannedPath = null;
-                        _berserkTargetId = null;
+                        _berserkTargetId = -1;
                         _logger.Trace("{0} is rethinking its berserk path because its target is dead", this.Id);
                     }
                 }
 
                 // If we're not charging toward a living enemy, look for another one to charge.  (This happens
                 // even if we're on a normal path-to-goal.)
-                if (_berserkTargetId==null || _plannedPath==null || _plannedPath.Count==0)
+                if (_berserkTargetId>=0 || _plannedPath==null || _plannedPath.Count==0)
                 {
-                    _berserkTargetId = null;
+                    _berserkTargetId = -1;
                     _plannedPath = null;
 
                     var potentialTargets = ListBerserkerTargetsInRange(battleState, berserkerAggroRange).ToList();

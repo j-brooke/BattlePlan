@@ -148,13 +148,13 @@ namespace BattlePlanEngine.Translator
             var evt = new Model.BattleEvent();
             evt.Time = double.Parse(arr[0]);
             evt.Type = ToEnumModel<Model.BattleEventType>(arr[1]);
-            evt.SourceEntity = arr[2];
+            evt.SourceEntity = (arr[2].Length>0)? int.Parse(arr[2]) : -1;
             evt.SourceLocation = (arr[3].Length>0 && arr[4].Length>0)?
                 new Model.Vector2Di(int.Parse(arr[3]), int.Parse(arr[4]))
                 : new Nullable<Model.Vector2Di>();
             evt.SourceTeamId = int.Parse(arr[5]);
             evt.SourceClass = arr[6];
-            evt.TargetEntity = (arr[7].Length>0)? arr[7] : null;
+            evt.TargetEntity = (arr[7].Length>0)? int.Parse(arr[7]) : -1;
             evt.TargetLocation = (arr[8].Length>0 && arr[9].Length>0)?
                 new Model.Vector2Di(int.Parse(arr[8]), int.Parse(arr[9]))
                 : new Nullable<Model.Vector2Di>();

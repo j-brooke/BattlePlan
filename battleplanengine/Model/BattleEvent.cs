@@ -10,11 +10,11 @@ namespace BattlePlanEngine.Model
     {
         public double Time { get; set; }
         public BattleEventType Type { get; set; }
-        public string SourceEntity { get; set; }
+        public int SourceEntity { get; set; }
         public Vector2Di? SourceLocation { get; set; }
         public int SourceTeamId { get; set; }
         public string SourceClass { get; set; }
-        public string TargetEntity { get; set; }
+        public int TargetEntity { get; set; }
         public Vector2Di? TargetLocation { get; set; }
         public int TargetTeamId { get; set; }
         public double? DamageAmount { get; set; }
@@ -28,7 +28,7 @@ namespace BattlePlanEngine.Model
 
             msg += $" {Type}";
 
-            if (this.TargetEntity!=null || TargetLocation.HasValue)
+            if (this.TargetEntity>=0 || TargetLocation.HasValue)
                 msg += $" toward {TargetEntity} at {TargetLocation}";
 
             if (this.DamageAmount.HasValue)
